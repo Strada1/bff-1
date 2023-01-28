@@ -1,13 +1,14 @@
 const {Router} = require('express');
+const {PATHS} = require('../constants');
 const movies = require('../models/Movies');
 
 const router = Router();
 
-router.get('/movies', (req, res) => {
+router.get(PATHS.MOVIES, (req, res) => {
   res.send('GET request is done.');
 });
 
-router.post('/movies', async (req, res) => {
+router.post(PATHS.MOVIES, async (req, res) => {
   try {
     await movies.create(req.body);
     return res.status(201).send('movie created');

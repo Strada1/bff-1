@@ -8,6 +8,7 @@ const categoriesRoute = require('./routers/categories');
 const port = 3000;
 
 app.use(express.json());
+
 app.use(homeRoute);
 app.use(moviesRoute);
 app.use(categoriesRoute);
