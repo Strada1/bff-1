@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="init: Added project">
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="refactor: Git branch">
+      <change afterPath="$PROJECT_DIR$/controllers/CategoriesContoller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controllers/MoviesContoller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +19,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -36,6 +40,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -94,6 +99,7 @@
       <workItem from="1674805802981" duration="4880000" />
       <workItem from="1674817406171" duration="5470000" />
       <workItem from="1674827316736" duration="1021000" />
+      <workItem from="1674939418699" duration="7635000" />
     </task>
     <task id="LOCAL-00001" summary="Project init">
       <created>1674753075589</created>
@@ -109,15 +115,46 @@
       <option name="project" value="LOCAL" />
       <updated>1674827536222</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="refactor: Git branch">
+      <created>1674939984365</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1674939984365</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/den.soldugeev/practice-5" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Project init" />
     <MESSAGE value="init: Added project" />
-    <option name="LAST_COMMIT_MESSAGE" value="init: Added project" />
+    <MESSAGE value="refactor: Git branch" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: Git branch" />
   </component>
 </project>

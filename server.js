@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
-const { MovieModal } = require('./models/movies');
-const { CategoryModal } = require('./models/categories');
+const { createCategory } = require('./controllers/CategoriesContoller');
+const { createMovie, getAllMovies } = require('./controllers/MoviesContoller');
 
 const app = express();
 const port = 3000;
@@ -25,50 +25,14 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-// Роут на добавление фильма в БД
-app.post('/movies', async (req, res) => {
-  try {
-    const doc = new MovieModal({
-      title: req.body.title,
-      year: req.body.year,
-      rating: req.body.rating,
-    });
+// Роут на добавление фильма
+app.post('/movies', createMovie);
 
-    await MovieModal.create(doc); // добавляем документ
+// Роут на получение всех фильмов
+app.get('/movies', getAllMovies);
 
-    return res.status(201).json({
-      message: 'Movies created',
-    }); // возвращаем ответ
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
-
-// Роут на добавление категорий в БД
-app.post('/categories', async (req, res) => {
-  try {
-    const doc = new CategoryModal({
-      title: req.body.title,
-    });
-
-    await CategoryModal.create(doc); // добавляем документ
-
-    return res.status(201).json({
-      message: 'Category created',
-    }); // возвращаем ответ
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
-
-app.get('/movies', async (req, res) => {
-  try {
-    const allMovies = await MovieModal.find(); // получаем все документы
-    return res.status(200).json(allMovies); // возвращаем ответ
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
+// Роут на добавление категорий
+app.post('/categories', createCategory);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
