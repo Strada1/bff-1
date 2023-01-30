@@ -7,6 +7,7 @@ const MovieSchema = new Schema({
   duration: Number,
   director: String,
   rating: Number,
+  category: { type: 'ObjectId', ref: 'Category' },
 });
 
 const Movie = model('Movie', MovieSchema);
