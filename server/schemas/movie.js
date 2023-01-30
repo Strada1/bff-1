@@ -9,15 +9,13 @@ const MovieSchema = new mongoose.Schema({ // определяем схему
     rating: Number,
     duration: Number,
     director: String,
+    category: {
+        type: 'ObjectId',
+        ref: 'Category'
+    }
 });
-const CategorySchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-    },
-}, { versionKey: '_somethingElse' })
 
 const Movie = mongoose.model('Movie', MovieSchema); // создаем модель по схеме
-const Category = mongoose.model('Category', CategorySchema)
 
-module.exports = {Movie, Category}
+
+module.exports = {Movie}

@@ -3,7 +3,8 @@ const app = express()
 const port = 3000
 
 app.use(express.json());
-require('./routes')(app);
+require('./routes/movie')(app);
+require('./routes/category')(app);
 require('./db');
 
 app.listen(port, () => {
