@@ -15,4 +15,6 @@ router.post(PATHS.CATEGORIES, async (req, res) => {
     return res.status(400).send(error);
   }
 });
+
+
 module.exports = router;

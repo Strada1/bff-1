@@ -1,18 +1,21 @@
-const DB = {
-  URL: 'mongodb://localhost:27017/main',
-  OPTIONS: {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-};
-
 const PATHS = {
   HOME: '/',
   MOVIES: '/movies',
   CATEGORIES: '/categories',
+  SCHEMA: {
+    MOVIES: '/schema/movies',
+    CATEGORIES: '/schema/categories',
+  },
+};
+
+const INFO_MSG = {
+  FIELD_IS_CREATED: 'Поле успешно добавлено.',
+  FIELD_IS_DELETED: 'Поле успешно удалено.',
+  FIELD_IS_NOT_CREATED: 'Не получилось добавить поле.',
+  FIELD_IS_NOT_DELETED: 'Не получилось удалить поле.',
 };
 
 module.exports = {
-  DB,
   PATHS,
+  INFO_MSG,
 };
