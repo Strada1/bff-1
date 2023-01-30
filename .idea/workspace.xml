@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="refactor">
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added new key for MovieSchema">
+      <change afterPath="$PROJECT_DIR$/connect.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/movies.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/movies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +17,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -98,7 +99,8 @@
       <workItem from="1674817406171" duration="5470000" />
       <workItem from="1674827316736" duration="1021000" />
       <workItem from="1674939418699" duration="8071000" />
-      <workItem from="1675086215445" duration="1702000" />
+      <workItem from="1675086215445" duration="1858000" />
+      <workItem from="1675100383844" duration="554000" />
     </task>
     <task id="LOCAL-00001" summary="Project init">
       <created>1674753075589</created>
@@ -128,7 +130,14 @@
       <option name="project" value="LOCAL" />
       <updated>1674953464236</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feat: Added new key for MovieSchema">
+      <created>1675088091330</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1675088091330</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,6 +171,7 @@
     <MESSAGE value="init: Added project" />
     <MESSAGE value="refactor: Git branch" />
     <MESSAGE value="refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor" />
+    <MESSAGE value="feat: Added new key for MovieSchema" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Added new key for MovieSchema" />
   </component>
 </project>
