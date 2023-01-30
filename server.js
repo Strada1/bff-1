@@ -27,8 +27,12 @@ app.get('/movies', async (req, res) => {
 app.post("/add-movie", async (req, res) => {
     try {
         const rs = req.body;
-        if (rs?.title && rs?.director && rs?.year && rs?.duration && rs?.rating) {
-            await Movie.create(rs);
+        if (rs?.title && rs?.director && rs?.year && rs?.duration && rs?.rating && rs?.category) {
+            const category = await Category.find({title: rs.category});
+            if (!category.length) {
+                throw new Error("The category does not exist");
+            }
+            await Movie.create({...rs, category: category[0]["_id"]});
             res.status(201).send("Movies added");
         } else {
             throw new Error("Incomplete information");
@@ -36,6 +40,8 @@ app.post("/add-movie", async (req, res) => {
     }
     catch(e) {
         if (e.message == "Incomplete information") {
+            res.status(400).send(e.message);
+        } else if (e.message === "The category does not exist") {
             res.status(400).send(e.message);
         } else {
             res.status(500).send("Error when adding a movie");

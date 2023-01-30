@@ -6,6 +6,7 @@ const MovieShema = new db.Schema({
     year: Number,
     duration: Number,
     rating: Number,
+    category: {type: "ObjectId", ref: "Category"},
 });
 
 const Movie = db.model("Movie", MovieShema);
