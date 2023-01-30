@@ -2,6 +2,16 @@ const MovieModel = require("../models/movie");
 const express = require("express");
 const app = express();
 
+const getAllMovies = app.get("/movies", async (req, res) => {
+  try {
+    const movies = await MovieModel.find();
+
+    return res.status(201).send(movies);
+  } catch (e) {
+    return res.status(500).send("error " + e);
+  }
+});
+
 const createMovie = app.post("/movies", async (req, res) => {
   try {
     await MovieModel.create({
@@ -19,4 +29,4 @@ const createMovie = app.post("/movies", async (req, res) => {
   }
 });
 
-module.exports = createMovie;
+module.exports = { createMovie, getAllMovies };
