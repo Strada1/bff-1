@@ -1,5 +1,4 @@
-import Movie from './schemas/movie.js';
-import Category from './schemas/category.js';
+import Schema from './schemas/index.js';
 
 function addRoutes(app) {
   app.get('/', (req, res) => {
@@ -8,7 +7,7 @@ function addRoutes(app) {
 
   app.post('/movies', async (req, res) => {
     try {
-      const movie = await Movie.create(req.body);
+      const movie = await Schema.Movie.create(req.body);
       return res.status(201).send('movie created: ' + movie);
     } catch {
       return res.status(400).send('request error');
@@ -17,7 +16,7 @@ function addRoutes(app) {
 
   app.post('/categories', async (req, res) => {
     try {
-      const category = await Category.create(req.body);
+      const category = await Schema.Category.create(req.body);
       return res.status(201).send('category created: ' + category);
     } catch {
       return res.status(400).send('request error');
