@@ -29,4 +29,8 @@ const createMovie = app.post("/movies", async (req, res) => {
   }
 });
 
-module.exports = { createMovie, getAllMovies };
+const deleteMovie = app.delete("/movies/:movieId", async (req, res) => {});
+
+const editMovie = app.put("/movies/:movieId", async (req, res) => {});
+
+module.exports = { createMovie, getAllMovies, deleteMovie, editMovie };
