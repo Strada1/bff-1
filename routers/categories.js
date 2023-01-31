@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const {PATHS} = require('../constants');
-const categories = require('../models/Categories');
+const {categories} = require('../models/Categories');
 
 const router = Router();
 
@@ -15,6 +15,5 @@ router.post(PATHS.CATEGORIES, async (req, res) => {
     return res.status(400).send(error);
   }
 });
-
 
 module.exports = router;

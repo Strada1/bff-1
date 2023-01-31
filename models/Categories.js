@@ -4,7 +4,8 @@ const CategoriesSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  raiting: Number,
 });
 
 const categories = mongoose.model('Categories', CategoriesSchema);
-module.exports = categories;
+module.exports = {categories, CategoriesSchema};

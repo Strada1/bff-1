@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const {PATHS} = require('../constants');
-const movies = require('../models/Movies');
+const {movies} = require('../models/Movies');
 
 const router = Router();
 
