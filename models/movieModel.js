@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 // определяем схему
 const MovieSchema = new mongoose.Schema({ 
     title: String,
-    category: String,
     year: Number,
     duration: Number,
     director: String,
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   });
 
   // создаем модель по схеме

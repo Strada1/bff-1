@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const CreateMovie = require('../movieapp/routes/movieRoutes');
-const CreateCategory = require('../movieapp/routes/categoryRoutes');
-const connectDb = require('../movieapp/db');
+const CreateMovie = require('../bff-1/routes/movieRoutes');
+const CreateCategory = require('../bff-1/routes/categoryRoutes');
+const connectDb = require('../bff-1/db');
 
 connectDb();
 
