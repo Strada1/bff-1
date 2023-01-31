@@ -2,6 +2,15 @@ const CategoryModel = require('../models/category')
 const express = require("express")
 const app = express()
 
+const showCategories = app.get('/categories', async (req, res) => {
+  try {
+    const allCategories = await CategoryModel.find()
+    return res.status(200).json(allCategories);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+})
+
 const createCategory = app.post("/categories", async (req, res) => {
   try {
     await CategoryModel.create(req.body);
@@ -12,4 +21,4 @@ const createCategory = app.post("/categories", async (req, res) => {
   }
 })
 
-module.exports = { createCategory };
+module.exports = { createCategory, showCategories };
