@@ -1,11 +1,7 @@
 const mongoose = require('../db');
-const CategoriesSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  raiting: Number,
+const categoriesSchema = new mongoose.Schema({
+  title: String,
 });
 
-const categories = mongoose.model('Categories', CategoriesSchema);
-module.exports = {categories, CategoriesSchema};
+const Categories = mongoose.model('Categories', categoriesSchema);
+module.exports = Categories;

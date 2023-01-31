@@ -1,20 +1,29 @@
 const {Router} = require('express');
 const {PATHS} = require('../constants');
-const {movies} = require('../models/Movies');
+const Movies = require('../models/Movies');
 
 const router = Router();
 
-router.get(PATHS.MOVIES, (req, res) => {
-  res.send('GET request is done.');
+router.get(PATHS.MOVIES, async (req, res) => {
+  try {
+    const allMovies = await Movies.find({});
+    // !req.body error handler
+    return res.status(200).json(allMovies);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
 });
 
 router.post(PATHS.MOVIES, async (req, res) => {
   try {
-    await movies.create(req.body);
-    return res.status(201).send('movie created');
+    await Movies.create(req.body);
+    // !req.body error handler
+    return res.status(200).send('movie created');
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 });
+// router.put();
+// router.delete();
 
 module.exports = router;
