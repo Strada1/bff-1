@@ -28,6 +28,7 @@ router.put('/movies/:movieId', (req, res) => {
   try {
     const movieId = req.params['movieId'];
     const movie = req.body;
+    console.log(movie, movieId);
     return req.status(200).send('movie changed');
   } catch (error) {
     return res.status(500).send(error);
