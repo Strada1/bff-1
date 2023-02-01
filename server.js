@@ -1,28 +1,15 @@
 const express = require('express');
-const { createCategory } = require('./controllers/CategoriesContoller');
-const { createMovie, getAllMovies } = require('./controllers/MoviesContoller');
-const { connectDb } = require('./connect');
+const { corsOptions } = require('./cors');
+const routers = require('./routes/index');
 
 const app = express();
 const port = 3000;
 
+app.use(corsOptions);
+
 app.use(express.json());
 
-connectDb().then(() => {
-  console.log('DB connect');
-}).catch((err) => {
-  console.log('DB error', err);
-});
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.post('/movies', createMovie);
-
-app.get('/movies', getAllMovies);
-
-app.post('/categories', createCategory);
+app.use(routers);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

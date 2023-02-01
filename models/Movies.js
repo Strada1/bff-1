@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('../db');
 
-const MovieSchema = new mongoose.Schema({ // определяем схему
+const MovieSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,

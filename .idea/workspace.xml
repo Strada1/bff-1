@@ -4,9 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added new key for MovieSchema">
-      <change afterPath="$PROJECT_DIR$/connect.js" afterDir="false" />
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="refactor: Code">
+      <change afterPath="$PROJECT_DIR$/cors.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/home.routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/movies.routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/сategories.routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/connect.js" beforeDir="false" afterPath="$PROJECT_DIR$/db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Categories.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Movies.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Movies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +109,9 @@
       <workItem from="1674827316736" duration="1021000" />
       <workItem from="1674939418699" duration="8071000" />
       <workItem from="1675086215445" duration="1858000" />
-      <workItem from="1675100383844" duration="554000" />
+      <workItem from="1675100383844" duration="1159000" />
+      <workItem from="1675172281576" duration="19000" />
+      <workItem from="1675247515468" duration="10226000" />
     </task>
     <task id="LOCAL-00001" summary="Project init">
       <created>1674753075589</created>
@@ -137,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675088091330</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="refactor: Code">
+      <created>1675101024909</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1675101024909</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,6 +190,7 @@
     <MESSAGE value="refactor: Git branch" />
     <MESSAGE value="refactor" />
     <MESSAGE value="feat: Added new key for MovieSchema" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Added new key for MovieSchema" />
+    <MESSAGE value="refactor: Code" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: Code" />
   </component>
 </project>

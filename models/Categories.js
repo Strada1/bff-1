@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('../db');
 
-const CategorySchema = new mongoose.Schema({ // определяем схему
+const CategorySchema = new mongoose.Schema({
   title: String,
 });
 
