@@ -23,7 +23,25 @@ router.post(PATHS.MOVIES, async (req, res) => {
     return res.status(500).send(error);
   }
 });
-// router.put();
-// router.delete();
+
+router.put('/movies/:movieId', (req, res) => {
+  try {
+    const movieId = req.params['movieId'];
+    const movie = req.body;
+    return req.status(200).send('movie changed');
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+router.delete('/movies/:movieId', (req, res) => {
+  try {
+    const movieId = req.params['movieId'];
+    console.log(movieId);
+    return res.status(200).send('movie deleted');
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
 
 module.exports = router;

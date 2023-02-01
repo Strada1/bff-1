@@ -2,10 +2,6 @@ const PATHS = {
   HOME: '/',
   MOVIES: '/movies',
   CATEGORIES: '/categories',
-  SCHEMA: {
-    MOVIES: '/schema/movies',
-    CATEGORIES: '/schema/categories',
-  },
 };
 
 const INFO_MSG = {
