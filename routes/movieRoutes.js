@@ -18,4 +18,15 @@ const CreateMovie = app.post('/movies', async (req, res) => {
     }
   });
 
-  module.exports = CreateMovie;
+  // // Роут на удаление
+  const DeleteMovie = app.delete('/movies/:movieId', async (req, res) => {
+
+  });
+
+
+  //   // Роут на изменение
+    const EditMovie = app.post('/edit/:movieId', async (req, res) => {
+
+    });
+
+  module.exports = {CreateMovie, DeleteMovie, EditMovie};
