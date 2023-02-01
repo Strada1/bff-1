@@ -11,6 +11,7 @@ const MovieSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  movie: String,
   duration: Number,
   director: String,
 });
