@@ -8,6 +8,7 @@ const MovieSchema = new mongoose.Schema({
   category: { type: ObjectId, ref: "Category" },
   duration: Number,
   director: String,
+  comment: "",
 });
 
 const MovieModel = mongoose.model("Movie", MovieSchema);

@@ -8,7 +8,7 @@ const getAllMovies = app.get("/movies", async (req, res) => {
 
     return res.status(201).send(movies);
   } catch (e) {
-    return res.status(500).send("error " + e);
+    return res.status(500).send(e);
   }
 });
 
@@ -18,19 +18,65 @@ const createMovie = app.post("/movies", async (req, res) => {
       title: req.body.title,
       year: req.body.year,
       rating: req.body.rating,
-      category: req.body.category,
+      // category: req.body.category,
       duration: req.body.duration,
       director: req.body.director,
     });
 
     return res.status(201).send("movie created");
   } catch (e) {
-    return res.status(500).send("error " + e);
+    return res.status(500).send(e);
   }
 });
 
-const deleteMovie = app.delete("/movies/:movieId", async (req, res) => {});
+const deleteMovie = app.delete("/movies/:movieId", async (req, res) => {
+  try {
+    await MovieModel.findByIdAndDelete({ _id: req.params.movieId });
 
-const editMovie = app.put("/movies/:movieId", async (req, res) => {});
+    return res.status(200).send("movie deleted");
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+});
 
-module.exports = { createMovie, getAllMovies, deleteMovie, editMovie };
+const editMovie = app.put("/movies/:movieId", async (req, res) => {
+  const title = { title: "terminator 3" };
+  try {
+    let updateMovie = await MovieModel.findByIdAndUpdate(
+      { _id: req.params.movieId },
+      title,
+      {
+        new: true,
+      }
+    );
+
+    return res.status(200).send(updateMovie);
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+});
+
+const addedComent = app.put("/movies/comment/:movieId", async (req, res) => {
+  const comment = { comment: "First comment" };
+  try {
+    let updateMovie = await MovieModel.findOneAndUpdate(
+      { _id: req.params.movieId },
+      comment,
+      {
+        new: true,
+      }
+    );
+
+    return res.status(200).send(updateMovie);
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+});
+
+module.exports = {
+  createMovie,
+  getAllMovies,
+  deleteMovie,
+  editMovie,
+  addedComent,
+};
