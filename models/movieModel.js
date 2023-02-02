@@ -7,6 +7,7 @@ const MovieSchema = new mongoose.Schema({
     year: Number,
     duration: Number,
     director: String,
+    comments: Array,
   });
 
   // создаем модель по схеме
