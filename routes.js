@@ -5,6 +5,7 @@ const addRoutes = (app) => {
         .post(async (req, res) => {
             try {
                 await Movie.create(req.body);
+                console.log(req);
                 return res.status(201).send('movie created');
             } catch (err) {
                 return res.status(401).send(err);
@@ -28,23 +29,34 @@ const addRoutes = (app) => {
         }
     });
 
-    app.route('/movies/:movieId')
+
+    app.route('/movies/:id')
         .put(async (req, res) => {
             try {
-
+               await Movie.findByIdAndUpdate(req.params.id, req.body);
+               console.log(req.body, req.params["id"]);
+               return res.status(201).send('movie updated');
             } catch (err) {
                 return res.status(400).send(err.message)
             }
         })
         .delete(async (req, res) => {
             try {
-
+                await Movie.findByIdAndDelete(req.params.id);
+                return res.status(201).send('movie deleted');
             } catch (err) {
                 return res.status(400).send(err.message)
             }
         })
 
+    app.post('/movies/:id/comments', async (req, res) => {
+        try {
 
+        } catch (err) {
+
+        }
+
+    })
 }
 
 module.exports = {
