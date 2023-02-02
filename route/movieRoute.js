@@ -1,10 +1,16 @@
-const MovieModel = require("../models/movie");
 const express = require("express");
 const app = express();
+const {
+  allMovies,
+  moviesCreate,
+  moviesDelete,
+  editMovies,
+  addedComment,
+} = require("../services/movieServices");
 
 const getAllMovies = app.get("/movies", async (req, res) => {
   try {
-    const movies = await MovieModel.find();
+    const movies = await allMovies();
 
     return res.status(201).send(movies);
   } catch (e) {
@@ -14,14 +20,7 @@ const getAllMovies = app.get("/movies", async (req, res) => {
 
 const createMovie = app.post("/movies", async (req, res) => {
   try {
-    await MovieModel.create({
-      title: req.body.title,
-      year: req.body.year,
-      rating: req.body.rating,
-      // category: req.body.category,
-      duration: req.body.duration,
-      director: req.body.director,
-    });
+    await moviesCreate(req);
 
     return res.status(201).send("movie created");
   } catch (e) {
@@ -31,7 +30,7 @@ const createMovie = app.post("/movies", async (req, res) => {
 
 const deleteMovie = app.delete("/movies/:movieId", async (req, res) => {
   try {
-    await MovieModel.findByIdAndDelete({ _id: req.params.movieId });
+    await moviesDelete(req.params.movieId);
 
     return res.status(200).send("movie deleted");
   } catch (e) {
@@ -40,15 +39,8 @@ const deleteMovie = app.delete("/movies/:movieId", async (req, res) => {
 });
 
 const editMovie = app.put("/movies/:movieId", async (req, res) => {
-  const title = { title: "terminator 3" };
   try {
-    let updateMovie = await MovieModel.findByIdAndUpdate(
-      { _id: req.params.movieId },
-      title,
-      {
-        new: true,
-      }
-    );
+    let updateMovie = await editMovies(req);
 
     return res.status(200).send(updateMovie);
   } catch (e) {
@@ -57,15 +49,8 @@ const editMovie = app.put("/movies/:movieId", async (req, res) => {
 });
 
 const addedComent = app.put("/movies/comment/:movieId", async (req, res) => {
-  const comment = { comment: "First comment" };
   try {
-    let updateMovie = await MovieModel.findOneAndUpdate(
-      { _id: req.params.movieId },
-      comment,
-      {
-        new: true,
-      }
-    );
+    let updateMovie = await addedComment(req);
 
     return res.status(200).send(updateMovie);
   } catch (e) {
