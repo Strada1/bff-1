@@ -1,5 +1,5 @@
 const url = 'mongodb://localhost:27017/main';
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const TrackSchema = new mongoose.Schema({
   title: String,
