@@ -9,8 +9,7 @@ const moviesSchema = new mongoose.Schema({
     ref: 'Categories',
   },
   year: Number,
-  duration: Number,
-  director: String,
+  comments: [String],
 });
 const Movies = mongoose.model('Movies', moviesSchema);
 module.exports = Movies;

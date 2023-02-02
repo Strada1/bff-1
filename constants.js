@@ -1,7 +1,17 @@
 const PATHS = {
   HOME: '/',
-  MOVIES: '/movies',
-  CATEGORIES: '/categories',
+  MOVIES: {
+    ALL: '/movies',
+    BY_ID: '/movies/:movieId',
+  },
+  CATEGORIES: {
+    ALL: '/categories',
+    BY_ID: '/categories/:categoryId',
+  },
+  COMMENTS: {
+    ALL: '/movies/:movieId/comments',
+    BY_ID: '/movies/:movieId/comments/:commentId',
+  },
 };
 
 const INFO_MSG = {

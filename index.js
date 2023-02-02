@@ -6,12 +6,14 @@ const app = express();
 
 const homeRoute = require('./routers/home');
 const moviesRoute = require('./routers/movies');
+const commentsRoute = require('./routers/comments');
 const categoriesRoute = require('./routers/categories');
 
 app.use(express.json());
 app.use(cors(CORS_OPTIONS));
 app.use(homeRoute);
 app.use(moviesRoute);
+app.use(commentsRoute);
 app.use(categoriesRoute);
 
 app.listen(SERVER.PORT, () => {

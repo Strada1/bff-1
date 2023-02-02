@@ -4,7 +4,7 @@ const Movies = require('../models/Movies');
 
 const router = Router();
 
-router.get(PATHS.MOVIES, async (req, res) => {
+router.get(PATHS.MOVIES.ALL, async (req, res) => {
   try {
     const allMovies = await Movies.find({});
     return res.status(200).json(allMovies);
@@ -13,7 +13,7 @@ router.get(PATHS.MOVIES, async (req, res) => {
   }
 });
 
-router.post(PATHS.MOVIES, async (req, res) => {
+router.post(PATHS.MOVIES.ALL, async (req, res) => {
   try {
     if (!req.body) {
       return req.status(400).send('wrong JSON');
@@ -25,7 +25,7 @@ router.post(PATHS.MOVIES, async (req, res) => {
   }
 });
 
-router.put('/movies/:movieId', async (req, res) => {
+router.put(PATHS.MOVIES.BY_ID, async (req, res) => {
   try {
     if (!req.body) {
       return res.status(400).send('wrong request body!');
@@ -39,7 +39,7 @@ router.put('/movies/:movieId', async (req, res) => {
   }
 });
 
-router.delete('/movies/:movieId', async (req, res) => {
+router.delete(PATHS.MOVIES.BY_ID, async (req, res) => {
   try {
     if (!req.body) {
       return res.status(400).send('wrong request body!');

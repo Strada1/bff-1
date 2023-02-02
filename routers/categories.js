@@ -15,7 +15,7 @@ router.get(PATHS.CATEGORIES, async (req, res) => {
 router.post(PATHS.CATEGORIES, async (req, res) => {
   try {
     if (!req.body) {
-      return req.status(400).send('wrong JSON');
+      return req.status(400).send('wrong request body');
     }
     await Categories.create(req.body);
     return res.status(201).send('category added');
@@ -24,7 +24,7 @@ router.post(PATHS.CATEGORIES, async (req, res) => {
   }
 });
 
-router.put('/categories/:categoryId', async (req, res) => {
+router.put(PATHS.CATEGORIES.BY_ID, async (req, res) => {
   try {
     if (!req.body) {
       return res.status(400).send('wrong request body!');
@@ -37,6 +37,14 @@ router.put('/categories/:categoryId', async (req, res) => {
     res.status(500).send(error);
   }
 });
-// router.delete();
+router.delete(PATHS.CATEGORIES.BY_ID, async (req, res) => {
+  try {
+    const categoryId = req.params['categoryId'];
+    await Categories.findByIdAndDelete(categoryId);
+    return res.status(201).send('category deleted!');
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 module.exports = router;
