@@ -8,6 +8,7 @@ const MovieSchema = new Schema({
   director: String,
   rating: Number,
   category: { type: 'ObjectId', ref: 'Category' },
+  comments: [{ body: String, date: Date }],
 });
 
 const Movie = model('Movie', MovieSchema);
