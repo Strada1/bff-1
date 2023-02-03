@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-const CategoryModel = require('../models/categoryModel');
+const { createCategory } = require('../services/categoryService');
 
-const CreateCategory = app.post('/category', async (req, res) => {
+const AddCategory = app.post('/category', async (req, res) => {
   try {
-    const category = await CategoryModel.create({
+    const category = await createCategory({
       title: req.body.title,
     });
     return res.status(201).send('category created');
@@ -14,5 +14,4 @@ const CreateCategory = app.post('/category', async (req, res) => {
   }
 });
 
-
-module.exports = CreateCategory;
+module.exports = AddCategory;
