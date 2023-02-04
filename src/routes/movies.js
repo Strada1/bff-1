@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const MovieSchema = require("../models/movie");
-const CommentScheme = require("../models/comments");
+const {
+  editComments,
+  deleteComments,
+  addComments,
+} = require("../services/comments");
+const { createMovie, editMovie, deleteMovie } = require("../services/movie");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,15 +19,9 @@ router.get("/", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   try {
-    const { title, year, rating, category } = req.body;
+    const addedMovie = await createMovie(req.body);
 
-    const createdMovie = await MovieSchema.create({
-      title,
-      year,
-      rating,
-      category,
-    });
-    return res.status(201).send(createdMovie);
+    return res.status(201).send(addedMovie);
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -30,15 +29,7 @@ router.post("/add", async (req, res) => {
 
 router.put("/edit/:id", async (req, res) => {
   try {
-    const { title, year, rating, category } = req.body;
-    const { id } = req.params;
-
-    const updatedMovie = await MovieSchema.findByIdAndUpdate(id, {
-      title,
-      year,
-      rating,
-      category,
-    });
+    const updatedMovie = await editMovie(req);
     return res.status(201).send(updatedMovie);
   } catch (error) {
     return res.status(500).send(error);
@@ -47,20 +38,7 @@ router.put("/edit/:id", async (req, res) => {
 
 router.put("/add_comments/:id/", async (req, res) => {
   try {
-    const { name, like, dislike, text } = req.body;
-    const { id } = req.params;
-
-    const updatedMovie = await CommentScheme.create({
-      name,
-      like,
-      dislike,
-      text,
-    });
-
-    const currentMovie = await MovieSchema.findByIdAndUpdate(id, {
-      $push: { comments: updatedMovie._id },
-    });
-
+    const currentMovie = await addComments(req);
     return res.status(201).send(currentMovie);
   } catch (error) {
     return res.status(500).send(error);
@@ -69,12 +47,7 @@ router.put("/add_comments/:id/", async (req, res) => {
 
 router.delete("/delete_comments/:id/comments/:commentId", async (req, res) => {
   try {
-    const { id, commentId } = req.params;
-
-    const currentMovie = await MovieSchema.findByIdAndUpdate(id, {
-      $pull: { comments: commentId },
-    });
-
+    const currentMovie = await deleteComments(req.params);
     return res.status(201).send(currentMovie);
   } catch (error) {
     return res.status(500).send(error);
@@ -83,16 +56,7 @@ router.delete("/delete_comments/:id/comments/:commentId", async (req, res) => {
 
 router.put("/edit_comments/:commentId", async (req, res) => {
   try {
-    const { commentId } = req.params;
-    const { text, name, like, dislike } = req.body;
-
-    const currentComment = await CommentScheme.findByIdAndUpdate(commentId, {
-      text,
-      name,
-      like,
-      dislike,
-    });
-
+    const currentComment = await editComments(req);
     return res.status(201).send(currentComment);
   } catch (error) {
     return res.status(500).send(error);
@@ -101,9 +65,7 @@ router.put("/edit_comments/:commentId", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const updatedMovie = await MovieSchema.findByIdAndDelete(id);
+    const updatedMovie = await deleteMovie(req.params);
     return res.status(200).send(updatedMovie);
   } catch (error) {
     return res.status(500).send(error);
