@@ -9,6 +9,7 @@ const moviesSchema = new mongoose.Schema({
     ref: 'Categories',
   },
   year: Number,
+  duration: Number,
   comments: [String],
 });
 const Movies = mongoose.model('Movies', moviesSchema);
