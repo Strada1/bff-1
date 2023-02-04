@@ -15,9 +15,7 @@ router.get(PATHS.MOVIES.ALL, async (req, res) => {
 
 router.post(PATHS.MOVIES.ALL, async (req, res) => {
   try {
-    if (!req.body) {
-      return req.status(400).send('wrong request body');
-    }
+    if (!req.body) return req.status(400).send('wrong request body');
     await addMovie(req.body);
     return res.status(201).send('movie created');
   } catch (error) {
@@ -27,9 +25,8 @@ router.post(PATHS.MOVIES.ALL, async (req, res) => {
 
 router.put(PATHS.MOVIES.BY_ID, async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).send('wrong request body!');
-    }
+    if (!req.body) return res.status(400).send('wrong request body!');
+    if (!req.params['movieId']) return res.status(400).send('wrong request params');
     await updateMovie(req.params['movieId'], req.body);
     return res.status(201).send('movie updated');
   } catch (error) {
@@ -39,9 +36,7 @@ router.put(PATHS.MOVIES.BY_ID, async (req, res) => {
 
 router.delete(PATHS.MOVIES.BY_ID, async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).send('wrong request body!');
-    }
+    if (!req.params['movieId']) return res.status(400).send('wrong request params');
     await deleteMovie(req.params['movieId']);
     return res.status(201).send('movie deleted');
   } catch (error) {

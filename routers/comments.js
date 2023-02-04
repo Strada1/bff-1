@@ -2,8 +2,6 @@ const {Router} = require('express');
 const {PATHS} = require('../constants');
 const {getAllcomments, addComment, updateComment, deleteComment} = require('../service/db/commentsService');
 
-const Movies = require('../models/Movies');
-
 const router = Router();
 
 router.get(PATHS.COMMENTS.ALL, async (req, res) => {
@@ -17,9 +15,7 @@ router.get(PATHS.COMMENTS.ALL, async (req, res) => {
 
 router.post(PATHS.COMMENTS.ALL, async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).send('wrong request body');
-    }
+    if (!req.body) return res.status(400).send('wrong request body');
     await addComment(req.params['movieId'], req.body.comment);
     res.status(201).send('comment added');
   } catch (error) {
