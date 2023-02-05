@@ -10,7 +10,7 @@ const addMovie = async (movie) => {
 };
 
 const updateMovie = async (movieId, movie) => {
-  await Movies.findByIdAndUpdate({ _id: movieId }, movie);
+  await Movies.findByIdAndUpdate(movieId, movie);
 };
 const deleteMovie = async (movieId) => {
   await Movies.findByIdAndDelete(movieId);
@@ -20,5 +20,5 @@ module.exports = {
   getAllMovies,
   addMovie,
   updateMovie,
-  deleteMovie
+  deleteMovie,
 };

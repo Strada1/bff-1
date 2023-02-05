@@ -10,7 +10,7 @@ const addCategory = async (category) => {
 };
 
 const updateCategory = async (categoryId, category) => {
-  await Categories.findByIdAndUpdate({_id: categoryId}, category);
+  await Categories.findByIdAndUpdate(categoryId, category);
 };
 const deleteCategory = async (categoryId) => {
   await Categories.findByIdAndDelete(categoryId);

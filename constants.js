@@ -12,6 +12,10 @@ const PATHS = {
     ALL: '/movies/:movieId/comments',
     BY_ID: '/movies/:movieId/comments/:commentId',
   },
+  DIRECTORS: {
+    ALL: '/directors',
+    BY_ID: '/directors/:directorId',
+  },
 };
 
 const INFO_MSG = {

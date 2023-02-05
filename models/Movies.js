@@ -8,6 +8,10 @@ const moviesSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Categories',
   },
+  director: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Directors',
+  },
   year: Number,
   duration: Number,
   comments: [String],
