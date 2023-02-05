@@ -36,7 +36,7 @@ export function createMovie({
 
 export async function addComment(
   movieId: string | Types.ObjectId,
-  commentId: Types.ObjectId
+  commentId: string | Types.ObjectId
 ) {
   const updatedMovie = await Movie.findByIdAndUpdate(
     { _id: movieId },
