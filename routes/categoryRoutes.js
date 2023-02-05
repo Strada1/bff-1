@@ -1,8 +1,29 @@
 const express = require('express');
-const app = express();
-const { createCategory } = require('../services/categoryService');
+const router = express.Router();
+const { findAllCategories, createCategory, findItemById, findAndDelete, findAndUpdate } = require('../services/categoryService');
 
-const AddCategory = app.post('/category', async (req, res) => {
+
+router.get('/', async (req, res) => {
+  try {
+    const categories = await findAllCategories();
+    return res.status(201).send(categories);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+router.get('/:categoryId', async (req, res) => {
+  const id = req.params.categoryId;
+  try {
+    const category = await findItemById(id);
+    return res.status(201).send(category);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+
+router.post('/', async (req, res) => {
   try {
     const category = await createCategory({
       title: req.body.title,
@@ -14,4 +35,29 @@ const AddCategory = app.post('/category', async (req, res) => {
   }
 });
 
-module.exports = AddCategory;
+router.delete('/:categoryId', async (req, res) => {
+  const id = req.params.categoryId;
+  try {
+    const category = await findAndDelete(id);
+    return res.status(201).send('category deleted');
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+router.put('/:categoryId/edit', async (req, res) => {
+  const id = req.params.categoryId;
+  try {
+    const category = await findAndUpdate(id,
+      {
+        title: req.body.title,
+      },
+      { new: true });
+    return res.status(201).send(category);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+
+module.exports = router;

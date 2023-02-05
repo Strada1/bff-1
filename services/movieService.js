@@ -1,11 +1,11 @@
 const MovieModel = require('../models/movieModel');
 
-const findItem = () => { 
+const findAllMovies = () => { 
 	return MovieModel.find();
 }
 
-const createMovie = ({ title, category, year, duration, director, comments }) => { 
-	return MovieModel.create({ title, category, year, duration, director, comments }); 
+const createMovie = ({ title, categoryId, year, duration, directorId }) => { 
+	return MovieModel.create({ title, categoryId, year, duration, directorId }); 
 }
 
 const findAndDelete = (id) => { 
@@ -21,4 +21,5 @@ const findItemById = (id) => {
 	return MovieModel.findById(id);
 }
 
-module.exports = { findItem, createMovie, findAndDelete, findAndUpdate, findItemById };
+
+module.exports = { findAllMovies, createMovie, findAndDelete, findAndUpdate, findItemById };
