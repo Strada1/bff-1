@@ -14,14 +14,14 @@ const showMovies = app.get('/movies', async (req, res) => {
 const createMovie = app.post("/movies", async (req, res) => {
   try {
     if (!req.body) return res.status(400).send('Movie not created!');
-    const movie = await addMovie(req.body);
+    await addMovie(req.body);
     return res.status(201).send('Movie created');
   } catch (e) {
     return res.status(500).send(e.message);
   }
 })
 
-const deleteMovie = app.delete('movies/:movieId', async (req, res) => {
+const deleteMovie = app.delete('/movies/:movieId', async (req, res) => {
   try {
     if (!req.body && !req.params.movieId) return res.status(400).send('Movie not deleted!');
     const id = req.params.movieId;
@@ -32,7 +32,7 @@ const deleteMovie = app.delete('movies/:movieId', async (req, res) => {
   }
 })
 
-const changeMovie = app.put('movies/:movieId', async (req, res) => {
+const changeMovie = app.put('/movies/:movieId', async (req, res) => {
   try {
     if (!req.body && req.params.movieId) return res.status(400).send('Movie not change!');
     const id = req.params.movieId;

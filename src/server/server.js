@@ -4,7 +4,7 @@ const cors = require('cors');
 const connectDB = require("./connectDB");
 const { createCategory, deleteCategory, changeCategory, showCategories } = require("./routes/categories");
 const { createMovie, showMovies, changeMovie, deleteMovie } = require("./routes/movies");
-const { createComment } = require('./routes/comments')
+const { createComment, showComments, deleteComment, changeComment } = require('./routes/comments')
 const { showDirector, createDirector, deleteDirector, changeDirector } = require("./routes/director");
 const port = 3000;
 
@@ -30,6 +30,9 @@ app.use(changeMovie)
 app.use(deleteMovie)
 
 app.use(createComment)
+app.use(showComments)
+app.use(deleteComment)
+app.use(changeComment)
 
 app.use(showDirector)
 app.use(createDirector)
