@@ -2,9 +2,10 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const connectDB = require("./connectDB");
-const { createCategory } = require("./routes/categories");
+const { createCategory, deleteCategory, changeCategory, showCategories } = require("./routes/categories");
 const { createMovie, showMovies, changeMovie, deleteMovie } = require("./routes/movies");
 const { createComment } = require('./routes/comments')
+const { showDirector, createDirector, deleteDirector, changeDirector } = require("./routes/director");
 const port = 3000;
 
 connectDB();
@@ -19,11 +20,22 @@ app.use(cors({
 }));
 
 app.use(createCategory)
+app.use(changeCategory)
+app.use(deleteCategory)
+app.use(showCategories)
+
 app.use(createMovie)
 app.use(showMovies)
 app.use(changeMovie)
 app.use(deleteMovie)
+
 app.use(createComment)
+
+app.use(showDirector)
+app.use(createDirector)
+app.use(changeDirector)
+app.use(deleteDirector)
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
