@@ -4,7 +4,7 @@ const cors = require('cors');
 const connectDB = require("./connectDB");
 const { createCategory } = require("./routes/categories");
 const { createMovie, showMovies, changeMovie, deleteMovie } = require("./routes/movies");
-const { addComment } = require('./routes/comments')
+const { createComment } = require('./routes/comments')
 const port = 3000;
 
 connectDB();
@@ -23,7 +23,7 @@ app.use(createMovie)
 app.use(showMovies)
 app.use(changeMovie)
 app.use(deleteMovie)
-app.use(addComment)
+app.use(createComment)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

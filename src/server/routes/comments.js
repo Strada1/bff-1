@@ -1,14 +1,14 @@
-const CommentModel = require('../models/comment')
 const express = require("express")
 const app = express()
 
-const addComment = app.get('/comments', async (req, res) => {
+const createComment = app.post('/comments', async (req, res) => {
   try {
-    await CommentModel.create(req.body)
+    if (!req.body) return res.status(400).send('Comment not created!');
+    await createComment(req.body)
     return res.status(200).json('Comment added.');
   } catch (e) {
     return res.status(500).send(e.message);
   }
 })
 
-module.exports = { addComment };
+module.exports = { createComment };
