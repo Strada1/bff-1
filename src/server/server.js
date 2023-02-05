@@ -1,8 +1,9 @@
-const url = "mongodb://localhost:27017/strada";
+require('dotenv').config()
+const url = process.env.MONGO_URL ;
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-const port = 3001;
+const port = process.env.NODE_ENV === 'prod' ? process.env.PORT : 3001;
 const cors = require("cors");
 const express = require("express");
 const app = express();
