@@ -1,6 +1,15 @@
-export const config = {
-  serverUrl: '127.0.0.1',
-  port: 3010,
-  mongoUrl: 'mongodb://localhost:27017/main',
-  allowedOrigins: ['127.0.0.1'],
+require('dotenv').config();
+
+interface IConfig {
+  serverUrl: string;
+  port: number;
+  mongoUrl: string;
+  allowedOrigins: string[];
+}
+
+export const config: IConfig = {
+  serverUrl: process.env.SERVER_URL,
+  port: process.env.PORT,
+  mongoUrl: process.env.MONGO_URL,
+  allowedOrigins: process.env.ALLOWED_ORIGINS,
 };

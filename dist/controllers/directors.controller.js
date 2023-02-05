@@ -35,72 +35,69 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMovie = exports.updateMovie = exports.createMovie = exports.getMovie = exports.getMovies = void 0;
+exports.deleteDirector = exports.updateDirector = exports.createDirector = exports.getDirector = exports.getDirectors = void 0;
 const http_status_1 = __importDefault(require("http-status"));
-const moviesService = __importStar(require("../services/movies.service"));
-const helpers_1 = require("../shared/helpers");
-function getMovies(req, res, next) {
+const directorsService = __importStar(require("../services/directors.service"));
+function getDirectors(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { populatedFields } = req.query;
-            const movies = yield moviesService.getMovies((0, helpers_1.convertQueryToArray)(populatedFields));
-            res.status(http_status_1.default.OK).send({ movies });
+            const directors = yield directorsService.getDirectors();
+            res.status(http_status_1.default.OK).send(directors);
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.getMovies = getMovies;
-function getMovie(req, res, next) {
+exports.getDirectors = getDirectors;
+function getDirector(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { movieId } = req.params;
-            const { populatedFields } = req.query;
-            const movie = yield moviesService.getMovie(movieId, (0, helpers_1.convertQueryToArray)(populatedFields));
-            res.status(http_status_1.default.OK).send(movie);
+            const { directorId } = req.params;
+            const director = yield directorsService.getDirector(directorId);
+            res.status(http_status_1.default.OK).send(director);
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.getMovie = getMovie;
-function createMovie(req, res, next) {
+exports.getDirector = getDirector;
+function createDirector(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const createdMovie = yield moviesService.createMovie(req.body);
-            res.status(http_status_1.default.CREATED).send(createdMovie);
+            const createdDirector = yield directorsService.createDirector(req.body);
+            res.status(http_status_1.default.CREATED).send(createdDirector);
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.createMovie = createMovie;
-function updateMovie(req, res, next) {
+exports.createDirector = createDirector;
+function updateDirector(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { movieId } = req.params;
-            const updatedMovie = yield moviesService.updateMovie(movieId, req.body);
-            res.status(http_status_1.default.OK).send(updatedMovie);
+            const { directorId } = req.params;
+            const updatedDirector = yield directorsService.updateDirector(directorId, req.body);
+            res.status(http_status_1.default.OK).send(updatedDirector);
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.updateMovie = updateMovie;
-function deleteMovie(req, res, next) {
+exports.updateDirector = updateDirector;
+function deleteDirector(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { movieId } = req.params;
-            yield moviesService.deleteMovie(movieId);
-            res.status(http_status_1.default.NO_CONTENT).send();
+            const { directorId } = req.params;
+            yield directorsService.deleteDirector(directorId);
+            res.status(http_status_1.default.NO_CONTENT).send({});
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.deleteMovie = deleteMovie;
+exports.deleteDirector = deleteDirector;

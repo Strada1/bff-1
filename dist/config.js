@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
+require('dotenv').config();
 exports.config = {
-    serverUrl: '127.0.0.1',
-    port: 3010,
-    mongoUrl: 'mongodb://localhost:27017/main',
-    allowedOrigins: ['127.0.0.1'],
+    serverUrl: process.env.SERVER_URL,
+    port: process.env.PORT,
+    mongoUrl: process.env.MONGO_URL,
+    allowedOrigins: process.env.ALLOWED_ORIGINS,
 };

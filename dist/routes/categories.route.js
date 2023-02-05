@@ -34,5 +34,6 @@ router
     .post(categoriesController.createCategory);
 router
     .route('/:categoryId')
-    .put(categoriesController.editCategory)
+    .get(categoriesController.getCategory)
+    .put(categoriesController.updateCategory)
     .delete(categoriesController.deleteCategory);

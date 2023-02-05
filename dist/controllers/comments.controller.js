@@ -35,67 +35,70 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMovie = exports.updateMovie = exports.createMovie = exports.getMovie = exports.getMovies = void 0;
+exports.deleteComment = exports.updateComment = exports.createComment = exports.getComment = exports.getComments = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const moviesService = __importStar(require("../services/movies.service"));
-const helpers_1 = require("../shared/helpers");
-function getMovies(req, res, next) {
+const commentsService = __importStar(require("../services/comments.service"));
+function getComments(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { populatedFields } = req.query;
-            const movies = yield moviesService.getMovies((0, helpers_1.convertQueryToArray)(populatedFields));
-            res.status(http_status_1.default.OK).send({ movies });
+            const { movieId } = req.query;
+            const comments = yield commentsService.getComments({
+                movieId,
+            });
+            res.status(http_status_1.default.OK).send({ comments });
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.getMovies = getMovies;
-function getMovie(req, res, next) {
+exports.getComments = getComments;
+function getComment(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { movieId } = req.params;
-            const { populatedFields } = req.query;
-            const movie = yield moviesService.getMovie(movieId, (0, helpers_1.convertQueryToArray)(populatedFields));
-            res.status(http_status_1.default.OK).send(movie);
+            const { commentId } = req.params;
+            const comment = yield commentsService.getComment(commentId);
+            res.status(http_status_1.default.OK).send(comment);
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.getMovie = getMovie;
-function createMovie(req, res, next) {
+exports.getComment = getComment;
+function createComment(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const createdMovie = yield moviesService.createMovie(req.body);
-            res.status(http_status_1.default.CREATED).send(createdMovie);
+            const { movieId } = req.body;
+            const createdComment = yield commentsService.createComment(movieId, req.body);
+            yield moviesService.addComment(movieId, createdComment._id);
+            res.status(http_status_1.default.CREATED).send(createdComment);
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.createMovie = createMovie;
-function updateMovie(req, res, next) {
+exports.createComment = createComment;
+function updateComment(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { movieId } = req.params;
-            const updatedMovie = yield moviesService.updateMovie(movieId, req.body);
-            res.status(http_status_1.default.OK).send(updatedMovie);
+            const { commentId } = req.params;
+            const editedComment = yield commentsService.updateComment(commentId, req.body);
+            res.status(http_status_1.default.OK).send(editedComment);
         }
         catch (error) {
             next(error);
         }
     });
 }
-exports.updateMovie = updateMovie;
-function deleteMovie(req, res, next) {
+exports.updateComment = updateComment;
+function deleteComment(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { movieId } = req.params;
-            yield moviesService.deleteMovie(movieId);
+            const { commentId } = req.params;
+            yield commentsService.deleteComment(commentId);
             res.status(http_status_1.default.NO_CONTENT).send();
         }
         catch (error) {
@@ -103,4 +106,4 @@ function deleteMovie(req, res, next) {
         }
     });
 }
-exports.deleteMovie = deleteMovie;
+exports.deleteComment = deleteComment;

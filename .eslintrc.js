@@ -25,6 +25,9 @@ module.exports = {
     'comma-dangle': 0,
     'consistent-return': 0,
     'import/no-extraneous-dependencies': 0,
+    'implicit-arrow-linebreak': 0,
+    'no-underscore-dangle': 0,
+    'operator-linebreak': 0,
     'import/extensions': [
       'error',
       'ignorePackages',

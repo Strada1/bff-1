@@ -9,5 +9,6 @@ const MovieSchema = new db_1.db.Schema({
     duration: Number,
     director: String,
     comments: [{ type: 'ObjectId', ref: 'Comment' }],
+    __v: { type: Number, select: false },
 });
 exports.Movie = db_1.db.model('Movie', MovieSchema);

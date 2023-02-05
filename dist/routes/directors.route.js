@@ -23,17 +23,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.moviesRoute = void 0;
+exports.directorsRoute = void 0;
 const express_1 = require("express");
-const moviesController = __importStar(require("../controllers/movies.controller"));
+const directorsController = __importStar(require("../controllers/directors.controller"));
 const router = (0, express_1.Router)();
-exports.moviesRoute = router;
+exports.directorsRoute = router;
 router
     .route('/')
-    .get(moviesController.getMovies)
-    .post(moviesController.createMovie);
+    .get(directorsController.getDirectors)
+    .post(directorsController.createDirector);
 router
-    .route('/:movieId')
-    .get(moviesController.getMovie)
-    .put(moviesController.updateMovie)
-    .delete(moviesController.deleteMovie);
+    .route('/:directorId')
+    .get(directorsController.getDirector)
+    .put(directorsController.updateDirector)
+    .delete(directorsController.deleteDirector);

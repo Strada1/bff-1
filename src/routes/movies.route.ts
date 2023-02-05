@@ -10,7 +10,8 @@ router
 
 router
   .route('/:movieId')
-  .put(moviesController.editMovie)
+  .get(moviesController.getMovie)
+  .put(moviesController.updateMovie)
   .delete(moviesController.deleteMovie);
 
 export { router as moviesRoute };

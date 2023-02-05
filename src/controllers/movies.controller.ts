@@ -1,45 +1,84 @@
 import STATUS from 'http-status';
-import { Request, Response } from 'express';
-import { Movie } from '../models/Movie.model';
+import { Request, Response, NextFunction } from 'express';
+import * as moviesService from '../services/movies.service';
+import { convertQueryToArray } from '../shared/helpers';
 
-export async function getMovies(req: Request, res: Response) {
+export async function getMovies(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    res.status(STATUS.OK).send({ movies: [] });
-  } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+    const { populatedFields } = req.query as { populatedFields: string };
+    const movies = await moviesService.getMovies(
+      convertQueryToArray(populatedFields)
+    );
+
+    res.status(STATUS.OK).send({ movies });
+  } catch (error: any) {
+    next(error);
   }
 }
 
-export async function createMovie(req: Request, res: Response) {
+export async function getMovie(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    const { title, category } = req.body;
+    const { movieId } = req.params;
+    const { populatedFields } = req.query as { populatedFields: string };
+    const movie = await moviesService.getMovie(
+      movieId,
+      convertQueryToArray(populatedFields)
+    );
 
-    if (!title || !category) {
-      return res
-        .status(STATUS.BAD_REQUEST)
-        .send({ meta: 'required fields are missing' });
-    }
+    res.status(STATUS.OK).send(movie);
+  } catch (error: any) {
+    next(error);
+  }
+}
 
-    const createdMovie = await Movie.create(req.body);
+export async function createMovie(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const createdMovie = await moviesService.createMovie(req.body);
 
     res.status(STATUS.CREATED).send(createdMovie);
-  } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+  } catch (error: any) {
+    next(error);
   }
 }
 
-export async function editMovie(req: Request, res: Response) {
+export async function updateMovie(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    res.status(STATUS.OK).send({});
-  } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+    const { movieId } = req.params;
+    const updatedMovie = await moviesService.updateMovie(movieId, req.body);
+
+    res.status(STATUS.OK).send(updatedMovie);
+  } catch (error: any) {
+    next(error);
   }
 }
 
-export async function deleteMovie(req: Request, res: Response) {
+export async function deleteMovie(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    res.status(STATUS.NO_CONTENT).send({});
-  } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+    const { movieId } = req.params;
+    await moviesService.deleteMovie(movieId);
+
+    res.status(STATUS.NO_CONTENT).send();
+  } catch (error: any) {
+    next(error);
   }
 }

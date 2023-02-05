@@ -10,7 +10,8 @@ router
 
 router
   .route('/:categoryId')
-  .put(categoriesController.editCategory)
+  .get(categoriesController.getCategory)
+  .put(categoriesController.updateCategory)
   .delete(categoriesController.deleteCategory);
 
 export { router as categoriesRoute };

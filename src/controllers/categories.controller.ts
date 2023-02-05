@@ -1,45 +1,79 @@
 import STATUS from 'http-status';
-import { Request, Response } from 'express';
-import { Category } from '../models/Category.model';
+import { NextFunction, Request, Response } from 'express';
+import * as categoriesService from '../services/categories.service';
 
-export async function getCategories(req: Request, res: Response) {
+export async function getCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    res.status(STATUS.OK).send({ categories: [] });
+    const categories = await categoriesService.getCategories();
+
+    res.status(STATUS.OK).send(categories);
   } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+    next(error);
   }
 }
 
-export async function createCategory(req: Request, res: Response) {
+export async function getCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    const { category } = req.body;
+    const { categoryId } = req.params;
+    const category = await categoriesService.getCategory(categoryId);
 
-    if (!category) {
-      return res
-        .status(STATUS.BAD_REQUEST)
-        .send({ meta: 'required fields are missing' });
-    }
+    res.status(STATUS.OK).send(category);
+  } catch (error) {
+    next(error);
+  }
+}
 
-    const createdCategory = await Category.create({ category });
+export async function createCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const createdCategory = await categoriesService.createCategory(req.body);
 
     res.status(STATUS.CREATED).send(createdCategory);
   } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+    next(error);
   }
 }
 
-export async function editCategory(req: Request, res: Response) {
+export async function updateCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    res.status(STATUS.OK).send({});
-  } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+    const { categoryId } = req.params;
+    const updatedCategory = await categoriesService.updateCategory(
+      categoryId,
+      req.body
+    );
+
+    res.status(STATUS.OK).send(updatedCategory);
+  } catch (error: any) {
+    next(error);
   }
 }
 
-export async function deleteCategory(req: Request, res: Response) {
+export async function deleteCategory(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
-    res.status(STATUS.NO_CONTENT).send({});
-  } catch (error) {
-    res.status(STATUS.INTERNAL_SERVER_ERROR).send({});
+    const { categoryId } = req.params;
+    await categoriesService.deleteCategory(categoryId);
+
+    res.status(STATUS.NO_CONTENT).send();
+  } catch (error: any) {
+    next(error);
   }
 }
