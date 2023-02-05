@@ -34,9 +34,7 @@ export async function updateCategory(
   const category = await Category.findByIdAndUpdate(
     id,
     { title },
-    {
-      new: true,
-    }
+    { new: true }
   );
 
   if (!category) {

@@ -49,9 +49,7 @@ function addComment(movieId, commentId) {
 exports.addComment = addComment;
 function updateMovie(id, { title, category, year, duration, director }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const updatedMovie = yield movies_model_1.Movie.findByIdAndUpdate(id, { title, category, year, duration, director }, {
-            new: true,
-        });
+        const updatedMovie = yield movies_model_1.Movie.findByIdAndUpdate(id, { title, category, year, duration, director }, { new: true });
         if (!updatedMovie) {
             throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
         }

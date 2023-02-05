@@ -39,9 +39,7 @@ function createDirector({ firstName, lastName }) {
 exports.createDirector = createDirector;
 function updateDirector(id, { firstName, lastName }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const director = yield director_model_1.Director.findByIdAndUpdate(id, { firstName, lastName }, {
-            new: true,
-        });
+        const director = yield director_model_1.Director.findByIdAndUpdate(id, { firstName, lastName }, { new: true });
         if (!director) {
             throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Director not found');
         }

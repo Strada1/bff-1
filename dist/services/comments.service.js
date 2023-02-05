@@ -48,9 +48,7 @@ function createComment(id, { text }) {
 exports.createComment = createComment;
 function updateComment(id, { movie, text }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const comment = yield comments_model_1.Comment.findByIdAndUpdate(id, { movie, text }, {
-            new: true,
-        });
+        const comment = yield comments_model_1.Comment.findByIdAndUpdate(id, { movie, text }, { new: true });
         if (!comment) {
             throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Comment not found');
         }

@@ -42,9 +42,7 @@ function createCategory({ title }) {
 exports.createCategory = createCategory;
 function updateCategory(id, { title }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const category = yield categories_model_1.Category.findByIdAndUpdate(id, { title }, {
-            new: true,
-        });
+        const category = yield categories_model_1.Category.findByIdAndUpdate(id, { title }, { new: true });
         if (!category) {
             throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Category not found');
         }

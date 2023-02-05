@@ -36,9 +36,7 @@ export async function updateDirector(
   const director = await Director.findByIdAndUpdate(
     id,
     { firstName, lastName },
-    {
-      new: true,
-    }
+    { new: true }
   );
 
   if (!director) {

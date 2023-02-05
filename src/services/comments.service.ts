@@ -43,9 +43,7 @@ export async function updateComment(
   const comment = await Comment.findByIdAndUpdate(
     id,
     { movie, text },
-    {
-      new: true,
-    }
+    { new: true }
   );
 
   if (!comment) {

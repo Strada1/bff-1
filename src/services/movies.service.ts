@@ -57,9 +57,7 @@ export async function updateMovie(
   const updatedMovie = await Movie.findByIdAndUpdate(
     id,
     { title, category, year, duration, director },
-    {
-      new: true,
-    }
+    { new: true }
   );
 
   if (!updatedMovie) {
