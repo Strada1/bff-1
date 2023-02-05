@@ -13,7 +13,6 @@ const moviesDelete = (req) => {
 };
 
 const editMovies = (req) => {
-  console.log(req);
   return MovieModel.findByIdAndUpdate({ _id: req.params.movieId }, req.body, {
     new: true,
   });
