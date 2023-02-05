@@ -14,7 +14,7 @@ const updateComment = async (commentId, commentBody) => {
   comment.save();
 };
 
-const deleteComment = (commentId) => Schema.Comment.findByIdAndDelete(commentId);
+const deleteComment = ({ commentId }) => Schema.Comment.findByIdAndDelete(commentId);
 
 export default {
   getComment,

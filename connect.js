@@ -1,5 +1,9 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 import { connect } from 'mongoose';
 
-const url = 'mongodb://localhost:27017/main1';
+const url = process.env.MONGO_CONNECTION_STRING;
 
 connect(url, { useNewUrlParser: true, useUnifiedTopology: true });

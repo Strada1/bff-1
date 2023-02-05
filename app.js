@@ -1,3 +1,7 @@
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
 import express, { json } from 'express';
 import cors from 'cors';
 
@@ -5,7 +9,7 @@ import addRoutes from './routes/index.js';
 import './connect.js';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 const allowedOrigins = [''];
 
 app.listen(port, () => {
