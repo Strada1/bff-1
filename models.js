@@ -16,12 +16,18 @@ const CommentSchema = new mongoose.Schema({
 
 const Comment = mongoose.model('Comment', CommentSchema);
 
+const DirectorSchema = new mongoose.Schema({
+    name: String,
+}, {versionKey: false})
+
+const Director = mongoose.model('Director', DirectorSchema);
+
 const MovieSchema = new mongoose.Schema({
     title: String,
     category: {type: 'ObjectId', ref: 'Category'},
     year: Number,
     duration: Number,
-    director: String,
+    director: {type: 'ObjectId', ref: 'Director'},
     comments: [{type: 'ObjectId', ref: 'Comment'}],
 },{versionKey: false});
 
@@ -30,5 +36,6 @@ const Movie = mongoose.model('Movie', MovieSchema);
 module.exports = {
     Movie,
     Category,
-    Comment
+    Comment,
+    Director
 };
