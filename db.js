@@ -1,5 +1,6 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
-const url = "mongodb://localhost:27017/main";
+const url = process.env.MONGO_CONNECT;
 
 function connectDb() {
   mongoose.set("strictQuery", false);

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const connectDb = require("./db");
@@ -22,7 +23,7 @@ const {
   updateDirector,
   deleteDirector,
 } = require("./route/directorRoute");
-const port = 3000;
+const port = process.env.PORT;
 
 const allowedOrigins = ["http://localhost:3000"];
 
