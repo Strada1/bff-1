@@ -1,13 +1,28 @@
 import { Router } from 'express';
 
-import Schema from '../schemas/index.js';
+import movieService from '../services/movieService.js';
+import addCommentsRoutes from './comments.js';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
   try {
-    const movies = await Schema.Movie.find();
+    const movies = await movieService.getMovies();
     return res.status(201).send(movies);
+  } catch {
+    return res.status(500).send('request error');
+  }
+});
+
+router.get('/:movieId', async (req, res) => {
+  const { movieId } = req.params;
+  try {
+    const movie = await movieService
+      .getMovie(movieId)
+      .populate('director')
+      .populate('comments')
+      .populate('category');
+    return res.status(201).send(movie);
   } catch {
     return res.status(500).send('request error');
   }
@@ -15,7 +30,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    await Schema.Movie.create(req.body);
+    await movieService.createMovie(req.body);
     return res.status(201).send('movie created');
   } catch {
     return res.status(500).send('request error');
@@ -25,20 +40,8 @@ router.post('/', async (req, res) => {
 router.put('/:movieId', async (req, res) => {
   const id = req.params.movieId;
   try {
-    await Schema.Movie.findByIdAndUpdate(id, req.body);
+    await movieService.updateMovie(id, req.body);
     return res.status(201).send('movie updated');
-  } catch {
-    return res.status(500).send('request error');
-  }
-});
-
-router.post('/:movieId/comments', async (req, res) => {
-  const id = req.params.movieId;
-  try {
-    const movie = await Schema.Movie.findById(id);
-    movie.comments.push({ body: req.body.comment, date: new Date() });
-    movie.save();
-    return res.status(201).send('comment added');
   } catch {
     return res.status(500).send('request error');
   }
@@ -47,11 +50,13 @@ router.post('/:movieId/comments', async (req, res) => {
 router.delete('/:movieId', async (req, res) => {
   const id = req.params.movieId;
   try {
-    await Schema.Movie.findByIdAndDelete(id);
+    await movieService.deleteMovie(id);
     return res.status(201).send('movie deleted');
   } catch {
     return res.status(500).send('request error');
   }
 });
+
+addCommentsRoutes(router);
 
 export default router;

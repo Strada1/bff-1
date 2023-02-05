@@ -1,13 +1,23 @@
 import { Router } from 'express';
 
-import Schema from '../schemas/index.js';
+import categoryService from '../services/categoryService.js';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
   try {
-    const categories = await Schema.Category.find();
+    const categories = await categoryService.readCategories();
     return res.status(201).send(categories);
+  } catch {
+    return res.status(500).send('request error');
+  }
+});
+
+router.get('/:categoryId', async (req, res) => {
+  const { categoryId } = req.params;
+  try {
+    const category = await categoryService.readCategory(categoryId);
+    return res.status(201).send(category);
   } catch {
     return res.status(500).send('request error');
   }
@@ -15,7 +25,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    await Schema.Category.create(req.body);
+    await categoryService.createCategory(req.body);
     return res.status(201).send('category created');
   } catch {
     return res.status(500).send('request error');
@@ -23,9 +33,9 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:categoryId', async (req, res) => {
-  const id = req.params.categoryId;
+  const { categoryId } = req.params;
   try {
-    await Schema.Category.findByIdAndUpdate(id, req.body);
+    await categoryService.updateCategory(categoryId, req.body);
     return res.status(201).send('category update');
   } catch {
     return res.status(500).send('request error');
@@ -33,9 +43,9 @@ router.put('/:categoryId', async (req, res) => {
 });
 
 router.delete('/:categoryId', async (req, res) => {
-  const id = req.params.categoryId;
+  const { categoryId } = req.params;
   try {
-    await Schema.Category.findByIdAndDelete(id);
+    await categoryService.deleteCategory(categoryId);
     return res.status(201).send('category deleted');
   } catch {
     return res.status(500).send('request error');
