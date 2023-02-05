@@ -14,6 +14,7 @@ const MovieSchema = new mongoose.Schema({
   movie: String,
   duration: Number,
   director: String,
+  comments: Array,
 });
 const MovieModel = mongoose.model('Movie', MovieSchema);
 
