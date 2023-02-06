@@ -1,13 +1,14 @@
-const mongoose = require('../db');
+const {Schema, model} = require('../db');
 
-const commentsSchema = new mongoose.Schema({
+const commentsSchema = new Schema({
   text: String,
   rank: Number,
-  movieId: {
-    type: mongoose.Schema.Types.ObjectId,
+  movie: {
+    type: Schema.Types.ObjectId,
     ref: 'Movies',
+    required: true,
   },
 });
-const Comments = mongoose.model('Comments', commentsSchema);
+const Comments = model('Comments', commentsSchema);
 
 module.exports = Comments;

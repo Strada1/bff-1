@@ -1,17 +1,26 @@
 const Comments = require('../../models/Comments');
+const Movies = require('../../models/Movies');
 
 const getAllcomments = async (movieId) => {
   const comments = await Comments.find({
-    movieId: movieId,
+    movie: movieId,
   }).lean();
   return comments;
 };
 
 const addComment = async (movieId, comment) => {
-  await Comments.create({...comment, movieId});
+  const commentId = await (
+    await Comments.create({
+      ...comment,
+      movie: movieId,
+    })
+  )._id;
+  const movie = await Movies.findById(movieId);
+  movie.comments.push(commentId);
+  await movie.save();
 };
 
-const updateComment = async (commentId, comment) => {};
+const updateComment = async (movieId, commentId, comment) => {};
 const deleteComment = async (commentId) => {};
 
 module.exports = {

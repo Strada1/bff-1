@@ -1,21 +1,27 @@
-const mongoose = require('../db');
+const {Schema, model} = require('../db');
 
-const moviesSchema = new mongoose.Schema({
+const moviesSchema = new Schema({
   title: {
     type: String,
     required: true,
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Categories',
   },
   director: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Directors',
   },
   year: Number,
   duration: Number,
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Comments',
+    },
+  ],
 });
-const Movies = mongoose.model('Movies', moviesSchema);
+const Movies = model('Movies', moviesSchema);
 
 module.exports = Movies;

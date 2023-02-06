@@ -5,7 +5,7 @@ const getAllMovies = async () => {
   return allMovies;
 };
 const getMovieById = async (movieId) => {
-  const movie = await Movies.findById(movieId).populate('director').populate('category').lean();
+  const movie = await Movies.findById(movieId).populate('director').populate('comments').populate('category').lean();
   return movie;
 };
 const addMovie = async (movie) => {
