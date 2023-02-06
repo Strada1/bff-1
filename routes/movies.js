@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import movieService from '../services/movieService.js';
 import addCommentsRoutes from './comments.js';
+import validate from '../middleware/validate.js';
 
 const router = Router();
 
@@ -28,7 +29,7 @@ router.get('/:movieId', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validate.createMovieValidate(['rating']), async (req, res) => {
   try {
     await movieService.createMovie(req.body);
     return res.status(201).send('movie created');
