@@ -3,25 +3,19 @@ const {createMovie, getMovies, updateMovie, deleteMovie, getMovieById} = require
 const {createCategory, updateCategory, deleteCategory, getCategoryById} = require("./services/categoryService");
 const {createComment, updateComment, getCommentById} = require("./services/commentsService");
 const {createDirector, updateDirector, deleteDirector, getDirectorById} = require("./services/directorService");
+const {validate} = require("./middleware");
+
 
 const addRoutes = (app) => {
-    app.route('/movies')
-        .post(async (req, res) => {
-            try {
-                await createMovie(req.body);
-                return res.status(201).send('movie created');
-            } catch (err) {
-                return res.status(401).send(err);
-            }
-        })
-        .get(async (req, res) => {
-                try {
-                   const moviesList = await getMovies(req.body);
-                    return res.status(201).send(moviesList);
-                } catch (err) {
-                    return res.status(401).send(err);
-                }
-            });
+    app.post('/movies', validate('duration'), async (req, res) => {
+        try {
+            await createMovie(req.body);
+            return res.status(201).send('movie created');
+        } catch (err) {
+            return res.status(401).send(err);
+        }
+    })
+
 
     app.post('/categories', async (req, res) => {
         try {
