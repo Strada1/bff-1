@@ -8,8 +8,8 @@ export interface IComment {
 }
 
 const CommentSchema = new db.Schema<IComment>({
-  movie: { type: 'ObjectId', ref: 'Movie' },
-  text: String,
+  movie: { type: 'ObjectId', ref: 'Movie', required: true },
+  text: { type: 'String', required: true },
   __v: { type: Number, select: false },
 });
 

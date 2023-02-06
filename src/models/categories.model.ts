@@ -6,7 +6,7 @@ export interface ICategory {
 }
 
 const CategorySchema = new db.Schema<ICategory>({
-  title: String,
+  title: { type: 'String', required: true },
   __v: { type: Number, select: false },
 });
 

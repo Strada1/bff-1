@@ -12,8 +12,8 @@ export interface IDirector {
 export type IDirectorOptional = Optional<IDirector, 'firstName' | 'lastName'>;
 
 const DirectorSchema = new db.Schema<IDirector>({
-  firstName: String,
-  lastName: String,
+  firstName: { type: 'String', required: true },
+  lastName: { type: 'String', required: true },
   __v: { type: Number, select: false },
 });
 

@@ -7,7 +7,7 @@ export interface IMovie {
   category: Types.ObjectId;
   year?: Number;
   duration?: Number;
-  director?: String;
+  director?: Types.ObjectId;
   comments?: [Types.ObjectId];
   readonly __v?: number;
 }
@@ -15,11 +15,11 @@ export interface IMovie {
 export type IMovieOptional = Optional<IMovie, 'title' | 'category'>;
 
 const MovieSchema = new db.Schema<IMovie>({
-  title: String,
-  category: { type: 'ObjectId', ref: 'Category' },
+  title: { type: 'String', required: true },
+  category: { type: 'ObjectId', ref: 'Category', required: true },
   year: Number,
   duration: Number,
-  director: String,
+  director: [{ type: 'ObjectId', ref: 'Director' }],
   comments: [{ type: 'ObjectId', ref: 'Comment' }],
   __v: { type: Number, select: false },
 });

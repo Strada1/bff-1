@@ -25,15 +25,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.moviesRoute = void 0;
 const express_1 = require("express");
+const express_validator_1 = require("express-validator");
 const moviesController = __importStar(require("../controllers/movies.controller"));
+const validate_1 = require("../middlewares/validate");
+const const_1 = require("../shared/const");
 const router = (0, express_1.Router)();
 exports.moviesRoute = router;
 router
     .route('/')
     .get(moviesController.getMovies)
-    .post(moviesController.createMovie);
+    .post((0, validate_1.validate)([
+    (0, express_validator_1.body)('title').notEmpty(),
+    (0, express_validator_1.body)('category').isLength(const_1.OBJECT_ID_LENGTH_RANGE),
+    (0, express_validator_1.body)('director').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE),
+]), moviesController.createMovie);
 router
     .route('/:movieId')
+    .all((0, validate_1.validate)([(0, express_validator_1.param)('movieId').isLength(const_1.OBJECT_ID_LENGTH_RANGE)]))
     .get(moviesController.getMovie)
-    .put(moviesController.updateMovie)
+    .put((0, validate_1.validate)([
+    (0, express_validator_1.body)('category').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE),
+    (0, express_validator_1.body)('director').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE),
+]), moviesController.updateMovie)
     .delete(moviesController.deleteMovie);

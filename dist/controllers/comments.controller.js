@@ -98,7 +98,8 @@ function deleteComment(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { commentId } = req.params;
-            yield commentsService.deleteComment(commentId);
+            const deletedComment = yield commentsService.deleteComment(commentId);
+            yield moviesService.deleteComment(deletedComment.movie, deletedComment._id);
             res.status(http_status_1.default.NO_CONTENT).send();
         }
         catch (error) {

@@ -25,15 +25,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commentsRoute = void 0;
 const express_1 = require("express");
+const express_validator_1 = require("express-validator");
 const commentsController = __importStar(require("../controllers/comments.controller"));
+const validate_1 = require("../middlewares/validate");
+const const_1 = require("../shared/const");
 const router = (0, express_1.Router)();
 exports.commentsRoute = router;
 router
     .route('/')
-    .get(commentsController.getComments)
-    .post(commentsController.createComment);
+    .get((0, validate_1.validate)([(0, express_validator_1.query)('movieId').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE)]), commentsController.getComments)
+    .post((0, validate_1.validate)([
+    (0, express_validator_1.body)('movieId').isLength(const_1.OBJECT_ID_LENGTH_RANGE),
+    (0, express_validator_1.body)('text').notEmpty(),
+]), commentsController.createComment);
 router
     .route('/:commentId')
+    .all((0, validate_1.validate)([(0, express_validator_1.param)('commentId').isLength(const_1.OBJECT_ID_LENGTH_RANGE)]))
     .get(commentsController.getComment)
     .put(commentsController.updateComment)
     .delete(commentsController.deleteComment);

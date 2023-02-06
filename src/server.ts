@@ -1,8 +1,9 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import cors from 'cors';
-import STATUS from 'http-status';
 import routes from './routes';
 import { config } from './config';
+import { errorLog } from './middlewares/errorLog';
+import { errorHandler } from './middlewares/errorHandler';
 
 const JSONSyntaxErr = require('json-syntax-error');
 
@@ -16,26 +17,10 @@ app.use(
   JSONSyntaxErr({ meta: 'bad json' })
 );
 
+console.log();
+
 app.use(routes);
-
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  console.log(error);
-  next(error);
-});
-
-app.use((error: any, req: Request, res: Response, next: NextFunction) => {
-  if (error.statusCode) {
-    return res.status(error.statusCode).send({ meta: error.message });
-  }
-
-  if (error.name === 'CastError') {
-    return res.status(STATUS.NOT_FOUND).send({ meta: error.message });
-  }
-
-  res.status(STATUS.INTERNAL_SERVER_ERROR).send({ error });
-
-  next();
-});
+app.use(errorLog, errorHandler);
 
 app.listen(config.port, () => {
   console.log(`server running at ${config.serverUrl}:${config.port}`);

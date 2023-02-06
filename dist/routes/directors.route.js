@@ -25,15 +25,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.directorsRoute = void 0;
 const express_1 = require("express");
+const express_validator_1 = require("express-validator");
 const directorsController = __importStar(require("../controllers/directors.controller"));
+const validate_1 = require("../middlewares/validate");
+const const_1 = require("../shared/const");
 const router = (0, express_1.Router)();
 exports.directorsRoute = router;
 router
     .route('/')
     .get(directorsController.getDirectors)
-    .post(directorsController.createDirector);
+    .post((0, validate_1.validate)([(0, express_validator_1.body)('firstName').notEmpty(), (0, express_validator_1.body)('lastName').notEmpty()]), directorsController.createDirector);
 router
     .route('/:directorId')
+    .all((0, validate_1.validate)([(0, express_validator_1.param)('directorId').isLength(const_1.OBJECT_ID_LENGTH_RANGE)]))
     .get(directorsController.getDirector)
     .put(directorsController.updateDirector)
     .delete(directorsController.deleteDirector);

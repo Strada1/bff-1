@@ -80,7 +80,8 @@ export async function deleteComment(
 ) {
   try {
     const { commentId } = req.params;
-    await commentsService.deleteComment(commentId);
+    const deletedComment = await commentsService.deleteComment(commentId);
+    await moviesService.deleteComment(deletedComment.movie, deletedComment._id);
 
     res.status(STATUS.NO_CONTENT).send();
   } catch (error: any) {

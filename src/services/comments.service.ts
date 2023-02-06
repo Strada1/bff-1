@@ -23,17 +23,8 @@ export async function getComment(id: string | Types.ObjectId) {
   return comment;
 }
 
-export async function createComment(
-  id: string | Types.ObjectId,
-  { text }: IComment
-) {
-  const comment = await Comment.create({ text, movie: id });
-
-  if (!text || !id) {
-    throw new ApiError(STATUS.BAD_REQUEST, 'required fields are missing');
-  }
-
-  return comment;
+export function createComment(id: string | Types.ObjectId, { text }: IComment) {
+  return Comment.create({ text, movie: id });
 }
 
 export async function updateComment(

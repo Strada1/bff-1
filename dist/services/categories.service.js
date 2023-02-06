@@ -31,13 +31,7 @@ function getCategory(id) {
 }
 exports.getCategory = getCategory;
 function createCategory({ title }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const category = yield categories_model_1.Category.create({ title });
-        if (!title) {
-            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'required fields are missing');
-        }
-        return category;
-    });
+    return categories_model_1.Category.create({ title });
 }
 exports.createCategory = createCategory;
 function updateCategory(id, { title }) {

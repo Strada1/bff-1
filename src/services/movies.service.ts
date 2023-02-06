@@ -7,17 +7,11 @@ export function getMovies(populatedFields: string[]) {
   return Movie.find().populate(populatedFields).lean();
 }
 
-export async function getMovie(
+export function getMovie(
   id: string | Types.ObjectId,
   populatedFields: string[] = []
 ) {
-  const movie = await Movie.findById(id).populate(populatedFields);
-
-  if (!movie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
-  }
-
-  return movie;
+  return Movie.findById(id).populate(populatedFields);
 }
 
 export function createMovie({
@@ -27,10 +21,6 @@ export function createMovie({
   duration,
   director,
 }: IMovie) {
-  if (!title || !category) {
-    throw new ApiError(STATUS.BAD_REQUEST, 'required fields are missing');
-  }
-
   return Movie.create({ title, category, year, duration, director });
 }
 
@@ -40,7 +30,23 @@ export async function addComment(
 ) {
   const updatedMovie = await Movie.findByIdAndUpdate(
     { _id: movieId },
-    { $push: { comments: commentId } }
+    { $addToSet: { comments: commentId } }
+  );
+
+  if (!updatedMovie) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
+  }
+
+  return updatedMovie;
+}
+
+export async function deleteComment(
+  movieId: string | Types.ObjectId,
+  commentId: string | Types.ObjectId
+) {
+  const updatedMovie = await Movie.findByIdAndUpdate(
+    { _id: movieId },
+    { $pull: { comments: commentId } }
   );
 
   if (!updatedMovie) {

@@ -31,9 +31,6 @@ function getDirector(id) {
 }
 exports.getDirector = getDirector;
 function createDirector({ firstName, lastName }) {
-    if (!firstName || !lastName) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'required fields are missing');
-    }
     return director_model_1.Director.create({ firstName, lastName });
 }
 exports.createDirector = createDirector;

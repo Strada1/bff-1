@@ -17,14 +17,8 @@ export async function getCategory(id: string | Types.ObjectId) {
   return category;
 }
 
-export async function createCategory({ title }: ICategory) {
-  const category = await Category.create({ title });
-
-  if (!title) {
-    throw new ApiError(STATUS.BAD_REQUEST, 'required fields are missing');
-  }
-
-  return category;
+export function createCategory({ title }: ICategory) {
+  return Category.create({ title });
 }
 
 export async function updateCategory(

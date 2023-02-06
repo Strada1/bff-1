@@ -22,10 +22,6 @@ export async function getDirector(id: string | Types.ObjectId) {
 }
 
 export function createDirector({ firstName, lastName }: IDirector) {
-  if (!firstName || !lastName) {
-    throw new ApiError(STATUS.BAD_REQUEST, 'required fields are missing');
-  }
-
   return Director.create({ firstName, lastName });
 }
 

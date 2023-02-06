@@ -37,13 +37,7 @@ function getComment(id) {
 }
 exports.getComment = getComment;
 function createComment(id, { text }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const comment = yield comments_model_1.Comment.create({ text, movie: id });
-        if (!text || !id) {
-            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'required fields are missing');
-        }
-        return comment;
-    });
+    return comments_model_1.Comment.create({ text, movie: id });
 }
 exports.createComment = createComment;
 function updateComment(id, { movie, text }) {
