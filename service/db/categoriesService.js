@@ -1,7 +1,7 @@
 const Categories = require('../../models/Categories');
 
 const getAllCategories = async () => {
-  const allCategories = await Categories.find({});
+  const allCategories = await Categories.find({}).lean();
   return allCategories;
 };
 

@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const {PATHS} = require('../constants');
-const {getAllMovies, addMovie, updateMovie, deleteMovie} = require('../service/db/moviesService');
+const {getAllMovies, getMovieById, addMovie, updateMovie, deleteMovie} = require('../service/db/moviesService');
 
 const router = Router();
 
@@ -8,6 +8,17 @@ router.get(PATHS.MOVIES.ALL, async (req, res) => {
   try {
     const allMovies = await getAllMovies();
     return res.status(200).json(allMovies);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+router.get(PATHS.MOVIES.BY_ID, async (req, res) => {
+  try {
+    if (!req.params['movieId']) return res.status(400).send('wrong request params');
+    const movieId = req.params['movieId'];
+    const movie = await getMovieById(movieId);
+    return res.status(200).json(movie);
   } catch (error) {
     return res.status(500).send(error);
   }

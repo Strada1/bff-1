@@ -1,7 +1,7 @@
 const Directors = require('../../models/Directors');
 
 const getAllDirectors = async () => {
-  const allDirectors = await Directors.find({});
+  const allDirectors = await Directors.find({}).lean();
   return allDirectors;
 };
 

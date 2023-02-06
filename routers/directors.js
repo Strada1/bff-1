@@ -7,7 +7,7 @@ const router = Router();
 router.get(PATHS.DIRECTORS.ALL, async (req, res) => {
   try {
     const allDirectors = await getAllDirectors();
-    return res.status(201).json(allDirectors);
+    return res.status(200).json(allDirectors);
   } catch (error) {
     return res.status(500).send(error);
   }

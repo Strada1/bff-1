@@ -1,4 +1,5 @@
 const mongoose = require('../db');
+
 const moviesSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -14,7 +15,7 @@ const moviesSchema = new mongoose.Schema({
   },
   year: Number,
   duration: Number,
-  comments: [String],
 });
 const Movies = mongoose.model('Movies', moviesSchema);
+
 module.exports = Movies;
