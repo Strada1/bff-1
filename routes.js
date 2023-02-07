@@ -1,14 +1,23 @@
 
-const {createMovie, getMovies, updateMovie, deleteMovie, getMovieById} = require("./services/movieService");
+const {createMovie, updateMovie, deleteMovie, getMovieById} = require("./services/movieService");
 const {createCategory, updateCategory, deleteCategory, getCategoryById} = require("./services/categoryService");
 const {createComment, updateComment, getCommentById} = require("./services/commentsService");
 const {createDirector, updateDirector, deleteDirector, getDirectorById} = require("./services/directorService");
 const {validate} = require("./middleware");
+const {body, validationResult} = require("express-validator");
 
 
 const addRoutes = (app) => {
-    app.post('/movies', validate('duration'), async (req, res) => {
+    app.post('/movies',
+        body('year')
+            .notEmpty()
+            .withMessage('must be a year of movie'),
+        async (req, res) => {
         try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({errors: errors.array()})
+            }
             await createMovie(req.body);
             return res.status(201).send('movie created');
         } catch (err) {
