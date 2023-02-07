@@ -1,13 +1,6 @@
-const DB = {
-  URL: 'mongodb://localhost:27017/main',
-  OPTIONS: {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-};
-
-const SERVER = {
-  PORT: 3000,
+const DB_OPTIONS = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 };
 
 const CORS_OPTIONS = {
@@ -16,7 +9,6 @@ const CORS_OPTIONS = {
 };
 
 module.exports = {
-  SERVER,
-  DB,
+  DB_OPTIONS,
   CORS_OPTIONS,
 };

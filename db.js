@@ -1,6 +1,7 @@
-const {DB} = require('./config');
 const mongoose = require('mongoose');
+const {DB_OPTIONS} = require('./config');
+
 mongoose.set('strictQuery', false);
-mongoose.connect(DB.URL, DB.OPTIONS, () => console.log('Connected to MongoDB'));
+mongoose.connect(process.env.MONGO_CONNECTION_STRING, DB_OPTIONS, () => console.log('Connected to MongoDB'));
 
 module.exports = mongoose;

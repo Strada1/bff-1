@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-const {SERVER, CORS_OPTIONS} = require('./config');
+const {CORS_OPTIONS} = require('./config');
 const app = express();
 
 const homeRoute = require('./routers/home');
@@ -19,6 +19,6 @@ app.use(commentsRoute);
 app.use(categoriesRoute);
 app.use(directorsRoute);
 
-app.listen(SERVER.PORT, () => {
-  console.log(`Example app listen on ${SERVER.PORT} port`);
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`Example app listen on ${process.env.SERVER_PORT} port`);
 });
