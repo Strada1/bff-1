@@ -21,7 +21,7 @@ const createDirector = app.post("/director", async (req, res) => {
   }
 })
 
-const deleteDirector = app.delete('directors/:directorId', async (req, res) => {
+const deleteDirector = app.delete('/director/:directorId', async (req, res) => {
   try {
     if (!req.body && !req.params.directorId) return res.status(400).send('Director not deleted!');
     const id = req.params.directorId;
@@ -32,7 +32,7 @@ const deleteDirector = app.delete('directors/:directorId', async (req, res) => {
   }
 })
 
-const changeDirector = app.put('directors/:directorId', async (req, res) => {
+const changeDirector = app.put('/director/:directorId', async (req, res) => {
   try {
     if (!req.body && req.params.directorId) return res.status(400).send('Director not change!');
     const id = req.params.directorId;

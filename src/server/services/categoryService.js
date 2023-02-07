@@ -8,4 +8,12 @@ const addCategory = ({ title }) => {
   return CategoryModel.create({ title });
 }
 
-module.exports = { getAllCategories, addCategory };
+const removeCategory = ({ id }) => {
+  return CategoryModel.findOneAndDelete(id)
+}
+
+const updateCategory = (id, { title }) => {
+  return CategoryModel.findOneAndUpdate(id, { title }, { new: true });
+}
+
+module.exports = { getAllCategories, addCategory, removeCategory, updateCategory };

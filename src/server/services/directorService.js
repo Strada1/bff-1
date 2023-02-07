@@ -9,7 +9,7 @@ const removeDirector = ({ id }) => {
 }
 
 const updateDirector = (id, { title }) => {
-  return DirectorModel.findOneAndUpdate(id, title, { new: true });
+  return DirectorModel.findOneAndUpdate(id, { title }, { new: true });
 }
 
 const getDirector = () => {
