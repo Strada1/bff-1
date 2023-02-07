@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { getCategories, createCategory, updateCategory, deleteCategory } = require("../services/category");
+const { body, validationResult } = require("express-validator");
 
 router.route("/")
 .get(async (req, res) => {
@@ -11,8 +12,18 @@ router.route("/")
         return res.status(500).json({error: e, message: "Error when receiving categories"});
     }
 })
-.post(async (req, res) => {
+.post(
+    body("title")
+        .exists().withMessage("There is no field title")
+        .bail()
+        .notEmpty().withMessage("The field title is empty"),    
+    async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()})
+        }
+        
         const values = req.body;
         await createCategory(values);
         return res.status(201).send("Category added");

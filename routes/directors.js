@@ -1,9 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const { getDirector, getDirectors, createDirector, updateDirector, deleteDirector } = require("../services/director");
+const { body, validationResult } = require("express-validator");
 
 router.route("/")
-.get(async (req, res) => {
+.get(
+    body("firstname")
+        .exists().withMessage("There is no field firstname")
+        .bail()
+        .notEmpty().withMessage("The field firstname is empty"),
+    body("lastname")
+        .exists().withMessage("There is no field lastname")
+        .bail()
+        .notEmpty().withMessage("The field lastname is empty"),
+    body("born")
+        .exists().withMessage("There is no field born")
+        .bail()
+        .notEmpty().withMessage("The field born is empty"),
+    body("about")
+        .exists().withMessage("There is no field about")
+        .bail()
+        .notEmpty().withMessage("The field about is empty"),
+    async (req, res) => {
     try {
         const directors = await getDirectors();
         return res.status(200).send(directors);
@@ -13,6 +31,11 @@ router.route("/")
 })
 .post(async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()})
+        }
+
         const values = req.body;
         await createDirector(values);
         return res.status(201).send("Director created");

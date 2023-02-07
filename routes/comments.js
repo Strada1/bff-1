@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { getComments, createComment, updateComment, deleteComment } = require("../services/comment");
+const { body, validationResult } = require("express-validator");
 
 router.route("/:movieId/comments")
 .get(async (req, res) => {
@@ -12,8 +13,22 @@ router.route("/:movieId/comments")
         return res.status(500).json({error: e, message: "Error when reciving comments"});
     }
 })
-.post(async (req, res) => {
+.post(
+    body("user")
+        .exists().withMessage("There is no field user")
+        .bail()
+        .notEmpty().withMessage("The field user is empty"),
+    body("text")
+        .exists().withMessage("There is no field text")
+        .bail()
+        .notEmpty().withMessage("The field text is empty"),
+    async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()})
+        }
+
         const movieId = req.params.movieId;
         const values = req.body;
         await createComment(movieId, values);
