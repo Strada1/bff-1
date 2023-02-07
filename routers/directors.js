@@ -1,61 +1,59 @@
-const express = require('express');
-const router = express.Router();
+const exprees = require('express');
+const router = exprees.Router();
 const {
-  getCategories,
-  createCategory,
-  updateCategory,
-  deliteCategory,
-} = require('../services/categoryService.js');
+  getDirectors,
+  addDirector,
+  updateDirector,
+  deliteDirector,
+} = require('../services/directorService.js');
 const { body } = require('express-validator');
 const validateParams = require('../middlewares/validate.js');
 
 router.get('/', async (req, res) => {
   try {
-    const categories = await getCategories();
-    return res.status(200).json(categories);
+    const directors = await getDirectors();
+    return res.status(200).send(directors);
   } catch (e) {
     return res.status(500).send(`Internal server error: ${e.message}`);
   }
 });
-
 router.post(
   '/',
-  validateParams([body('title').notEmpty()]),
+  validateParams([body('director').notEmpty()]),
   async (req, res) => {
     try {
-      await createCategory(req.body);
-      return res.status(201).send('Category adding');
+      await addDirector(req.body);
+      return res.status(201).send('Director adding');
     } catch (e) {
       return res.status(500).send(`Internal server error: ${e.message}`);
     }
   }
 );
-
 router.put(
-  '/:categoryId',
-  validateParams([body(['id', 'title']).notEmpty()]),
+  '/:directorId',
+  validateParams([body('director').notEmpty()]),
   async (req, res) => {
     try {
-      const result = await updateCategory(req.body.id, req.body);
+      const result = await updateDirector(req.body.id, req.body);
       if (!result) {
-        return res.status(404).send('Not found ID');
+        return res.status(404).send('ID is not found');
       }
-      return res.status(200).send('Category updated');
+      return res.status(201).send('Director updated');
     } catch (e) {
       return res.status(500).send(`Internal server error: ${e.message}`);
     }
   }
 );
 router.delete(
-  '/:categoryId',
+  '/:directorId',
   validateParams([body('id').notEmpty()]),
   async (req, res) => {
     try {
-      const result = await deliteCategory(req.body.id);
+      const result = await deliteDirector(req.body.id);
       if (!result) {
         return res.status(404).send('ID is not found');
       }
-      return res.status(200).send('Category delited');
+      return res.status(200).send('Director delited');
     } catch (e) {
       return res.status(500).send(`Internal server error: ${e.message}`);
     }
