@@ -20,11 +20,11 @@ const removeComment = async (movieId, commentId) => {
   movie.save();
 }
 
-const updateComment = async (movieId, commentId, { title }) => { // TODO NOT WORK!!!
+const updateComment = async (movieId, commentId, { title }) => {
   await CommentModel.findByIdAndUpdate(commentId, { title })
   const movie = await MovieModel.findById(movieId)
   movie.comments = movie.comments.map(item => {
-    if (item._id.toString() !== commentId) {
+    if (item._id.toString() === commentId) {
       item.title = title
     }
     return item
