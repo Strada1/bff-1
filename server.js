@@ -1,13 +1,16 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
-const port = 3000;
 const connectDb = require('../bff-1/db');
 const cors = require("cors");
+const port = process.env.PORT;
+console.log('process.env', process.env);
 
 connectDb();
 
 const allowedOrigins = [
-  '' // hosts
+  'http://localhost:3000/'
 ];
 
 app.use(cors({
