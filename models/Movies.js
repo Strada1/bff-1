@@ -13,7 +13,10 @@ const moviesSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Directors',
   },
-  year: Number,
+  year: {
+    type: Number,
+    required: true,
+  },
   duration: Number,
   comments: [
     {

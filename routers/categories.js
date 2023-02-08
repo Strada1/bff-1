@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const {PATHS} = require('../constants');
 const {getAllCategories, addCategory, updateCategory, deleteCategory} = require('../service/db/categoriesService');
+const validateBodyAndParamsFields = require('../middlewares/validate');
 
 const router = Router();
 
@@ -12,9 +13,8 @@ router.get(PATHS.CATEGORIES.ALL, async (req, res) => {
     return res.status(500).send(error);
   }
 });
-router.post(PATHS.CATEGORIES.ALL, async (req, res) => {
+router.post(PATHS.CATEGORIES.ALL, validateBodyAndParamsFields(['title'], []), async (req, res) => {
   try {
-    if (!req.body) return res.status(400).send('wrong request body');
     await addCategory(req.body);
     return res.status(201).send('category added');
   } catch (error) {
@@ -22,19 +22,16 @@ router.post(PATHS.CATEGORIES.ALL, async (req, res) => {
   }
 });
 
-router.put(PATHS.CATEGORIES.BY_ID, async (req, res) => {
+router.put(PATHS.CATEGORIES.BY_ID, validateBodyAndParamsFields(['title'], ['categoryId']), async (req, res) => {
   try {
-    if (!req.body) return res.status(400).send('wrong request body!');
-    if (!req.params['categoryId']) return res.status(400).send('wrong request params');
     await updateCategory(req.params['categoryId'], req.body);
     return res.status(201).send('category updated!');
   } catch (error) {
     res.status(500).send(error);
   }
 });
-router.delete(PATHS.CATEGORIES.BY_ID, async (req, res) => {
+router.delete(PATHS.CATEGORIES.BY_ID, validateBodyAndParamsFields([], ['categoryId']), async (req, res) => {
   try {
-    if (!req.params['categoryId']) return res.status(400).send('wrong request params');
     await deleteCategory(req.params['categoryId']);
     return res.status(201).send('category deleted!');
   } catch (error) {

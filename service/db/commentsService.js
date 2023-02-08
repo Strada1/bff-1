@@ -8,6 +8,11 @@ const getAllcomments = async (movieId) => {
   return comments;
 };
 
+const getCommentById = async (commentId) => {
+  const comment = await Comments.findById(commentId).lean();
+  return comment;
+};
+
 const addComment = async (movieId, comment) => {
   const commentId = await (
     await Comments.create({
@@ -20,11 +25,17 @@ const addComment = async (movieId, comment) => {
   await movie.save();
 };
 
-const updateComment = async (movieId, commentId, comment) => {};
-const deleteComment = async (commentId) => {};
+const updateComment = async (commentId, comment) => {
+  await Comments.findByIdAndUpdate(commentId, comment);
+};
+
+const deleteComment = async (commentId) => {
+  await Comments.findByIdAndDelete(commentId);
+};
 
 module.exports = {
   getAllcomments,
+  getCommentById,
   addComment,
   updateComment,
   deleteComment,

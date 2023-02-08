@@ -1,7 +1,10 @@
 const {Schema, model} = require('../db');
 
 const commentsSchema = new Schema({
-  text: String,
+  text: {
+    type: String,
+    required: true,
+  },
   rank: Number,
   movie: {
     type: Schema.Types.ObjectId,

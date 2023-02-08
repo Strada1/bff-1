@@ -1,7 +1,10 @@
 const {Schema, model} = require('../db');
 
 const categoriesSchema = new Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true,
+  },
 });
 const Categories = model('Categories', categoriesSchema);
 

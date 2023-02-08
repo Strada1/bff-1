@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const {PATHS} = require('../constants');
 const {getAllMovies, getMovieById, addMovie, updateMovie, deleteMovie} = require('../service/db/moviesService');
+const validateBodyAndParamsFields = require('../middlewares/validate');
 
 const router = Router();
 
@@ -13,20 +14,17 @@ router.get(PATHS.MOVIES.ALL, async (req, res) => {
   }
 });
 
-router.get(PATHS.MOVIES.BY_ID, async (req, res) => {
+router.get(PATHS.MOVIES.BY_ID, validateBodyAndParamsFields([], ['movieId']), async (req, res) => {
   try {
-    if (!req.params['movieId']) return res.status(400).send('wrong request params');
-    const movieId = req.params['movieId'];
-    const movie = await getMovieById(movieId);
+    const movie = await getMovieById(req.params['movieId']);
     return res.status(200).json(movie);
   } catch (error) {
     return res.status(500).send(error);
   }
 });
 
-router.post(PATHS.MOVIES.ALL, async (req, res) => {
+router.post(PATHS.MOVIES.ALL, validateBodyAndParamsFields(['title', 'year'], []), async (req, res) => {
   try {
-    if (!req.body) return req.status(400).send('wrong request body');
     await addMovie(req.body);
     return res.status(201).send('movie created');
   } catch (error) {
@@ -34,10 +32,8 @@ router.post(PATHS.MOVIES.ALL, async (req, res) => {
   }
 });
 
-router.put(PATHS.MOVIES.BY_ID, async (req, res) => {
+router.put(PATHS.MOVIES.BY_ID, validateBodyAndParamsFields(['title', 'year'], ['movieId']), async (req, res) => {
   try {
-    if (!req.body) return res.status(400).send('wrong request body!');
-    if (!req.params['movieId']) return res.status(400).send('wrong request params');
     await updateMovie(req.params['movieId'], req.body);
     return res.status(201).send('movie updated');
   } catch (error) {
@@ -45,9 +41,8 @@ router.put(PATHS.MOVIES.BY_ID, async (req, res) => {
   }
 });
 
-router.delete(PATHS.MOVIES.BY_ID, async (req, res) => {
+router.delete(PATHS.MOVIES.BY_ID, validateBodyAndParamsFields(['title', 'year'], ['movieId']), async (req, res) => {
   try {
-    if (!req.params['movieId']) return res.status(400).send('wrong request params');
     await deleteMovie(req.params['movieId']);
     return res.status(201).send('movie deleted');
   } catch (error) {
