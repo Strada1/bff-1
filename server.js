@@ -5,7 +5,6 @@ const app = express();
 const connectDb = require('../bff-1/db');
 const cors = require("cors");
 const port = process.env.PORT;
-console.log('process.env', process.env);
 
 connectDb();
 

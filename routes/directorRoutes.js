@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { findAllDirectors, createDirector, findAndDelete, findAndUpdate, findItemById } = require('../services/directorService');
+const {validateDirector} = require('../middlewares/index')
 
 router.get('/', async (req, res) => {
   try {
@@ -21,7 +22,7 @@ router.get('/:directorId', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateDirector, async (req, res) => {
   try {
     const director = await createDirector({
       name: req.body.name,

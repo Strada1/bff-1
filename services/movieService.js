@@ -4,8 +4,8 @@ const findAllMovies = () => {
 	return MovieModel.find();
 }
 
-const createMovie = ({ title, categoryId, year, duration, directorId }) => { 
-	return MovieModel.create({ title, categoryId, year, duration, directorId }); 
+const createMovie = ({ title, category, year, duration, director }) => { 
+	return MovieModel.create({ title, category, year, duration, director }); 
 }
 
 const findAndDelete = (id) => { 

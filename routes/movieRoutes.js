@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { findAllMovies, createMovie, findAndDelete, findAndUpdate, findItemById } = require('../services/movieService');
+const {validateMovie} = require('../middlewares/index')
 
 router.get('/', async (req, res) => {
   try {
@@ -21,14 +22,14 @@ router.get('/:movieId', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateMovie, async (req, res) => {
   try {
     const movie = await createMovie({
       title: req.body.title,
-      categoryId: req.body.category,
+      category: req.body.category,
       year: req.body.year,
       duration: req.body.duration,
-      directorId: req.body.director
+      director: req.body.director
     });
     return res.status(201).send('movie created');
   } catch (err) {
