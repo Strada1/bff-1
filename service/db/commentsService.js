@@ -14,15 +14,8 @@ const getCommentById = async (commentId) => {
 };
 
 const addComment = async (movieId, comment) => {
-  const commentId = await (
-    await Comments.create({
-      ...comment,
-      movie: movieId,
-    })
-  )._id;
-  const movie = await Movies.findById(movieId);
-  movie.comments.push(commentId);
-  await movie.save();
+  const newComment = new Comments({...comment, movie: movieId});
+  return newComment.id;
 };
 
 const updateComment = async (commentId, comment) => {

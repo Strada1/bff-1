@@ -11,6 +11,9 @@ const getMovieById = async (movieId) => {
 const addMovie = async (movie) => {
   await Movies.create(movie);
 };
+const addCommentIdInMovie = async (movieId, commentId) => {
+  await Movies.findByIdAndUpdate(movieId, {$addToSet: {comments: commentId}});
+};
 const updateMovie = async (movieId, movie) => {
   await Movies.findByIdAndUpdate(movieId, movie);
 };
@@ -22,6 +25,7 @@ module.exports = {
   getAllMovies,
   getMovieById,
   addMovie,
+  addCommentIdInMovie,
   updateMovie,
   deleteMovie,
 };

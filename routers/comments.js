@@ -9,6 +9,8 @@ const {
   deleteComment,
 } = require('../service/db/commentsService');
 
+const {addCommentIdInMovie} = require('../service/db/moviesService');
+
 const router = Router();
 
 router.get(PATHS.COMMENTS.ALL, validateBodyAndParamsFields([], ['movieId']), async (req, res) => {
@@ -31,7 +33,9 @@ router.get(PATHS.COMMENTS.BY_ID, validateBodyAndParamsFields([], ['commentId']),
 
 router.post(PATHS.COMMENTS.ALL, validateBodyAndParamsFields(['text'], ['movieId']), async (req, res) => {
   try {
-    await addComment(req.params['movieId'], req.body);
+    const movieId = req.params['movieId'];
+    const commentId = await addComment(movieId, req.body);
+    await addCommentIdInMovie(movieId, commentId);
     res.status(201).send('comment added');
   } catch (error) {
     return res.status(500).send(error);
