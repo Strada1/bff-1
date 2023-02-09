@@ -1,8 +1,9 @@
 const express = require('express')
+const validate = require('../middleware/validate')
 const router = express.Router();
 const TRACK = require('../services/trackService')
 
-router.post('/', async (req, res) => {
+router.post('/', validate(['title']), async (req, res) => {
   try {
     await TRACK.CREATE(req.body)
     return res.status(201).send('track added');
