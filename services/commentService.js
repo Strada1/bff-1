@@ -1,7 +1,7 @@
 const CommentModel = require('../models/commentModel');
 
 const findAllCommentsForMovie = (id) => { 
-	return CommentModel.find({id: id});
+	return CommentModel.find({movieId: id});
 }
 
 const createComment = (movieId, body) => { 
@@ -16,10 +16,8 @@ const findAndUpdate = (commentId, body, options) => {
 	return CommentModel.findByIdAndUpdate(commentId, body, options);
 }
 
-
 const findItemById = (id) => { 
 	return CommentModel.findById(id);
 }
-
 
 module.exports = { findAllCommentsForMovie, createComment, findAndDelete, findAndUpdate, findItemById };

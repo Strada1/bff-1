@@ -1,25 +1,40 @@
+const { validationResult } = require('express-validator');
+
 const validateMovie = (req, res, next) => {
-
-  const result = [req.body.title, req.body.category, req.body.year, req.body.duration, req.body.director].filter(item => item === undefined)
-
-  if (result.length > 0) {
-    return res.status(401).send("Fill all necessary fields");
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
   next();
-}
-
+};
 
 const validateDirector = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-  const result = [req.body.name, req.body.surname, req.body.yearOfBirth].filter(item => item === undefined)
+  next();
+};
 
-  if (result.length > 0) {
-    return res.status(401).send("Fill all necessary fields");
+const validateCategory = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  next();
+}
+
+const validateComment = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
 
   next();
 }
 
 
-module.exports = { validateMovie, validateDirector }
+module.exports = { validateMovie, validateDirector, validateCategory, validateComment }
