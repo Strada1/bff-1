@@ -41,7 +41,7 @@ router.put(PATHS.MOVIES.BY_ID, validateBodyAndParamsFields(['title', 'year'], ['
   }
 });
 
-router.delete(PATHS.MOVIES.BY_ID, validateBodyAndParamsFields(['title', 'year'], ['movieId']), async (req, res) => {
+router.delete(PATHS.MOVIES.BY_ID, validateBodyAndParamsFields([], ['movieId']), async (req, res) => {
   try {
     await deleteMovie(req.params['movieId']);
     return res.status(201).send('movie deleted');

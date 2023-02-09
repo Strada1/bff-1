@@ -1,4 +1,5 @@
 const Movies = require('../../models/Movies');
+const Comments = require('../../models/Comments');
 
 const getAllMovies = async () => {
   const allMovies = await Movies.find({}).lean();
@@ -14,23 +15,19 @@ const addMovie = async (movie) => {
   await Movies.create(movie);
 };
 
-const addCommentIdInMovie = async (movieId, commentId) => {
-  await Movies.findByIdAndUpdate(movieId, {$push: {comments: [commentId]}});
-};
-
 const updateMovie = async (movieId, movie) => {
   await Movies.findByIdAndUpdate(movieId, movie);
 };
 
 const deleteMovie = async (movieId) => {
   await Movies.findByIdAndDelete(movieId);
+  await Comments.deleteMany({movie: movieId});
 };
 
 module.exports = {
   getAllMovies,
   getMovieById,
   addMovie,
-  addCommentIdInMovie,
   updateMovie,
   deleteMovie,
 };

@@ -9,8 +9,6 @@ const {
   deleteComment,
 } = require('../service/db/commentsService');
 
-const {addCommentIdInMovie} = require('../service/db/moviesService');
-
 const router = Router();
 
 router.get(PATHS.COMMENTS.ALL, validateBodyAndParamsFields([], ['movieId']), async (req, res) => {
