@@ -13,6 +13,7 @@ router.get(PATHS.CATEGORIES.ALL, async (req, res) => {
     return res.status(500).send(error);
   }
 });
+
 router.post(PATHS.CATEGORIES.ALL, validateBodyAndParamsFields(['title'], []), async (req, res) => {
   try {
     await addCategory(req.body);
@@ -30,6 +31,7 @@ router.put(PATHS.CATEGORIES.BY_ID, validateBodyAndParamsFields(['title'], ['cate
     res.status(500).send(error);
   }
 });
+
 router.delete(PATHS.CATEGORIES.BY_ID, validateBodyAndParamsFields([], ['categoryId']), async (req, res) => {
   try {
     await deleteCategory(req.params['categoryId']);

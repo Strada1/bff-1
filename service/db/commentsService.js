@@ -14,16 +14,18 @@ const getCommentById = async (commentId) => {
 };
 
 const addComment = async (movieId, comment) => {
-  const newComment = new Comments({...comment, movie: movieId});
-  return newComment.id;
+  Comments.create({...comment, movie: movieId}, async (error, comment) => {
+    await Movies.findByIdAndUpdate(movieId, {$push: {comments: [comment.id]}});
+  });
 };
 
 const updateComment = async (commentId, comment) => {
   await Comments.findByIdAndUpdate(commentId, comment);
 };
 
-const deleteComment = async (commentId) => {
+const deleteComment = async (movieId, commentId) => {
   await Comments.findByIdAndDelete(commentId);
+  await Movies.findByIdAndUpdate(movieId, {$pull: {comments: {_id: commentId}}});
 };
 
 module.exports = {

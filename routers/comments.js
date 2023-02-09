@@ -16,7 +16,7 @@ const router = Router();
 router.get(PATHS.COMMENTS.ALL, validateBodyAndParamsFields([], ['movieId']), async (req, res) => {
   try {
     const allComments = await getAllcomments(req.params['movieId']);
-    res.status(201).json(allComments);
+    res.status(200).json(allComments);
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -33,9 +33,7 @@ router.get(PATHS.COMMENTS.BY_ID, validateBodyAndParamsFields([], ['commentId']),
 
 router.post(PATHS.COMMENTS.ALL, validateBodyAndParamsFields(['text'], ['movieId']), async (req, res) => {
   try {
-    const movieId = req.params['movieId'];
-    const commentId = await addComment(movieId, req.body);
-    await addCommentIdInMovie(movieId, commentId);
+    await addComment(req.params['movieId'], req.body);
     res.status(201).send('comment added');
   } catch (error) {
     return res.status(500).send(error);
@@ -53,7 +51,7 @@ router.put(PATHS.COMMENTS.BY_ID, validateBodyAndParamsFields(['text'], ['movieId
 
 router.delete(PATHS.COMMENTS.BY_ID, validateBodyAndParamsFields([], ['movieId', 'commentId']), async (req, res) => {
   try {
-    await deleteComment(req.params['commentId']);
+    await deleteComment(req.params['movieId'], req.params['commentId']);
     res.status(201).send('comment deleted');
   } catch (error) {
     return res.status(500).send(error);
