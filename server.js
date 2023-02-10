@@ -6,6 +6,9 @@ const connectDb = require('../bff-1/db');
 const cors = require("cors");
 const port = process.env.PORT;
 
+const fileReading = require('../bff-1/fs');
+fileReading();
+
 connectDb();
 
 const allowedOrigins = [

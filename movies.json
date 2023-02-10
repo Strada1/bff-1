@@ -1,0 +1,29 @@
+[{
+  "_id": {
+    "$oid": "63dd3e2a8226275deb977539"
+  },
+  "title": "Forrest Gump",
+  "category": {
+    "$oid": "63dd3dcf8226275deb977537"
+  },
+  "year": 1994,
+  "duration": 142,
+  "director": {
+    "$oid": "63e34af1beff9e4245bbf25b"
+  },
+  "__v": 1
+},{
+  "_id": {
+    "$oid": "63e4a6a47c5966896dccfe19"
+  },
+  "title": "Back to the Future",
+  "category": {
+    "$oid": "63d67f40ae7e07d358cfd736"
+  },
+  "year": 1985,
+  "duration": 116,
+  "director": {
+    "$oid": "63e33f64a9e86e9c74bb8f3d"
+  },
+  "__v": 0
+}]
