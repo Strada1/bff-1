@@ -28,23 +28,24 @@ const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const moviesController = __importStar(require("../controllers/movies.controller"));
 const validate_1 = require("../middlewares/validate");
-const const_1 = require("../shared/const");
+const movies_model_1 = require("../models/movies.model");
+const validations_1 = require("../shared/validations");
 const router = (0, express_1.Router)();
 exports.moviesRoute = router;
 router
     .route('/')
-    .get(moviesController.getMovies)
-    .post((0, validate_1.validate)([
-    (0, express_validator_1.body)('title').notEmpty(),
-    (0, express_validator_1.body)('category').isLength(const_1.OBJECT_ID_LENGTH_RANGE),
-    (0, express_validator_1.body)('director').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE),
-]), moviesController.createMovie);
+    .all((0, validate_1.validate)([...movies_model_1.movieValidation]))
+    .get((0, validate_1.validate)([...validations_1.sortOrderValidation, (0, express_validator_1.query)('year').optional().isNumeric()]), moviesController.getMovies)
+    .post((0, validate_1.validate)([(0, express_validator_1.body)('title').exists(), (0, express_validator_1.body)('category').exists()]), moviesController.createMovie);
 router
     .route('/:movieId')
-    .all((0, validate_1.validate)([(0, express_validator_1.param)('movieId').isLength(const_1.OBJECT_ID_LENGTH_RANGE)]))
+    .all((0, validate_1.validate)([(0, express_validator_1.param)('movieId').isMongoId(), ...movies_model_1.movieValidation]))
     .get(moviesController.getMovie)
-    .put((0, validate_1.validate)([
-    (0, express_validator_1.body)('category').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE),
-    (0, express_validator_1.body)('director').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE),
-]), moviesController.updateMovie)
+    .put(moviesController.updateMovie)
     .delete(moviesController.deleteMovie);
+router
+    .route('/test-aggregation/count-by-director')
+    .get(moviesController.aggregateByDirector);
+router
+    .route('/test-aggregation/count-by-dates')
+    .get((0, validate_1.validate)([(0, express_validator_1.query)('from').isNumeric(), (0, express_validator_1.query)('to').isNumeric()]), moviesController.aggregateByDates);

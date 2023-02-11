@@ -14,7 +14,6 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: config_1.config.allowedOrigins,
 }), express_1.default.json(), JSONSyntaxErr({ meta: 'bad json' }));
-console.log();
 app.use(routes_1.default);
 app.use(errorLog_1.errorLog, errorHandler_1.errorHandler);
 app.listen(config_1.config.port, () => {

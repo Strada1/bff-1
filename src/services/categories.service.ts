@@ -1,49 +1,28 @@
-import { Types } from 'mongoose';
-import STATUS from 'http-status';
-import ApiError from '../shared/ApiError';
+import { SortOrder, Types } from 'mongoose';
 import { Category, ICategory } from '../models/categories.model';
 
-export function getCategories() {
-  return Category.find().lean();
-}
+export function getCategories({ sortOrder }: { sortOrder: SortOrder }) {
+  const query = Category.find().lean();
 
-export async function getCategory(id: string | Types.ObjectId) {
-  const category = await Category.findById(id);
-
-  if (!category) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Category not found');
+  if (sortOrder) {
+    query.sort({ title: sortOrder });
   }
 
-  return category;
+  return query;
 }
 
-export function createCategory({ title }: ICategory) {
-  return Category.create({ title });
+export function getCategory(id: string | Types.ObjectId) {
+  return Category.findById(id);
 }
 
-export async function updateCategory(
-  id: string | Types.ObjectId,
-  { title }: ICategory
-) {
-  const category = await Category.findByIdAndUpdate(
-    id,
-    { title },
-    { new: true }
-  );
-
-  if (!category) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Category not found');
-  }
-
-  return category;
+export function createCategory(data: ICategory) {
+  return Category.create(data);
 }
 
-export async function deleteCategory(id: string | Types.ObjectId) {
-  const deletedCategory = await Category.findByIdAndDelete(id);
+export function updateCategory(id: string | Types.ObjectId, data: ICategory) {
+  return Category.findByIdAndUpdate(id, data, { new: true });
+}
 
-  if (!deletedCategory) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Category not found');
-  }
-
-  return deletedCategory;
+export function deleteCategory(id: string | Types.ObjectId) {
+  return Category.findByIdAndDelete(id);
 }

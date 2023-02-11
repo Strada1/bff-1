@@ -1,9 +1,7 @@
 import { Types } from 'mongoose';
-import STATUS from 'http-status';
-import ApiError from '../shared/ApiError';
-import { Comment, IComment } from '../models/comments.model';
+import { Comment, IComment, CommentOptional } from '../models/comments.model';
 
-export async function getComments(options: { movieId: string }) {
+export function getComments(options: { movieId: string }) {
   const query = Comment.find().lean();
 
   if (options.movieId) {
@@ -13,43 +11,21 @@ export async function getComments(options: { movieId: string }) {
   return query;
 }
 
-export async function getComment(id: string | Types.ObjectId) {
-  const comment = await Comment.findById(id);
-
-  if (!comment) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Comment not found');
-  }
-
-  return comment;
+export function getComment(id: string | Types.ObjectId) {
+  return Comment.findById(id);
 }
 
-export function createComment(id: string | Types.ObjectId, { text }: IComment) {
-  return Comment.create({ text, movie: id });
+export function createComment(comment: IComment) {
+  return Comment.create(comment);
 }
 
-export async function updateComment(
+export function updateComment(
   id: string | Types.ObjectId,
-  { movie, text }: IComment
+  data: CommentOptional
 ) {
-  const comment = await Comment.findByIdAndUpdate(
-    id,
-    { movie, text },
-    { new: true }
-  );
-
-  if (!comment) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Comment not found');
-  }
-
-  return comment;
+  return Comment.findByIdAndUpdate(id, data, { new: true });
 }
 
-export async function deleteComment(id: string | Types.ObjectId) {
-  const deletedComment = await Comment.findByIdAndDelete(id);
-
-  if (!deletedComment) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Comment not found');
-  }
-
-  return deletedComment;
+export function deleteComment(id: string | Types.ObjectId) {
+  return Comment.findByIdAndDelete(id);
 }

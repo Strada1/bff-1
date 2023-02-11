@@ -2,27 +2,25 @@ import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import * as commentsController from '../controllers/comments.controller';
 import { validate } from '../middlewares/validate';
-import { OBJECT_ID_LENGTH_RANGE } from '../shared/const';
+import { commentValidation } from '../models/comments.model';
 
 const router = Router();
 
 router
   .route('/')
+  .all(validate([...commentValidation]))
   .get(
-    validate([query('movieId').optional().isLength(OBJECT_ID_LENGTH_RANGE)]),
+    validate([query('movieId').optional().isMongoId()]),
     commentsController.getComments
   )
   .post(
-    validate([
-      body('movieId').isLength(OBJECT_ID_LENGTH_RANGE),
-      body('text').notEmpty(),
-    ]),
+    validate([body('movieId').isMongoId(), body('text').exists()]),
     commentsController.createComment
   );
 
 router
   .route('/:commentId')
-  .all(validate([param('commentId').isLength(OBJECT_ID_LENGTH_RANGE)]))
+  .all(validate([param('commentId').isMongoId(), ...commentValidation]))
   .get(commentsController.getComment)
   .put(commentsController.updateComment)
   .delete(commentsController.deleteComment);

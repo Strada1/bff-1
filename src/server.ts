@@ -17,8 +17,6 @@ app.use(
   JSONSyntaxErr({ meta: 'bad json' })
 );
 
-console.log();
-
 app.use(routes);
 app.use(errorLog, errorHandler);
 

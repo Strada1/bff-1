@@ -2,21 +2,23 @@ import { Router } from 'express';
 import { body, param } from 'express-validator';
 import * as categoriesController from '../controllers/categories.controller';
 import { validate } from '../middlewares/validate';
-import { OBJECT_ID_LENGTH_RANGE } from '../shared/const';
+import { categoryValidation } from '../models/categories.model';
+import { sortOrderValidation } from '../shared/validations';
 
 const router = Router();
 
 router
   .route('/')
-  .get(categoriesController.getCategories)
+  .all(validate([...categoryValidation]))
+  .get(validate([...sortOrderValidation]), categoriesController.getCategories)
   .post(
-    validate([body('title').notEmpty()]),
+    validate([body('title').exists()]),
     categoriesController.createCategory
   );
 
 router
   .route('/:categoryId')
-  .all(validate([param('categoryId').isLength(OBJECT_ID_LENGTH_RANGE)]))
+  .all(validate([param('categoryId').isMongoId(), ...categoryValidation]))
   .get(categoriesController.getCategory)
   .put(categoriesController.updateCategory)
   .delete(categoriesController.deleteCategory);

@@ -35,72 +35,88 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMovie = exports.updateMovie = exports.createMovie = exports.getMovie = exports.getMovies = void 0;
+exports.aggregateByDates = exports.aggregateByDirector = exports.deleteMovie = exports.updateMovie = exports.createMovie = exports.getMovie = exports.getMovies = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const moviesService = __importStar(require("../services/movies.service"));
 const helpers_1 = require("../shared/helpers");
-function getMovies(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { populatedFields } = req.query;
-            const movies = yield moviesService.getMovies((0, helpers_1.convertQueryToArray)(populatedFields));
-            res.status(http_status_1.default.OK).send({ movies });
-        }
-        catch (error) {
-            next(error);
-        }
+const ApiError_1 = __importDefault(require("../shared/ApiError"));
+const cache_service_1 = require("../services/cache.service");
+const const_1 = require("../shared/const");
+const moviesCache = new cache_service_1.CacheService();
+exports.getMovies = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { year, sort, populatedFields } = req.query;
+    const requestHasOptions = Object.keys(req.query).length > 0;
+    if (!requestHasOptions && moviesCache.has(const_1.CACHE_KEYS.ALL_MOVIES)) {
+        const cachedMovies = moviesCache.get(const_1.CACHE_KEYS.ALL_MOVIES);
+        res.status(http_status_1.default.OK).send({ movies: cachedMovies });
+        return;
+    }
+    const movies = yield moviesService.getMovies({
+        year,
+        sortOrder: sort,
+        populatedFields: (0, helpers_1.convertQueryToArray)(populatedFields),
     });
-}
-exports.getMovies = getMovies;
-function getMovie(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { movieId } = req.params;
-            const { populatedFields } = req.query;
-            const movie = yield moviesService.getMovie(movieId, (0, helpers_1.convertQueryToArray)(populatedFields));
-            res.status(http_status_1.default.OK).send(movie);
-        }
-        catch (error) {
-            next(error);
-        }
+    if (!requestHasOptions) {
+        moviesCache.set(const_1.CACHE_KEYS.ALL_MOVIES, movies);
+    }
+    res.status(http_status_1.default.OK).send({ movies });
+}));
+exports.getMovie = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId } = req.params;
+    const { populatedFields } = req.query;
+    const movie = yield moviesService.getMovie(movieId, (0, helpers_1.convertQueryToArray)(populatedFields));
+    if (!movie) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
+    }
+    res.status(http_status_1.default.OK).send(movie);
+}));
+exports.createMovie = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { title, category, year, duration, director } = req.body;
+    const createdMovie = yield moviesService.createMovie({
+        title,
+        category,
+        year,
+        duration,
+        director,
     });
-}
-exports.getMovie = getMovie;
-function createMovie(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const createdMovie = yield moviesService.createMovie(req.body);
-            res.status(http_status_1.default.CREATED).send(createdMovie);
-        }
-        catch (error) {
-            next(error);
-        }
+    moviesCache.delete(const_1.CACHE_KEYS.ALL_MOVIES);
+    res.status(http_status_1.default.CREATED).send(createdMovie);
+}));
+exports.updateMovie = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId } = req.params;
+    const { title, category, year, duration, director } = req.body;
+    const updatedMovie = yield moviesService.updateMovie(movieId, {
+        title,
+        category,
+        year,
+        duration,
+        director,
     });
-}
-exports.createMovie = createMovie;
-function updateMovie(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { movieId } = req.params;
-            const updatedMovie = yield moviesService.updateMovie(movieId, req.body);
-            res.status(http_status_1.default.OK).send(updatedMovie);
-        }
-        catch (error) {
-            next(error);
-        }
+    if (!updatedMovie) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
+    }
+    moviesCache.delete(const_1.CACHE_KEYS.ALL_MOVIES);
+    res.status(http_status_1.default.OK).send(updatedMovie);
+}));
+exports.deleteMovie = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId } = req.params;
+    const deletedMovie = yield moviesService.deleteMovie(movieId);
+    if (!deletedMovie) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
+    }
+    moviesCache.delete(const_1.CACHE_KEYS.ALL_MOVIES);
+    res.status(http_status_1.default.NO_CONTENT).send();
+}));
+exports.aggregateByDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const movies = yield moviesService.aggregateByDirector();
+    res.status(http_status_1.default.OK).send({ movies });
+}));
+exports.aggregateByDates = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { from, to } = req.query;
+    const movies = yield moviesService.aggregateByDates({
+        from: Number(from),
+        to: Number(to),
     });
-}
-exports.updateMovie = updateMovie;
-function deleteMovie(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { movieId } = req.params;
-            yield moviesService.deleteMovie(movieId);
-            res.status(http_status_1.default.NO_CONTENT).send();
-        }
-        catch (error) {
-            next(error);
-        }
-    });
-}
-exports.deleteMovie = deleteMovie;
+    res.status(http_status_1.default.OK).send({ movies });
+}));

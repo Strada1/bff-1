@@ -1,79 +1,57 @@
 import STATUS from 'http-status';
-import { NextFunction, Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
 import * as directorsService from '../services/directors.service';
+import ApiError from '../shared/ApiError';
 
-export async function getDirectors(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const directors = await directorsService.getDirectors();
+export const getDirectors = asyncHandler(async (req, res) => {
+  const directors = await directorsService.getDirectors();
 
-    res.status(STATUS.OK).send(directors);
-  } catch (error) {
-    next(error);
+  res.status(STATUS.OK).send(directors);
+});
+
+export const getDirector = asyncHandler(async (req, res) => {
+  const { directorId } = req.params;
+  const director = await directorsService.getDirector(directorId);
+
+  if (!director) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Director not found');
   }
-}
 
-export async function getDirector(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { directorId } = req.params;
-    const director = await directorsService.getDirector(directorId);
+  res.status(STATUS.OK).send(director);
+});
 
-    res.status(STATUS.OK).send(director);
-  } catch (error: any) {
-    next(error);
+export const createDirector = asyncHandler(async (req, res) => {
+  const { firstName, lastName } = req.body;
+  const createdDirector = await directorsService.createDirector({
+    firstName,
+    lastName,
+  });
+
+  res.status(STATUS.CREATED).send(createdDirector);
+});
+
+export const updateDirector = asyncHandler(async (req, res) => {
+  const { directorId } = req.params;
+  const { firstName, lastName } = req.body;
+  const updatedDirector = await directorsService.updateDirector(directorId, {
+    firstName,
+    lastName,
+  });
+
+  if (!updatedDirector) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Director not found');
   }
-}
 
-export async function createDirector(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const createdDirector = await directorsService.createDirector(req.body);
+  res.status(STATUS.OK).send(updatedDirector);
+});
 
-    res.status(STATUS.CREATED).send(createdDirector);
-  } catch (error) {
-    next(error);
+export const deleteDirector = asyncHandler(async (req, res) => {
+  const { directorId } = req.params;
+  const deletedDirector = await directorsService.deleteDirector(directorId);
+
+  if (!deletedDirector) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Director not found');
   }
-}
 
-export async function updateDirector(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { directorId } = req.params;
-    const updatedDirector = await directorsService.updateDirector(
-      directorId,
-      req.body
-    );
-
-    res.status(STATUS.OK).send(updatedDirector);
-  } catch (error: any) {
-    next(error);
-  }
-}
-
-export async function deleteDirector(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { directorId } = req.params;
-    await directorsService.deleteDirector(directorId);
-
-    res.status(STATUS.NO_CONTENT).send({});
-  } catch (error: any) {
-    next(error);
-  }
-}
+  res.status(STATUS.NO_CONTENT).send({});
+});

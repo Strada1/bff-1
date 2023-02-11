@@ -1,90 +1,70 @@
 import STATUS from 'http-status';
-import { NextFunction, Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
 import * as moviesService from '../services/movies.service';
 import * as commentsService from '../services/comments.service';
+import ApiError from '../shared/ApiError';
 
-export async function getComments(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { movieId } = req.query as { movieId: string };
-    const comments = await commentsService.getComments({
-      movieId,
-    });
+export const getComments = asyncHandler(async (req, res) => {
+  const { movieId } = req.query as { movieId: string };
+  const comments = await commentsService.getComments({
+    movieId,
+  });
 
-    res.status(STATUS.OK).send({ comments });
-  } catch (error) {
-    next(error);
+  res.status(STATUS.OK).send({ comments });
+});
+
+export const getComment = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+  const comment = await commentsService.getComment(commentId);
+
+  if (!comment) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Comment not found');
   }
-}
 
-export async function getComment(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { commentId } = req.params;
-    const comment = await commentsService.getComment(commentId);
+  res.status(STATUS.OK).send(comment);
+});
 
-    res.status(STATUS.OK).send(comment);
-  } catch (error) {
-    next(error);
+export const createComment = asyncHandler(async (req, res) => {
+  const { movieId, text } = req.body;
+  const linkedMovie = await moviesService.getMovie(movieId);
+
+  if (!linkedMovie) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
   }
-}
 
-export async function createComment(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { movieId } = req.body;
-    const createdComment = await commentsService.createComment(
-      movieId,
-      req.body
-    );
+  const createdComment = await commentsService.createComment({
+    movie: movieId,
+    text,
+  });
 
-    await moviesService.addComment(movieId, createdComment._id);
+  await moviesService.addComment(movieId, createdComment._id);
 
-    res.status(STATUS.CREATED).send(createdComment);
-  } catch (error: any) {
-    next(error);
+  res.status(STATUS.CREATED).send(createdComment);
+});
+
+export const updateComment = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+  const { text } = req.body;
+  const updatedComment = await commentsService.updateComment(commentId, {
+    text,
+  });
+
+  if (!updatedComment) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Comment not found');
   }
-}
 
-export async function updateComment(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { commentId } = req.params;
-    const editedComment = await commentsService.updateComment(
-      commentId,
-      req.body
-    );
+  res.status(STATUS.OK).send(updatedComment);
+});
 
-    res.status(STATUS.OK).send(editedComment);
-  } catch (error: any) {
-    next(error);
+export const deleteComment = asyncHandler(async (req, res) => {
+  const { commentId } = req.params;
+  const deletedComment = await commentsService.deleteComment(commentId);
+
+  if (!deletedComment) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Comment not found');
   }
-}
 
-export async function deleteComment(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { commentId } = req.params;
-    const deletedComment = await commentsService.deleteComment(commentId);
-    await moviesService.deleteComment(deletedComment.movie, deletedComment._id);
+  await moviesService.deleteComment(deletedComment.movie, deletedComment._id);
 
-    res.status(STATUS.NO_CONTENT).send();
-  } catch (error: any) {
-    next(error);
-  }
-}
+  res.status(STATUS.NO_CONTENT).send();
+});

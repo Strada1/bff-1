@@ -28,19 +28,17 @@ const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const commentsController = __importStar(require("../controllers/comments.controller"));
 const validate_1 = require("../middlewares/validate");
-const const_1 = require("../shared/const");
+const comments_model_1 = require("../models/comments.model");
 const router = (0, express_1.Router)();
 exports.commentsRoute = router;
 router
     .route('/')
-    .get((0, validate_1.validate)([(0, express_validator_1.query)('movieId').optional().isLength(const_1.OBJECT_ID_LENGTH_RANGE)]), commentsController.getComments)
-    .post((0, validate_1.validate)([
-    (0, express_validator_1.body)('movieId').isLength(const_1.OBJECT_ID_LENGTH_RANGE),
-    (0, express_validator_1.body)('text').notEmpty(),
-]), commentsController.createComment);
+    .all((0, validate_1.validate)([...comments_model_1.commentValidation]))
+    .get((0, validate_1.validate)([(0, express_validator_1.query)('movieId').optional().isMongoId()]), commentsController.getComments)
+    .post((0, validate_1.validate)([(0, express_validator_1.body)('movieId').isMongoId(), (0, express_validator_1.body)('text').exists()]), commentsController.createComment);
 router
     .route('/:commentId')
-    .all((0, validate_1.validate)([(0, express_validator_1.param)('commentId').isLength(const_1.OBJECT_ID_LENGTH_RANGE)]))
+    .all((0, validate_1.validate)([(0, express_validator_1.param)('commentId').isMongoId(), ...comments_model_1.commentValidation]))
     .get(commentsController.getComment)
     .put(commentsController.updateComment)
     .delete(commentsController.deleteComment);

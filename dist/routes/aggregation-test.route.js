@@ -23,23 +23,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.categoriesRoute = void 0;
+exports.aggregationTest = void 0;
 const express_1 = require("express");
-const express_validator_1 = require("express-validator");
-const categoriesController = __importStar(require("../controllers/categories.controller"));
-const validate_1 = require("../middlewares/validate");
-const categories_model_1 = require("../models/categories.model");
-const validations_1 = require("../shared/validations");
+const moviesController = __importStar(require("../controllers/movies.controller"));
 const router = (0, express_1.Router)();
-exports.categoriesRoute = router;
-router
-    .route('/')
-    .all((0, validate_1.validate)([...categories_model_1.categoryValidation]))
-    .get((0, validate_1.validate)([...validations_1.sortOrderValidation]), categoriesController.getCategories)
-    .post((0, validate_1.validate)([(0, express_validator_1.body)('title').exists()]), categoriesController.createCategory);
-router
-    .route('/:categoryId')
-    .all((0, validate_1.validate)([(0, express_validator_1.param)('categoryId').isMongoId(), ...categories_model_1.categoryValidation]))
-    .get(categoriesController.getCategory)
-    .put(categoriesController.updateCategory)
-    .delete(categoriesController.deleteCategory);
+exports.aggregationTest = router;
+router.route('/movies/:movieId').get(moviesController.aggregationTest);

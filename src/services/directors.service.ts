@@ -1,53 +1,29 @@
 import { Types } from 'mongoose';
-import STATUS from 'http-status';
-import ApiError from '../shared/ApiError';
 import {
   IDirector,
   Director,
-  IDirectorOptional,
+  DirectorOptional,
 } from '../models/director.model';
 
 export function getDirectors() {
   return Director.find().lean();
 }
 
-export async function getDirector(id: string | Types.ObjectId) {
-  const director = await Director.findById(id).lean();
-
-  if (!director) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Director not found');
-  }
-
-  return director;
+export function getDirector(id: string | Types.ObjectId) {
+  return Director.findById(id).lean();
 }
 
-export function createDirector({ firstName, lastName }: IDirector) {
-  return Director.create({ firstName, lastName });
+export function createDirector(director: IDirector) {
+  return Director.create(director);
 }
 
-export async function updateDirector(
+export function updateDirector(
   id: Types.ObjectId | string,
-  { firstName, lastName }: IDirectorOptional
+  data: DirectorOptional
 ) {
-  const director = await Director.findByIdAndUpdate(
-    id,
-    { firstName, lastName },
-    { new: true }
-  );
-
-  if (!director) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Director not found');
-  }
-
-  return director;
+  return Director.findByIdAndUpdate(id, data, { new: true });
 }
 
-export async function deleteDirector(id: string | Types.ObjectId) {
-  const deletedDirector = await Director.findByIdAndDelete(id);
-
-  if (!deletedDirector) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Director not found');
-  }
-
-  return deletedDirector;
+export function deleteDirector(id: string | Types.ObjectId) {
+  return Director.findByIdAndDelete(id);
 }

@@ -37,67 +37,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteDirector = exports.updateDirector = exports.createDirector = exports.getDirector = exports.getDirectors = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const directorsService = __importStar(require("../services/directors.service"));
-function getDirectors(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const directors = yield directorsService.getDirectors();
-            res.status(http_status_1.default.OK).send(directors);
-        }
-        catch (error) {
-            next(error);
-        }
+const ApiError_1 = __importDefault(require("../shared/ApiError"));
+exports.getDirectors = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const directors = yield directorsService.getDirectors();
+    res.status(http_status_1.default.OK).send(directors);
+}));
+exports.getDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { directorId } = req.params;
+    const director = yield directorsService.getDirector(directorId);
+    if (!director) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Director not found');
+    }
+    res.status(http_status_1.default.OK).send(director);
+}));
+exports.createDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { firstName, lastName } = req.body;
+    const createdDirector = yield directorsService.createDirector({
+        firstName,
+        lastName,
     });
-}
-exports.getDirectors = getDirectors;
-function getDirector(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { directorId } = req.params;
-            const director = yield directorsService.getDirector(directorId);
-            res.status(http_status_1.default.OK).send(director);
-        }
-        catch (error) {
-            next(error);
-        }
+    res.status(http_status_1.default.CREATED).send(createdDirector);
+}));
+exports.updateDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { directorId } = req.params;
+    const { firstName, lastName } = req.body;
+    const updatedDirector = yield directorsService.updateDirector(directorId, {
+        firstName,
+        lastName,
     });
-}
-exports.getDirector = getDirector;
-function createDirector(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const createdDirector = yield directorsService.createDirector(req.body);
-            res.status(http_status_1.default.CREATED).send(createdDirector);
-        }
-        catch (error) {
-            next(error);
-        }
-    });
-}
-exports.createDirector = createDirector;
-function updateDirector(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { directorId } = req.params;
-            const updatedDirector = yield directorsService.updateDirector(directorId, req.body);
-            res.status(http_status_1.default.OK).send(updatedDirector);
-        }
-        catch (error) {
-            next(error);
-        }
-    });
-}
-exports.updateDirector = updateDirector;
-function deleteDirector(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { directorId } = req.params;
-            yield directorsService.deleteDirector(directorId);
-            res.status(http_status_1.default.NO_CONTENT).send({});
-        }
-        catch (error) {
-            next(error);
-        }
-    });
-}
-exports.deleteDirector = deleteDirector;
+    if (!updatedDirector) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Director not found');
+    }
+    res.status(http_status_1.default.OK).send(updatedDirector);
+}));
+exports.deleteDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { directorId } = req.params;
+    const deletedDirector = yield directorsService.deleteDirector(directorId);
+    if (!deletedDirector) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Director not found');
+    }
+    res.status(http_status_1.default.NO_CONTENT).send({});
+}));

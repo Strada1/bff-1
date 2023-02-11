@@ -1,34 +1,40 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import * as moviesController from '../controllers/movies.controller';
 import { validate } from '../middlewares/validate';
-import { OBJECT_ID_LENGTH_RANGE } from '../shared/const';
+import { movieValidation } from '../models/movies.model';
+import { sortOrderValidation } from '../shared/validations';
 
 const router = Router();
 
 router
   .route('/')
-  .get(moviesController.getMovies)
+  .all(validate([...movieValidation]))
+  .get(
+    validate([...sortOrderValidation, query('year').optional().isNumeric()]),
+    moviesController.getMovies
+  )
   .post(
-    validate([
-      body('title').notEmpty(),
-      body('category').isLength(OBJECT_ID_LENGTH_RANGE),
-      body('director').optional().isLength(OBJECT_ID_LENGTH_RANGE),
-    ]),
+    validate([body('title').exists(), body('category').exists()]),
     moviesController.createMovie
   );
 
 router
   .route('/:movieId')
-  .all(validate([param('movieId').isLength(OBJECT_ID_LENGTH_RANGE)]))
+  .all(validate([param('movieId').isMongoId(), ...movieValidation]))
   .get(moviesController.getMovie)
-  .put(
-    validate([
-      body('category').optional().isLength(OBJECT_ID_LENGTH_RANGE),
-      body('director').optional().isLength(OBJECT_ID_LENGTH_RANGE),
-    ]),
-    moviesController.updateMovie
-  )
+  .put(moviesController.updateMovie)
   .delete(moviesController.deleteMovie);
+
+router
+  .route('/test-aggregation/count-by-director')
+  .get(moviesController.aggregateByDirector);
+
+router
+  .route('/test-aggregation/count-by-dates')
+  .get(
+    validate([query('from').isNumeric(), query('to').isNumeric()]),
+    moviesController.aggregateByDates
+  );
 
 export { router as moviesRoute };

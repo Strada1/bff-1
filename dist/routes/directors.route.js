@@ -28,16 +28,17 @@ const express_1 = require("express");
 const express_validator_1 = require("express-validator");
 const directorsController = __importStar(require("../controllers/directors.controller"));
 const validate_1 = require("../middlewares/validate");
-const const_1 = require("../shared/const");
+const director_model_1 = require("../models/director.model");
 const router = (0, express_1.Router)();
 exports.directorsRoute = router;
 router
     .route('/')
+    .all((0, validate_1.validate)([...director_model_1.directorValidation]))
     .get(directorsController.getDirectors)
-    .post((0, validate_1.validate)([(0, express_validator_1.body)('firstName').notEmpty(), (0, express_validator_1.body)('lastName').notEmpty()]), directorsController.createDirector);
+    .post((0, validate_1.validate)([(0, express_validator_1.body)('firstName').exists(), (0, express_validator_1.body)('lastName').exists()]), directorsController.createDirector);
 router
     .route('/:directorId')
-    .all((0, validate_1.validate)([(0, express_validator_1.param)('directorId').isLength(const_1.OBJECT_ID_LENGTH_RANGE)]))
+    .all((0, validate_1.validate)([(0, express_validator_1.param)('directorId').isMongoId(), ...director_model_1.directorValidation]))
     .get(directorsController.getDirector)
     .put(directorsController.updateDirector)
     .delete(directorsController.deleteDirector);

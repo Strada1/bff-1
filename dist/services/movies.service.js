@@ -1,70 +1,61 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMovie = exports.updateMovie = exports.deleteComment = exports.addComment = exports.createMovie = exports.getMovie = exports.getMovies = void 0;
-const http_status_1 = __importDefault(require("http-status"));
-const ApiError_1 = __importDefault(require("../shared/ApiError"));
+exports.aggregateByDates = exports.aggregateByDirector = exports.deleteMovie = exports.updateMovie = exports.deleteComment = exports.addComment = exports.createMovie = exports.getMovie = exports.getMovies = void 0;
 const movies_model_1 = require("../models/movies.model");
-function getMovies(populatedFields) {
-    return movies_model_1.Movie.find().populate(populatedFields).lean();
+function getMovies({ year, sortOrder, populatedFields, }) {
+    const query = movies_model_1.Movie.find().populate(populatedFields);
+    if (year) {
+        query.where('year', year);
+    }
+    if (sortOrder) {
+        query.sort({ title: sortOrder });
+    }
+    return query;
 }
 exports.getMovies = getMovies;
 function getMovie(id, populatedFields = []) {
     return movies_model_1.Movie.findById(id).populate(populatedFields);
 }
 exports.getMovie = getMovie;
-function createMovie({ title, category, year, duration, director, }) {
-    return movies_model_1.Movie.create({ title, category, year, duration, director });
+function createMovie(movie) {
+    return movies_model_1.Movie.create(movie);
 }
 exports.createMovie = createMovie;
 function addComment(movieId, commentId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const updatedMovie = yield movies_model_1.Movie.findByIdAndUpdate({ _id: movieId }, { $addToSet: { comments: commentId } });
-        if (!updatedMovie) {
-            throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
-        }
-        return updatedMovie;
-    });
+    return movies_model_1.Movie.findByIdAndUpdate({ _id: movieId }, { $addToSet: { comments: commentId } });
 }
 exports.addComment = addComment;
 function deleteComment(movieId, commentId) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const updatedMovie = yield movies_model_1.Movie.findByIdAndUpdate({ _id: movieId }, { $pull: { comments: commentId } });
-        if (!updatedMovie) {
-            throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
-        }
-        return updatedMovie;
-    });
+    return movies_model_1.Movie.findByIdAndUpdate({ _id: movieId }, { $pull: { comments: commentId } });
 }
 exports.deleteComment = deleteComment;
-function updateMovie(id, { title, category, year, duration, director }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const updatedMovie = yield movies_model_1.Movie.findByIdAndUpdate(id, { title, category, year, duration, director }, { new: true });
-        if (!updatedMovie) {
-            throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
-        }
-        return updatedMovie;
-    });
+function updateMovie(id, data) {
+    return movies_model_1.Movie.findByIdAndUpdate(id, data, { new: true });
 }
 exports.updateMovie = updateMovie;
 function deleteMovie(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const deletedMovie = yield movies_model_1.Movie.findByIdAndDelete(id);
-        if (!deletedMovie) {
-            throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
-        }
-        return deletedMovie;
-    });
+    return movies_model_1.Movie.findByIdAndDelete(id);
 }
 exports.deleteMovie = deleteMovie;
+function aggregateByDirector() {
+    return movies_model_1.Movie.aggregate([
+        {
+            $group: {
+                _id: '$director',
+                moviesCount: {
+                    $sum: 1,
+                },
+            },
+        },
+    ]);
+}
+exports.aggregateByDirector = aggregateByDirector;
+function aggregateByDates({ from, to }) {
+    return movies_model_1.Movie.aggregate([
+        {
+            $match: { year: { $gte: from, $lte: to } },
+        },
+        { $count: 'count' },
+    ]);
+}
+exports.aggregateByDates = aggregateByDates;

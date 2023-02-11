@@ -28,6 +28,7 @@ module.exports = {
     'implicit-arrow-linebreak': 0,
     'no-underscore-dangle': 0,
     'operator-linebreak': 0,
+    'newline-per-chained-call': 0,
     'import/extensions': [
       'error',
       'ignorePackages',

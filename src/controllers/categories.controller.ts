@@ -1,79 +1,58 @@
 import STATUS from 'http-status';
-import { NextFunction, Request, Response } from 'express';
+import asyncHandler from 'express-async-handler';
+import { SortOrder } from 'mongoose';
 import * as categoriesService from '../services/categories.service';
+import ApiError from '../shared/ApiError';
 
-export async function getCategories(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const categories = await categoriesService.getCategories();
+export const getCategories = asyncHandler(async (req, res) => {
+  const { sort } = req.query as {
+    sort: SortOrder;
+  };
 
-    res.status(STATUS.OK).send(categories);
-  } catch (error) {
-    next(error);
+  const categories = await categoriesService.getCategories({ sortOrder: sort });
+
+  res.status(STATUS.OK).send(categories);
+});
+
+export const getCategory = asyncHandler(async (req, res) => {
+  const { categoryId } = req.params;
+  const category = await categoriesService.getCategory(categoryId);
+
+  if (!category) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Category not found');
   }
-}
 
-export async function getCategory(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { categoryId } = req.params;
-    const category = await categoriesService.getCategory(categoryId);
+  res.status(STATUS.OK).send(category);
+});
 
-    res.status(STATUS.OK).send(category);
-  } catch (error) {
-    next(error);
+export const createCategory = asyncHandler(async (req, res) => {
+  const { title } = req.body;
+  const createdCategory = await categoriesService.createCategory({ title });
+
+  res.status(STATUS.CREATED).send(createdCategory);
+});
+
+export const updateCategory = asyncHandler(async (req, res) => {
+  const { categoryId } = req.params;
+  const { title } = req.body;
+  const updatedCategory = await categoriesService.updateCategory(categoryId, {
+    title,
+  });
+
+  if (!updatedCategory) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Category not found');
   }
-}
 
-export async function createCategory(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const createdCategory = await categoriesService.createCategory(req.body);
+  res.status(STATUS.OK).send(updatedCategory);
+});
 
-    res.status(STATUS.CREATED).send(createdCategory);
-  } catch (error) {
-    next(error);
+export const deleteCategory = asyncHandler(async (req, res) => {
+  const { categoryId } = req.params;
+  const deletedCategory = await categoriesService.deleteCategory(categoryId);
+
+  if (!deletedCategory) {
+    throw new ApiError(STATUS.NOT_FOUND, 'Category not found');
   }
-}
 
-export async function updateCategory(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { categoryId } = req.params;
-    const updatedCategory = await categoriesService.updateCategory(
-      categoryId,
-      req.body
-    );
-
-    res.status(STATUS.OK).send(updatedCategory);
-  } catch (error: any) {
-    next(error);
-  }
-}
-
-export async function deleteCategory(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { categoryId } = req.params;
-    await categoriesService.deleteCategory(categoryId);
-
-    res.status(STATUS.NO_CONTENT).send();
-  } catch (error: any) {
-    next(error);
-  }
-}
+  res.status(STATUS.NO_CONTENT).send();
+});

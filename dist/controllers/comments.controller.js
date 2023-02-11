@@ -37,74 +37,55 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteComment = exports.updateComment = exports.createComment = exports.getComment = exports.getComments = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const moviesService = __importStar(require("../services/movies.service"));
 const commentsService = __importStar(require("../services/comments.service"));
-function getComments(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { movieId } = req.query;
-            const comments = yield commentsService.getComments({
-                movieId,
-            });
-            res.status(http_status_1.default.OK).send({ comments });
-        }
-        catch (error) {
-            next(error);
-        }
+const ApiError_1 = __importDefault(require("../shared/ApiError"));
+exports.getComments = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId } = req.query;
+    const comments = yield commentsService.getComments({
+        movieId,
     });
-}
-exports.getComments = getComments;
-function getComment(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { commentId } = req.params;
-            const comment = yield commentsService.getComment(commentId);
-            res.status(http_status_1.default.OK).send(comment);
-        }
-        catch (error) {
-            next(error);
-        }
+    res.status(http_status_1.default.OK).send({ comments });
+}));
+exports.getComment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { commentId } = req.params;
+    const comment = yield commentsService.getComment(commentId);
+    if (!comment) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Comment not found');
+    }
+    res.status(http_status_1.default.OK).send(comment);
+}));
+exports.createComment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { movieId, text } = req.body;
+    const linkedMovie = yield moviesService.getMovie(movieId);
+    if (!linkedMovie) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Movie not found');
+    }
+    const createdComment = yield commentsService.createComment({
+        movie: movieId,
+        text,
     });
-}
-exports.getComment = getComment;
-function createComment(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { movieId } = req.body;
-            const createdComment = yield commentsService.createComment(movieId, req.body);
-            yield moviesService.addComment(movieId, createdComment._id);
-            res.status(http_status_1.default.CREATED).send(createdComment);
-        }
-        catch (error) {
-            next(error);
-        }
+    yield moviesService.addComment(movieId, createdComment._id);
+    res.status(http_status_1.default.CREATED).send(createdComment);
+}));
+exports.updateComment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { commentId } = req.params;
+    const { text } = req.body;
+    const updatedComment = yield commentsService.updateComment(commentId, {
+        text,
     });
-}
-exports.createComment = createComment;
-function updateComment(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { commentId } = req.params;
-            const editedComment = yield commentsService.updateComment(commentId, req.body);
-            res.status(http_status_1.default.OK).send(editedComment);
-        }
-        catch (error) {
-            next(error);
-        }
-    });
-}
-exports.updateComment = updateComment;
-function deleteComment(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const { commentId } = req.params;
-            const deletedComment = yield commentsService.deleteComment(commentId);
-            yield moviesService.deleteComment(deletedComment.movie, deletedComment._id);
-            res.status(http_status_1.default.NO_CONTENT).send();
-        }
-        catch (error) {
-            next(error);
-        }
-    });
-}
-exports.deleteComment = deleteComment;
+    if (!updatedComment) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Comment not found');
+    }
+    res.status(http_status_1.default.OK).send(updatedComment);
+}));
+exports.deleteComment = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { commentId } = req.params;
+    const deletedComment = yield commentsService.deleteComment(commentId);
+    if (!deletedComment) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Comment not found');
+    }
+    yield moviesService.deleteComment(deletedComment.movie, deletedComment._id);
+    res.status(http_status_1.default.NO_CONTENT).send();
+}));

@@ -1,10 +1,26 @@
-import { Types } from 'mongoose';
-import STATUS from 'http-status';
-import ApiError from '../shared/ApiError';
-import { IMovie, IMovieOptional, Movie } from '../models/movies.model';
+import { SortOrder, Types } from 'mongoose';
+import { IMovie, MovieOptional, Movie } from '../models/movies.model';
 
-export function getMovies(populatedFields: string[]) {
-  return Movie.find().populate(populatedFields).lean();
+export function getMovies({
+  year,
+  sortOrder,
+  populatedFields,
+}: {
+  year: string;
+  sortOrder: SortOrder;
+  populatedFields: string[];
+}) {
+  const query = Movie.find().populate(populatedFields);
+
+  if (year) {
+    query.where('year', year);
+  }
+
+  if (sortOrder) {
+    query.sort({ title: sortOrder });
+  }
+
+  return query;
 }
 
 export function getMovie(
@@ -14,71 +30,56 @@ export function getMovie(
   return Movie.findById(id).populate(populatedFields);
 }
 
-export function createMovie({
-  title,
-  category,
-  year,
-  duration,
-  director,
-}: IMovie) {
-  return Movie.create({ title, category, year, duration, director });
+export function createMovie(movie: IMovie) {
+  return Movie.create(movie);
 }
 
-export async function addComment(
+export function addComment(
   movieId: string | Types.ObjectId,
   commentId: string | Types.ObjectId
 ) {
-  const updatedMovie = await Movie.findByIdAndUpdate(
+  return Movie.findByIdAndUpdate(
     { _id: movieId },
     { $addToSet: { comments: commentId } }
   );
-
-  if (!updatedMovie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
-  }
-
-  return updatedMovie;
 }
 
-export async function deleteComment(
+export function deleteComment(
   movieId: string | Types.ObjectId,
   commentId: string | Types.ObjectId
 ) {
-  const updatedMovie = await Movie.findByIdAndUpdate(
+  return Movie.findByIdAndUpdate(
     { _id: movieId },
     { $pull: { comments: commentId } }
   );
-
-  if (!updatedMovie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
-  }
-
-  return updatedMovie;
 }
 
-export async function updateMovie(
-  id: string | Types.ObjectId,
-  { title, category, year, duration, director }: IMovieOptional
-) {
-  const updatedMovie = await Movie.findByIdAndUpdate(
-    id,
-    { title, category, year, duration, director },
-    { new: true }
-  );
-
-  if (!updatedMovie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
-  }
-
-  return updatedMovie;
+export function updateMovie(id: string | Types.ObjectId, data: MovieOptional) {
+  return Movie.findByIdAndUpdate(id, data, { new: true });
 }
 
-export async function deleteMovie(id: string) {
-  const deletedMovie = await Movie.findByIdAndDelete(id);
+export function deleteMovie(id: string) {
+  return Movie.findByIdAndDelete(id);
+}
 
-  if (!deletedMovie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
-  }
+export function aggregateByDirector() {
+  return Movie.aggregate([
+    {
+      $group: {
+        _id: '$director',
+        moviesCount: {
+          $sum: 1,
+        },
+      },
+    },
+  ]);
+}
 
-  return deletedMovie;
+export function aggregateByDates({ from, to }: { from: number; to: number }) {
+  return Movie.aggregate([
+    {
+      $match: { year: { $gte: from, $lte: to } },
+    },
+    { $count: 'count' },
+  ]);
 }
