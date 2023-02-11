@@ -1,14 +1,5 @@
 import { query } from 'express-validator';
-
-export const SORT_ORDER_VALUES = [
-  '',
-  -1,
-  1,
-  'asc',
-  'ascending',
-  'desc',
-  'descending',
-];
+import { SORT_ORDER_VALUES } from './const';
 
 export const sortOrderValidation = [
   query('sort')
