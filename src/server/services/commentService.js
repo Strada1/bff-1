@@ -8,7 +8,11 @@ const addComment = async (id, { title }) => {
   movie.save();
 };
 
-const getAllComments = async (id) => {
+const getAllComments = async () => {
+  return CommentModel.find();
+}
+
+const getAllCommentsInMovie = async (id) => {
   const movie = await MovieModel.findById(id);
   return movie.comments
 }
@@ -33,4 +37,4 @@ const updateComment = async (movieId, commentId, { title }) => {
 }
 
 
-module.exports = { addComment, getAllComments, removeComment, updateComment };
+module.exports = { addComment, getAllComments, getAllCommentsInMovie, removeComment, updateComment };

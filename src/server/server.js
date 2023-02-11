@@ -4,20 +4,20 @@ const cors = require('cors');
 const connectDB = require("./connectDB");
 const { createCategory, deleteCategory, changeCategory, showCategories } = require("./routes/categories");
 const { createMovie, showMovies, changeMovie, deleteMovie } = require("./routes/movies");
-const { createComment, showComments, deleteComment, changeComment } = require('./routes/comments')
+const { createComment, showComments, deleteComment, changeComment, showAllComments } = require('./routes/comments')
 const { showDirector, createDirector, deleteDirector, changeDirector } = require("./routes/director");
-const port = 3000;
 
 connectDB();
-app.use(express.json());
 
 const allowedOrigins = [
-  `http://localhost:${port}`
+  `http://localhost:${process.env.PORT}`
 ];
 
 app.use(cors({
   origin: allowedOrigins
 }));
+
+app.use(express.json());
 
 app.use(createCategory)
 app.use(changeCategory)
@@ -33,6 +33,7 @@ app.use(createComment)
 app.use(showComments)
 app.use(deleteComment)
 app.use(changeComment)
+app.use(showAllComments)
 
 app.use(showDirector)
 app.use(createDirector)
@@ -40,7 +41,7 @@ app.use(changeDirector)
 app.use(deleteDirector)
 
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(process.env.PORT, () => {
+  console.log(`Example app listening on port ${process.env.PORT}`)
 });
 

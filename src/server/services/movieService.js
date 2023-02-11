@@ -19,7 +19,7 @@ const updateMovie = (id, { title, year, movie, duration }) => {
 }
 
 const getAllMovies = () => {
-  return MovieModel.find()
+  return MovieModel.find().populate('directorId').populate('category')
 }
 
 const getMovie = (id) => {

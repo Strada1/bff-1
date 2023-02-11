@@ -1,5 +1,5 @@
 const express = require("express")
-const { addComment, getAllComments, removeComment, updateComment } = require("../services/commentService");
+const { addComment, getAllComments, removeComment, updateComment, getAllCommentsInMovie } = require("../services/commentService");
 const app = express()
 
 const createComment = app.post('/movies/:movieId/comments', async (req, res) => {
@@ -13,11 +13,20 @@ const createComment = app.post('/movies/:movieId/comments', async (req, res) => 
   }
 })
 
+const showAllComments = app.get('/movies/comments', async (req, res) => {
+  try {
+    const allComments = await getAllComments();
+    return res.status(200).json(allComments);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+})
+
 const showComments = app.get('/movies/:movieId/comments', async (req, res) => {
   try {
     if (!req.body && !req.params.movieId) return res.status(400).send('Comment not show!');
     const id = req.params.movieId;
-    const allComments = await getAllComments(id);
+    const allComments = await getAllCommentsInMovie(id);
     return res.status(200).json(allComments);
   } catch (e) {
     return res.status(500).send(e.message);
@@ -50,4 +59,4 @@ const changeComment = app.put('/movies/:movieId/comments/:commentId', async (req
   }
 })
 
-module.exports = { createComment, showComments, deleteComment, changeComment };
+module.exports = { createComment, showComments, deleteComment, changeComment, showAllComments };
