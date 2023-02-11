@@ -7,7 +7,7 @@ const cors = require("cors");
 const port = process.env.PORT;
 
 const fileReading = require('../bff-1/fs');
-fileReading();
+//fileReading();
 
 connectDb();
 
@@ -25,6 +25,7 @@ app.use("/movies", require("./routes/movieRoutes"));
 app.use("/categories", require("./routes/categoryRoutes"));
 app.use("/movies", require("./routes/commentRoutes"));
 app.use("/directors", require("./routes/directorRoutes"));
+app.use("/aggregate", require("./routes/aggregate"));
 
 app.listen(port, () => {
   console.log(`Server run at ${port}`)

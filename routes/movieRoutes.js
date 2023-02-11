@@ -1,5 +1,4 @@
 const express = require('express');
-const { body, param } = require('express-validator');
 const router = express.Router();
 const { findAllMovies, createMovie, findAndDelete, findAndUpdate, findItemById } = require('../services/movieService');
 const { validateMovie } = require('../middlewares');

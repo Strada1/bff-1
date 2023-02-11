@@ -1,5 +1,4 @@
 const express = require('express');
-const { body, param } = require('express-validator');
 const router = express.Router();
 const { findAllDirectors, createDirector, findAndDelete, findAndUpdate, findItemById } = require('../services/directorService');
 const { validateDirector } = require('../middlewares');
@@ -74,5 +73,5 @@ router.put('/:directorId/edit',
     }
   });
 
-  
+
 module.exports = router;
