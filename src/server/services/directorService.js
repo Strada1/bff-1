@@ -1,7 +1,7 @@
 const DirectorModel = require("../models/director");
 
-const addDirector = ({ title }) => {
-  return DirectorModel.create({ title })
+const addDirector = ({ title, movies }) => {
+  return DirectorModel.create({ title, movies })
 }
 
 const removeDirector = ({ id }) => {
