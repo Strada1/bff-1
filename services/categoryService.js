@@ -1,22 +1,28 @@
 const CategoryModel = require('../models/categoryModel');
 
-const findAllCategories = () => { 
-	return CategoryModel.find();
+const findAllCategories = ({ sort }) => {
+	const query = CategoryModel.find();
+	if (sort) query
+		.sort({
+			title: 1
+		});
+
+	return query;
 }
 
-const createCategory = ({ title}) => { 
-	return CategoryModel.create({ title}); 
+const createCategory = ({ title }) => {
+	return CategoryModel.create({ title });
 }
 
-const findItemById = (id) => { 
+const findItemById = (id) => {
 	return CategoryModel.findById(id);
 }
 
-const findAndDelete = (id) => { 
+const findAndDelete = (id) => {
 	return CategoryModel.findByIdAndDelete(id);
 }
 
-const findAndUpdate = (id, body, options) => { 
+const findAndUpdate = (id, body, options) => {
 	return CategoryModel.findByIdAndUpdate(id, body, options);
 }
 

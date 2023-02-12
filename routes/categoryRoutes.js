@@ -5,8 +5,9 @@ const { validateCategory } = require('../middlewares');
 const { categoryPostValidatorSchema, categoryDeleteValidatorSchema, categoryEditValidatorSchema } = require('../validatorSchema/category');
 
 router.get('/', async (req, res) => {
+  const { sort } = req.query;
   try {
-    const categories = await findAllCategories();
+    const categories = await findAllCategories({ sort });	
     return res.status(201).send(categories);
   } catch (err) {
     return res.status(500).send(err);

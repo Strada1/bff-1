@@ -5,8 +5,9 @@ const { validateMovie } = require('../middlewares');
 const { moviePostValidatorSchema, movieDeleteValidatorSchema, movieEditValidatorSchema } = require('../validatorSchema/movie');
 
 router.get('/', async (req, res) => {
+  const { director, year, sort, onyears } = req.query;
   try {
-    const movies = await findAllMovies();
+    const movies = await findAllMovies({ director, year, sort, onyears });
     return res.status(201).send(movies);
   } catch (err) {
     return res.status(500).send(err);
