@@ -10,7 +10,7 @@ const { createMovie, editMovie, deleteMovie } = require("../services/movie");
 
 router.get("/", async (req, res) => {
   try {
-    const movieList = await MovieSchema.find().populate("category comments");
+    const movieList = await MovieSchema.find().populate("category comments director");
     return res.status(200).send(movieList);
   } catch (error) {
     return res.status(500).send(error);

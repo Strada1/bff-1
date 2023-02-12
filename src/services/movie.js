@@ -11,7 +11,7 @@ const createMovie = async ({ title, year, rating, category }) => {
 };
 
 const editMovie = async ({ params, body }) => {
-  const { title, year, rating, category } = body;
+  const { title, year, rating, category, director } = body;
   const { id } = params;
 
   const updatedMovie = await MovieSchema.findByIdAndUpdate(id, {
@@ -19,6 +19,7 @@ const editMovie = async ({ params, body }) => {
     year,
     rating,
     category,
+    director,
   });
 
   return updatedMovie;

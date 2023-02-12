@@ -19,4 +19,29 @@ router.post("/add", async (req, res) => {
   } catch (error) {}
 });
 
+router.put("/edit/:id", async (req, res) => {
+  try {
+    const { title } = req.body;
+    const editedCategory = await CategoryScheme.findByIdAndUpdate(
+      req.params.id,
+      { title }
+    );
+    return res.status(201).send(editedCategory);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const deletedCategory = await CategoryScheme.findByIdAndDelete(
+      req.params.id
+    );
+
+    return res.status(201).send(deletedCategory);
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+});
+
 module.exports = router;

@@ -12,6 +12,10 @@ const MovieSchema = new mongoose.Schema({
       },
     ],
   },
+  director: {
+    ref: "Director",
+    type: mongoose.Schema.Types.ObjectId,
+  },
   category: {
     ref: "Category",
     type: mongoose.Schema.Types.ObjectId,
