@@ -1,0 +1,14 @@
+[
+  {
+    "title": "testing film",
+    "year": 1980,
+    "category": "63e7607d10e7237b83535eb0",
+    "directorId": "63e647de2f05feef04b3862b"
+  },
+  {
+    "title": "Hello, I am Ilya",
+    "year": 1990,
+    "category": "63e7607d10e7237b83535eb0",
+    "directorId": "63e647de2f05feef04b3862b"
+  }
+]
