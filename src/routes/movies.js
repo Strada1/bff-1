@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const MovieSchema = require("../models/movie");
+const fs = require("node:fs/promises");
+const { opendir } = require("node:fs/promises");
 const {
   editComments,
   deleteComments,
@@ -8,6 +10,7 @@ const {
 } = require("../services/comments");
 const { body, validationResult, check } = require("express-validator");
 const { createMovie, editMovie, deleteMovie } = require("../services/movie");
+const { route } = require("./directors");
 
 const titleValidator = async (value) => {
   const matchedFilm = await MovieSchema.findOne({ title: value });
@@ -20,7 +23,7 @@ const titleValidator = async (value) => {
 const ratingValidator = async (value) => {
   if (value > 10) {
     throw new Error("Rating must be less than 10!");
-  } 
+  }
 
   if (value < 0) {
     throw new Error("Rating can't be less than 0!");
@@ -46,6 +49,22 @@ router.get("/", async (req, res) => {
     return res.status(500).send(error);
   }
 });
+
+// ------------------ by file
+
+router.get("/file", async (req, res) => {
+  try {
+    const file = await fs.readFile("./src/files/movies.json", {
+      encoding: "utf8",
+    });
+
+    return res.status(200).send(file);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+// ------------------ by file
 
 router.post(
   "/add",
