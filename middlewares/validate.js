@@ -1,16 +1,13 @@
-function validateBodyAndParamsFields(bodyFields, paramsFields) {
-  return (req, res, next) => {
-    for (const field of bodyFields) {
-      if (!(field in req.body)) {
-        return res.status(400).send('wrong body params');
-      }
-    }
-    for (const field of paramsFields) {
-      if (!(field in req.params)) {
-        return res.status(400).send('wrong request params');
-      }
-    }
-    next();
-  };
+const {validationResult} = require('express-validator');
+
+function validate(req, res, next) {
+  const errors = validationResult(req);
+  if (errors.isEmpty()) {
+    return next();
+  }
+  const extractedErrors = [];
+  errors.array().map((error) => extractedErrors.push({[error.param]: error.msg}));
+  return res.status(422).json({errors: extractedErrors});
 }
-module.exports = validateBodyAndParamsFields;
+
+module.exports = validate;

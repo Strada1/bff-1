@@ -13,12 +13,12 @@ const updateDirector = async (directorId, director) => {
   await Directors.findByIdAndUpdate(directorId, director);
 };
 
-const deleteCategory = async (directorId) => {
+const deleteDirector = async (directorId) => {
   await Directors.findByIdAndDelete(directorId);
 };
 module.exports = {
   getAllDirectors,
   addDirector,
   updateDirector,
-  deleteCategory,
+  deleteDirector,
 };

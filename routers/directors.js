@@ -1,47 +1,39 @@
 const {Router} = require('express');
 const {PATHS} = require('../constants');
-const {getAllDirectors, addDirector, updateDirector, deleteCategory} = require('../service/db/directorsService');
+const {body, param} = require('express-validator');
+const {getDirectors, addDirector, updateDirector, deleteDirector} = require('../controllers/directors');
+const validate = require('../middlewares/validate');
 
 const router = Router();
 
-router.get(PATHS.DIRECTORS.ALL, async (req, res) => {
-  try {
-    const allDirectors = await getAllDirectors();
-    return res.status(200).json(allDirectors);
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-});
+router.get(PATHS.DIRECTORS.ALL, [], validate, getDirectors);
 
-router.post(PATHS.DIRECTORS.ALL, async (req, res) => {
-  try {
-    if (!req.body) return res.status(400).send('wrong request body');
-    await addDirector(req.body);
-    return res.status(201).send('director added');
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-});
+router.post(
+  PATHS.DIRECTORS.ALL,
+  [
+    body('firstName').notEmpty().withMessage('the firstName field should not be empty'),
+    body('lastName').notEmpty().withMessage('the lastName field should not be empty'),
+  ],
+  validate,
+  addDirector
+);
 
-router.put(PATHS.DIRECTORS.BY_ID, async (req, res) => {
-  try {
-    if (!req.body) return res.status(400).send('wrong request body!');
-    if (!req.params['directorId']) return res.status(400).send('wrong request params');
-    await updateDirector(req.params['directorId'], req.body);
-    return res.status(201).send('director updated!');
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.put(
+  PATHS.DIRECTORS.BY_ID,
+  [
+    body('firstName').notEmpty().withMessage('the firstName field should not be empty'),
+    body('lastName').notEmpty().withMessage('the lastName field should not be empty'),
+    param('directorId').notEmpty().withMessage('directorId is required param'),
+  ],
+  validate,
+  updateDirector
+);
 
-router.delete(PATHS.DIRECTORS.BY_ID, async (req, res) => {
-  try {
-    if (!req.params['directorId']) return res.status(400).send('wrong request params');
-    await deleteCategory(req.params['directorId']);
-    return res.status(201).send('director deleted!');
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+router.delete(
+  PATHS.DIRECTORS.BY_ID,
+  [param('directorid').notEmpty().withMessage('directorid is required param')],
+  validate,
+  deleteDirector
+);
 
 module.exports = router;
