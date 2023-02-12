@@ -14,7 +14,8 @@ const fieldValidators = [
 
 const showMovies = app.get('/movies', async (req, res) => {
   try {
-    const allMovies = await getAllMovies();
+    const { sort, title, year } = req.query
+    const allMovies = await getAllMovies(sort, title, year);
     return res.status(200).json(allMovies);
   } catch (e) {
     return res.status(500).send(e.message);

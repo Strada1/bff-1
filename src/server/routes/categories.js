@@ -10,7 +10,8 @@ const paramValidator = param('categoryId').isMongoId().withMessage('categoryId m
 
 const showCategories = app.get('/categories', async (req, res) => {
   try {
-    const allCategories = await getAllCategories()
+    const { sort } = req.query
+    const allCategories = await getAllCategories(sort)
     return res.status(200).json(allCategories);
   } catch (e) {
     return res.status(500).send(e.message);

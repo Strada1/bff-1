@@ -1,11 +1,13 @@
 const CategoryModel = require("../models/category");
 
-const getAllCategories = () => {
-  return CategoryModel.find();
+const getAllCategories = (sort) => {
+  const query = CategoryModel.find().populate('movies')
+  if (sort) query.sort({ title: sort })
+  return query.exec();
 }
 
-const addCategory = ({ title }) => {
-  return CategoryModel.create({ title });
+const addCategory = (data) => {
+  return CategoryModel.create(data);
 }
 
 const removeCategory = ({ id }) => {
