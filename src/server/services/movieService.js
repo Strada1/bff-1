@@ -18,8 +18,8 @@ const updateMovie = (id, { title, year, movie, duration }) => {
   return MovieModel.findOneAndUpdate(id, update, { new: true });
 }
 
-const getAllMovies = (sort, title, year) => {
-  const query = MovieModel.find().populate('directorId').populate('category')
+const getAllMovies = ({ sort, title, year }) => {
+  const query = MovieModel.find().lean().populate('directorId').populate('category')
   if (title) query.where('title', title)
   if (year) query.where('year', year)
   if (sort) query.sort({ year: sort })

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { ObjectId } = require('mongodb')
 
 const MovieSchema = new mongoose.Schema({
   title: {
@@ -6,14 +7,14 @@ const MovieSchema = new mongoose.Schema({
     required: true,
   },
   category: {
-    type: 'ObjectId',
+    type: ObjectId,
     ref: 'Category'
   },
   year: Number,
   movie: String,
   duration: Number,
   directorId: {
-    type: 'ObjectId',
+    type: ObjectId,
     ref: 'Director'
   },
   comments: [{ title: String, date: Date }]
