@@ -9,9 +9,10 @@ const {body, validationResult} = require("express-validator");
 
 const addRoutes = (app) => {
     app.post('/movies',
-        body('year')
-            .notEmpty()
-            .withMessage('must be a year of movie'),
+        body('title').notEmpty().bail().withMessage('must be a title of movie'),
+        body('year').notEmpty().bail().withMessage('must be a year of movie'),
+        body('category').notEmpty().bail().withMessage('must be a category of movie'),
+        body('duration').notEmpty().bail().withMessage('must be a duration of movie'),
         async (req, res) => {
         try {
             const errors = validationResult(req);
