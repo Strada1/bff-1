@@ -20,6 +20,20 @@ const getMovieById = (id) => {
     return Movie.findById(id);
 }
 
+const getAllMovies = ({ sort, title, year }) => {
+    const query = Movie.find().lean().populate('directorId').populate('category')
+    if (title) {
+        query.where('title', title)
+    }
+    if (year) {
+        query.where('year', year)
+    }
+    if (sort) {
+        query.sort({ year: sort })
+    }
+    return query.exec()
+}
+
 module.exports = {
     createMovie,
     getMovies,

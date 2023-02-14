@@ -1,0 +1,221 @@
+[{
+  "_id": {
+    "$oid": "63d50e34de3296952cb8169f"
+  },
+  "title": "Matrix",
+  "year": 1999,
+  "director": "обалдеть, обновилось 8",
+  "comments": [
+    {
+      "$oid": "63dec73494d7f3ab94587e86"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "63d5120f840716acc39ba47b"
+  },
+  "title": "Matrixa",
+  "category": "action",
+  "year": 1999,
+  "duration": 120,
+  "director": "Vachovsky"
+},{
+  "_id": {
+    "$oid": "63d6de0665840cb2bd8aecdd"
+  },
+  "title": "harry potter",
+  "year": 2020,
+  "duration": 134,
+  "director": "hz"
+},{
+  "_id": {
+    "$oid": "63dbd22da079d087198957c8"
+  },
+  "title": "Bruno",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2020,
+  "duration": 124,
+  "director": "обалдеть, обновилось 3",
+  "comments": [
+    {
+      "$oid": "63deb3328aa7cba4cac28d48"
+    },
+    {
+      "$oid": "63deb3b7ad5bb7fb55097e6e"
+    },
+    {
+      "$oid": "63deb3bbad5bb7fb55097e72"
+    },
+    {
+      "$oid": "63deb3c7725a90cb563950cf"
+    }
+  ]
+},{
+  "_id": {
+    "$oid": "63dec29636e33a3621a408cf"
+  },
+  "title": "Lexy in the shop",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": "brask input",
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e167434e31f4c2e75d3503"
+  },
+  "title": "Хороший фильм",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e16762193b6c5ce24cdd5b"
+  },
+  "title": "Хороший фильм 2",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e16be215669778b2f98338"
+  },
+  "title": "Хороший фильм 3",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e16c9bf7093abdf0fa63eb"
+  },
+  "title": "Хороший фильм 3",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e16d228b65606dc5ade6ba"
+  },
+  "title": "Хороший фильм 3",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e16e386bce441daa0e508d"
+  },
+  "title": "Хороший фильм 3",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e170683f6486a461342215"
+  },
+  "title": "Хороший фильм 3",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e17095903e44d22e70bf5a"
+  },
+  "title": "Хороший фильм 3",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e2b9535743b09ea5972773"
+  },
+  "title": "боди хоррор",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e2b97991bb76644c3025e2"
+  },
+  "title": "боди хоррор",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+},{
+  "_id": {
+    "$oid": "63e3bc436ee11a33fb05e840"
+  },
+  "title": "Переделал роуты",
+  "category": {
+    "$oid": "63d6deb8c7537c128232ce91"
+  },
+  "year": 2005,
+  "duration": 124,
+  "director": {
+    "$oid": "63e014ec45e651ae3c5e6fa3"
+  },
+  "comments": []
+}]
