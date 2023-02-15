@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="refactor: Code">
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added rout delete movie">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/learn-node.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/learn-node.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/CategoriesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/CategoriesContoller.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/MoviesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/MoviesContoller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Movies.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Movies.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/movies.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/movies.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/сategories.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/сategories.routes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +56,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.13.0&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.11.18&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/projects/bff-1&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/WebstormProjects/basics-3/dasha.mogacheva&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -59,6 +69,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\WebstormProjects\bff-1-den.soldugeev\controllers" />
+      <recent name="D:\WebstormProjects\bff-1-den.soldugeev\models" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
@@ -106,6 +122,11 @@
       <workItem from="1675247515468" duration="12688000" />
       <workItem from="1675296523105" duration="163000" />
       <workItem from="1675351906474" duration="1850000" />
+      <workItem from="1676131286690" duration="222000" />
+      <workItem from="1676131511895" duration="6450000" />
+      <workItem from="1676140240962" duration="611000" />
+      <workItem from="1676217458020" duration="1640000" />
+      <workItem from="1676308093693" duration="1627000" />
     </task>
     <task id="LOCAL-00001" summary="Project init">
       <created>1674753075589</created>

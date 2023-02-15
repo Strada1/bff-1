@@ -11,6 +11,10 @@ const MovieSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
   },
+  director: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Director',
+  },
 });
 
 const MovieModal = mongoose.model('Movie', MovieSchema);
