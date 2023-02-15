@@ -1,9 +1,11 @@
 const url = process.env.MONGO_CONNECTION_STRING;
 const mongoose = require('mongoose')
 
+mongoose.set('strictQuery', false);
+
 const TrackSchema = new mongoose.Schema({
   title: String,
-  genre: { type: 'ObjectId', ref: 'Genres' },
+  genre: { type: 'ObjectId', ref: 'Genre' },
   album: String,
   year: Number,
   duration: Number,
@@ -17,7 +19,7 @@ const GenreSchema = new mongoose.Schema({
 const ReviewSchema = new mongoose.Schema({
   text: String,
   score: Number,
-  trackId: {type: 'ObjectId', ref: 'Tracks'},
+  trackId: {type: 'ObjectId', ref: 'Track'},
 })
 
 const ArtistSchema = new mongoose.Schema({
@@ -25,7 +27,7 @@ const ArtistSchema = new mongoose.Schema({
 })
 
 const Track = new mongoose.model('Track', TrackSchema);
-const Review = new mongoose.model('TrackReview', ReviewSchema)
+const Review = new mongoose.model('Review', ReviewSchema)
 const Genre = new mongoose.model('Genre', GenreSchema);
 const Artist = new mongoose.model('Artist', ArtistSchema);
 

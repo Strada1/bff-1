@@ -1,47 +1,71 @@
-const express = require('express')
-const router = require('./tracks')
+const router = require('./tracks');
+const {validationResult} = require('express-validator');
+const sendError = require('../helpers/sendError')
+
+const { validateParamId, validateNumericField, validateStringField, validateMongoIdField } = require('../middleware/routeValidation')
 
 const REVIEW = require('../services/reviewService');
 
-router.post('/:trackId/reviews', async (req, res) => {
+const reviewIdLink = '/:trackId/reviews/:reviewId';
+
+const reviewParamValidation = [
+  validateParamId('trackId'), 
+  validateParamId('reviewId')
+]
+const reviewPostValidation = [
+  validateStringField('text'), 
+  validateNumericField('score'),
+  validateMongoIdField('trackId')
+]
+
+router.post('/:trackId/reviews', reviewPostValidation,
+  async (req, res) => {
     try {
+      validationResult(req).throw()
       const review = req.body;
       await REVIEW.CREATE(review, req.params.trackId);
       return res.status(201).send('track review added');
-    } catch(e) {
-      return res.status(501).send('something went wrong')
+    } catch(error) {
+      return sendError(error.array(), res, 400)
     }
-  })
+})
 
-router.route('/:trackId/reviews/:reviewId')
-  .get(async (req, res) => {
+router.get(reviewIdLink, reviewParamValidation,
+  async (req, res) => {
     try {
+      validationResult(req).throw()
       const reviewId = req.params.reviewId;
       const review = await REVIEW.GET(reviewId)
       return res.status(201).send(review)
-    } catch(e) {
-      return res.status(500).send('something went wrong')
+    } catch(error) {
+      return sendError(error.array(), res, 400)
     }
-  })
-  .put(async (req, res) => {
+})
+
+router.put(reviewIdLink, reviewParamValidation,
+  async (req, res) => {
     try {
+      validationResult(req).throw()
       const reviewId = req.params.reviewId;
       const update = req.body;
       await REVIEW.UPDATE(reviewId, update)
       return res.status(201).send('review updated')
-    } catch(e) {
-      return res.status(500).send('something went wrong')
+    } catch(error) {
+      return sendError(error.array(), res, 400)
     }
-  })
-  .delete(async (req, res) => {
+})
+
+router.delete(reviewIdLink, reviewParamValidation, 
+  async(req, res) => {
     try {
+      validationResult(req).throw()
       const reviewId = req.params.reviewId;
       await REVIEW.DELETE(reviewId)
       return res.status(201).send('review deleted')
-    } catch(e) {
-      return res.status(500).send('something went wrong')
+    } catch(error) {
+      return sendError(error.array(), res, 400)
     }
-  })
+})
 
 
-module.exports = router;
+  module.exports = router;

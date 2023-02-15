@@ -3,6 +3,7 @@ const {mongoose, url} = require('./database')
 const tracks = require('./router/tracks')
 const genres = require('./router/genres')
 const artist = require('./router/artists')
+const review = require('./router/reviews')
 
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -13,7 +14,7 @@ const port = process.env.PORT
 
 app.use(express.json())
 app.use(cors({origin: 'https://youtube.com'}))
-app.use('/tracks', tracks)
+app.use('/tracks', [tracks, review])
 app.use('/genres', genres)
 app.use('/artist', artist)
 
