@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added rout directors">
-      <change afterPath="$PROJECT_DIR$/.env.template" afterDir="false" />
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added env file">
+      <change afterPath="$PROJECT_DIR$/middleware/handleValidationErrors.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/validation/validation.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/db.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Movies.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Movies.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/movies.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/movies.routes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +178,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676479280893</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat: Added env file">
+      <created>1676479623658</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1676479623658</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,6 +222,7 @@
     <MESSAGE value="feat: Added new key for MovieSchema" />
     <MESSAGE value="refactor: Code" />
     <MESSAGE value="feat: Added rout directors" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Added rout directors" />
+    <MESSAGE value="feat: Added env file" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Added env file" />
   </component>
 </project>

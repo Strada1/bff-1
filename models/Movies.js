@@ -5,7 +5,10 @@ const MovieSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  year: Number,
+  year: {
+    type: Number,
+    required: true,
+  },
   rating: Number,
   category: {
     type: mongoose.Schema.Types.ObjectId,
