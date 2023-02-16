@@ -4,12 +4,16 @@ const findAllUsers = () => {
 	return UserModel.find();
 }
 
-const createUser = ({ email, password, username, roles }) => { 
-	return UserModel.create({ email, password, username, roles }); 
+const createUser = ({ email, token, username, roles }) => { 
+	return UserModel.create({ email, token, username, roles }); 
 }
 
-const findOneByCondition = ({email}) => { 
+const findOneByEmail = ({email}) => { 
 	return UserModel.findOne({ email: email });
 }
 
-module.exports = { findAllUsers, createUser, findOneByCondition };
+const findOneByToken = ({token}) => { 
+	return UserModel.findOne({ token: token });
+}
+
+module.exports = { findAllUsers, createUser, findOneByEmail, findOneByToken };

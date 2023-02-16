@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
-const { findOneByCondition } = require('../services/userService');
+const { findOneByToken } = require('../services/userService');
+const jwt = require('jsonwebtoken');
 
 const validateMovie = (req, res, next) => {
   const errors = validationResult(req);
@@ -48,25 +49,18 @@ const validateUser = (req, res, next) => {
 
 
 const authentication = async (req, res, next) => {
-  const authheader = req.get('Authorization');
+  const authToken = req.get('Authorization');
 
-  if (!authheader) {
+  if (!authToken) {
     return res.status(401).send('You are not authenticated!');
   }
 
-  const auth = authheader.split(' ');
-  const email = auth[0];
-  const pass = auth[1];
-
-  const user = await findOneByCondition({ email });
+  const user = await findOneByToken({ authToken });
 
   if (!user) {
-    return res.status(401).send('This email does not exist');
+    return res.status(401).send('This token does not exist');
   }
 
-  if (pass.toString() !== user.password) {
-    return res.status(401).send('Password does not match email');
-  }
   next();
 }
 

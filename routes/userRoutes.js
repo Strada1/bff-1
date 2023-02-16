@@ -1,17 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { findAllUsers, createUser, findOneByCondition } = require('../services/userService');
+const { createUser, findOneByEmail } = require('../services/userService');
 const { validateUser } = require('../middlewares');
 const { userPostValidatorSchema } = require('../validatorSchema/user');
-
-router.get('/', async (req, res) => {
-  try {
-    const users = await findAllUsers();
-    return res.status(201).send(users);
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
+const jwt = require('jsonwebtoken');
 
 router.post('/create',
   userPostValidatorSchema,
@@ -19,7 +11,8 @@ router.post('/create',
   async (req, res) => {
     const { email, password, username, roles } = req.body;
     try {
-      const user = await createUser({ email, password, username, roles });
+      const token = await jwt.sign({email, password}, process.env.JWT_SECRET);
+      const user = await createUser({ email, token, username, roles });
       return res.status(201).send('user created');
     } catch (err) {
       return res.status(500).send(err);
@@ -27,16 +20,25 @@ router.post('/create',
   });
 
 router.get('/auth',
+userPostValidatorSchema,
+validateUser,
 async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await findOneByCondition({email});
 
-    if (password.toString() !== user.password) {
-      return res.status(401).send('Password does not match email');
+    const user = await findOneByEmail({ email });
+    console.log('user', user)
+    if (user === null) {
+      return res.status(401).send('This user was not found');
     }
 
-    return res.status(201).send(`${email} ${password}`);
+    const payload = await jwt.verify(user.token, process.env.JWT_SECRET);
+
+    if (password !== payload.password) {
+      return res.status(401).send('Token does not found');
+    }
+
+    return res.status(201).send(user.token);
   } catch (err) {
     return res.status(500).send(err);
   }
