@@ -6,8 +6,9 @@ const { createCategory, deleteCategory, changeCategory, showCategories } = requi
 const { createMovie, showMovies, changeMovie, deleteMovie } = require("./routes/movies");
 const { createComment, showComments, deleteComment, changeComment, showAllComments } = require('./routes/comments')
 const { showDirector, createDirector, deleteDirector, changeDirector } = require("./routes/director");
-const { uploadFileToDB } = require("./services/uploadFileToDB");
+const { uploadFile, addToDB } = require("./services/uploadFile");
 const { getDirectorForId, getMoviesCount } = require("./routes/testRoute");
+const { createUser, getUsers, changeUser, deleteUser, checkUser } = require("./routes/userRoute");
 
 connectDB();
 
@@ -37,6 +38,12 @@ app.use(deleteComment)
 app.use(changeComment)
 app.use(showAllComments)
 
+app.use(createUser)
+app.use(getUsers)
+app.use(changeUser)
+app.use(deleteUser)
+app.use(checkUser)
+
 app.use(showDirector)
 app.use(createDirector)
 app.use(changeDirector)
@@ -47,7 +54,8 @@ app.use(getMoviesCount)
 
 
 app.listen(process.env.PORT, async () => {
-  // await uploadFileToDB('./movies.json')
+  const movies = await uploadFile('./movies.json')
+  await addToDB(movies)
   console.log(`Example app listening on port ${process.env.PORT}`)
 });
 

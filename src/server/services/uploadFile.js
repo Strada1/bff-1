@@ -11,17 +11,21 @@ const validate = (data, requiredFields) => {
   return missingFields;
 };
 
-const uploadFileToDB = async (path) => {
+const addToDB = async (movies) => {
+  for (const movie of movies) {
+    const missingFields = validate(movie, ['title', 'year', 'directorId'])
+    missingFields.length > 0 ? console.log(`The movie is not loaded: ${movie?.title}`) : await addMovie(movie)
+  }
+}
+
+const uploadFile = async (path) => {
   try {
     const data = await fs.readFile(path, { encoding: 'utf8' });
     const movies = JSON.parse(data)
-    for (const movie of movies) {
-      const missingFields = validate(movie, ['title', 'year', 'directorId'])
-      missingFields.length > 0 ? console.log(`The movie is not loaded: ${movie?.title}`) : await addMovie(movie)
-    }
+    return movies;
   } catch (e) {
     console.log(e)
   }
 }
 
-module.exports = { uploadFileToDB }
+module.exports = { uploadFile, addToDB }

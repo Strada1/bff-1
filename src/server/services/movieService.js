@@ -4,8 +4,8 @@ const addMovie = ({ title, category, year, movie, duration, directorId }) => {
   return MovieModel.create({ title, category, year, movie, duration, directorId, comments: [] })
 }
 
-const removeMovie = ({ id }) => {
-  return MovieModel.findOneAndDelete(id)
+const removeMovie = (id) => {
+  return MovieModel.findOneAndDelete({ _id: id })
 }
 
 const updateMovie = (id, { title, year, movie, duration }) => {
