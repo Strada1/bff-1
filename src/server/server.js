@@ -8,7 +8,7 @@ const { createComment, showComments, deleteComment, changeComment, showAllCommen
 const { showDirector, createDirector, deleteDirector, changeDirector } = require("./routes/director");
 const { uploadFile, addToDB } = require("./services/uploadFile");
 const { getDirectorForId, getMoviesCount } = require("./routes/testRoute");
-const { createUser, getUsers, changeUser, deleteUser, checkUser } = require("./routes/userRoute");
+const { createUser, getUsers, changeUser, deleteUser, authUserWithToken } = require("./routes/userRoute");
 
 connectDB();
 
@@ -42,7 +42,7 @@ app.use(createUser)
 app.use(getUsers)
 app.use(changeUser)
 app.use(deleteUser)
-app.use(checkUser)
+app.use(authUserWithToken)
 
 app.use(showDirector)
 app.use(createDirector)

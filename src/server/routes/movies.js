@@ -4,6 +4,9 @@ const { validationResult, body, param } = require("express-validator");
 const { validate } = require("../middlewares");
 const app = express()
 const NodeCache = require("node-cache");
+const { checkToken } = require("../helpers");
+const { isAdmin } = require("../services/userService");
+const { log } = require("util");
 const movieCache = new NodeCache({ stdTTL: 3600 })
 
 const paramValidator = param('movieId').isMongoId().withMessage('movieId must be MongoId');
@@ -16,13 +19,28 @@ const fieldValidators = [
 
 const showMovies = app.get('/movies', async (req, res) => {
   try {
-    if (Object.keys(req.query).length === 0 && movieCache.has('movies')) {
-      return res.status(200).send(movieCache.get('movies'));
-    } else {
+    const token = req.headers.authorization;
+    const permission = await isAdmin(token)
+
+    if (!permission) {
+      return res.status(403).send('You don\'t have permission');
+    }
+
+    const hasQueryParams = Object.keys(req.query).length > 0
+    const hasCache = movieCache.has('movies')
+
+    if (hasQueryParams) {
       const allMovies = await getAllMovies(req.query);
-      movieCache.set('movies', allMovies)
       return res.status(200).send(allMovies);
     }
+
+    if (hasCache) {
+      return res.status(200).send(movieCache.get('movies'));
+    }
+
+    const allMovies = await getAllMovies(req.query);
+    movieCache.set('movies', allMovies)
+    return res.status(200).send(allMovies);
   } catch (e) {
     return res.status(500).send(e.message);
   }
