@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { findAllCommentsForMovie, createComment, findAndDelete, findAndUpdate, findItemById } = require('../services/commentService');
-const { validateComment } = require('../middlewares');
+const { validate } = require('../middlewares');
 const { commentGetValidatorSchema, commentGetOneValidatorSchema, commentPostValidatorSchema, commentEditValidatorSchema } = require('../validatorSchema/comment');
 
 router.get('/:movieId/comments',
   commentGetValidatorSchema,
-  validateComment,
+  validate,
   async (req, res) => {
     const id = req.params.movieId;
     try {
@@ -19,7 +19,7 @@ router.get('/:movieId/comments',
 
 router.get('/:movieId/comments/:commentId',
   commentGetOneValidatorSchema,
-  validateComment,
+  validate,
   async (req, res) => {
     const commentId = req.params.commentId;
     try {
@@ -32,7 +32,7 @@ router.get('/:movieId/comments/:commentId',
 
 router.post('/:movieId/comments',
   commentPostValidatorSchema,
-  validateComment,
+  validate,
   async (req, res) => {
     const id = req.params.movieId;
     try {
@@ -49,7 +49,7 @@ router.post('/:movieId/comments',
 
 router.delete('/:movieId/comments/:commentId',
   commentGetOneValidatorSchema,
-  validateComment,
+  validate,
   async (req, res) => {
     const id = req.params.commentId;
     try {
@@ -62,7 +62,7 @@ router.delete('/:movieId/comments/:commentId',
 
 router.put('/:movieId/comments/:commentId/edit',
   commentEditValidatorSchema,
-  validateComment,
+  validate,
   async (req, res) => {
     const commentId = req.params.commentId;
     try {

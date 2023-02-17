@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const NodeCache = require('node-cache');
 const { findAllMovies, createMovie, findAndDelete, findAndUpdate, findItemById } = require('../services/movieService');
-const { validateMovie } = require('../middlewares');
+const { validate } = require('../middlewares');
 const { moviePostValidatorSchema, movieDeleteValidatorSchema, movieEditValidatorSchema } = require('../validatorSchema/movie');
 const myCache = new NodeCache({ stdTTL: 3600 });
 
@@ -33,7 +33,7 @@ router.get('/:movieId', async (req, res) => {
 
 router.post('/',
   moviePostValidatorSchema,
-  validateMovie,
+  validate,
   async (req, res) => {
     try {
       const movie = await createMovie({
@@ -52,7 +52,7 @@ router.post('/',
 
 router.delete('/:movieId',
   movieDeleteValidatorSchema,
-  validateMovie,
+  validate,
   async (req, res) => {
     const id = req.params.movieId;
     try {
@@ -66,7 +66,7 @@ router.delete('/:movieId',
 
 router.put('/:movieId/edit',
   movieEditValidatorSchema,
-  validateMovie,
+  validate,
   async (req, res) => {
     const id = req.params.movieId;
     try {

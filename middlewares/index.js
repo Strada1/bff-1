@@ -2,7 +2,8 @@ const { validationResult } = require('express-validator');
 const { findOneByToken } = require('../services/userService');
 const jwt = require('jsonwebtoken');
 
-const validateMovie = (req, res, next) => {
+
+const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -10,47 +11,14 @@ const validateMovie = (req, res, next) => {
 
   next();
 };
-
-const validateDirector = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  next();
-};
-
-const validateCategory = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  next();
-}
-
-const validateComment = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  next();
-}
-
-const validateUser = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  next();
-};
-
 
 const authentication = async (req, res, next) => {
-  const authToken = req.get('Authorization');
 
+  if (req.originalUrl === '/user/create' || req.originalUrl ==='/user/auth') {
+    return next();
+  }
+
+  const authToken = req.get('Authorization');
   if (!authToken) {
     return res.status(401).send('You are not authenticated!');
   }
@@ -65,4 +33,4 @@ const authentication = async (req, res, next) => {
 }
 
 
-module.exports = { validateMovie, validateDirector, validateCategory, validateComment, validateUser, authentication }
+module.exports = { validate, authentication }

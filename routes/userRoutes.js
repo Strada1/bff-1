@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { createUser, findOneByEmail } = require('../services/userService');
-const { validateUser } = require('../middlewares');
+const { validate } = require('../middlewares');
 const { userPostValidatorSchema } = require('../validatorSchema/user');
-const jwt = require('jsonwebtoken');
+const { createToken, verifyToken } = require('../helpers/token')
 
 router.post('/create',
   userPostValidatorSchema,
-  validateUser,
+  validate,
   async (req, res) => {
     const { email, password, username, roles } = req.body;
     try {
-      const token = await jwt.sign({email, password}, process.env.JWT_SECRET);
+      const token = createToken(email, password);
       const user = await createUser({ email, token, username, roles });
       return res.status(201).send('user created');
     } catch (err) {
@@ -21,18 +21,17 @@ router.post('/create',
 
 router.get('/auth',
 userPostValidatorSchema,
-validateUser,
+validate,
 async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await findOneByEmail({ email });
-    console.log('user', user)
     if (user === null) {
       return res.status(401).send('This user was not found');
     }
 
-    const payload = await jwt.verify(user.token, process.env.JWT_SECRET);
+    const payload = verifyToken(user.token);
 
     if (password !== payload.password) {
       return res.status(401).send('Token does not found');

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { findAllCategories, createCategory, findItemById, findAndDelete, findAndUpdate } = require('../services/categoryService');
-const { validateCategory } = require('../middlewares');
+const { validate } = require('../middlewares');
 const { categoryPostValidatorSchema, categoryDeleteValidatorSchema, categoryEditValidatorSchema } = require('../validatorSchema/category');
 
 router.get('/', async (req, res) => {
@@ -27,7 +27,7 @@ router.get('/:categoryId', async (req, res) => {
 
 router.post('/',
   categoryPostValidatorSchema,
-  validateCategory,
+  validate,
   async (req, res) => {
     try {
       const category = await createCategory({
@@ -35,14 +35,13 @@ router.post('/',
       });
       return res.status(201).send('category created');
     } catch (err) {
-      console.log(err.message);
       return res.status(500).send(err);
     }
   });
 
 router.delete('/:categoryId',
   categoryDeleteValidatorSchema,
-  validateCategory,
+  validate,
   async (req, res) => {
     const id = req.params.categoryId;
     try {
@@ -55,7 +54,7 @@ router.delete('/:categoryId',
 
 router.put('/:categoryId/edit',
   categoryEditValidatorSchema,
-  validateCategory,
+  validate,
   async (req, res) => {
     const id = req.params.categoryId;
     try {

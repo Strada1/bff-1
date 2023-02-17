@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { findAllDirectors, createDirector, findAndDelete, findAndUpdate, findItemById } = require('../services/directorService');
-const { validateDirector } = require('../middlewares');
+const { validate } = require('../middlewares');
 const { directorPostValidatorSchema, directorDeleteValidatorSchema, directorEditValidatorSchema } = require('../validatorSchema/director');
 
 router.get('/', async (req, res) => {
@@ -25,7 +25,7 @@ router.get('/:directorId', async (req, res) => {
 
 router.post('/',
   directorPostValidatorSchema,
-  validateDirector,
+  validate,
   async (req, res) => {
     try {
       const director = await createDirector({
@@ -41,7 +41,7 @@ router.post('/',
 
 router.delete('/:directorId',
   directorDeleteValidatorSchema,
-  validateDirector,
+  validate,
   async (req, res) => {
 
     const id = req.params.directorId;
@@ -55,7 +55,7 @@ router.delete('/:directorId',
 
 router.put('/:directorId/edit',
   directorEditValidatorSchema,
-  validateDirector,
+  validate,
   async (req, res) => {
 
     const id = req.params.directorId;
