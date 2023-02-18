@@ -26,14 +26,17 @@ const removeUser = (id) => {
 
 const authUser = async ({ email, password }) => {
   const user = await UserModel.findOne({ email: email }).lean()
+  if (!user) return undefined;
   const { token } = user;
   const decoded = await jwt.decode(token);
   if (password === decoded.password) return token
+  return undefined;
 }
 
-const isAdmin = async (token) => {
-  const user = await UserModel.findOne({ token })
-  return (user && user.roles.includes(userRoles.admin))
+const getUserByToken = async (token) => {
+  const user = await UserModel.findOne({ token });
+  if (!user) return undefined;
+  return user;
 }
 
-module.exports = { addUser, getAllUsers, updateUser, removeUser, authUser, isAdmin }
+module.exports = { addUser, getAllUsers, updateUser, removeUser, authUser, getUserByToken }

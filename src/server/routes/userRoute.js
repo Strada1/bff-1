@@ -1,7 +1,6 @@
 const { validationResult, body, param } = require("express-validator");
 const express = require("express")
-const { addUser, findUser, getAllUsers, updateUser, removeUser, authUser, isAdmin } = require("../services/userService");
-const jwt = require("jsonwebtoken");
+const { addUser, getAllUsers, updateUser, removeUser, authUser, getUserByToken } = require("../services/userService");
 const { checkToken, createToken } = require("../helpers");
 const app = express()
 
@@ -37,6 +36,13 @@ const getUsers = app.get('/users', ...fieldValidators, async (req, res) => {
 
     checkToken(req)
 
+    const token = req.headers.authorization;
+    const permission = await getUserByToken(token)
+
+    if (!permission) {
+      return res.status(403).send('You don\'t have permission');
+    }
+
     const users = await getAllUsers()
     return res.status(201).send(users);
   } catch (e) {
@@ -54,7 +60,7 @@ const changeUser = app.put('/users/:userId', ...fieldValidators, paramValidator,
     checkToken(req)
 
     const token = req.headers.authorization;
-    const permission = await isAdmin(token)
+    const permission = await getUserByToken(token)
 
     if (!permission) {
       return res.status(403).send('You don\'t have permission');
@@ -77,7 +83,7 @@ const deleteUser = app.delete('/users/:userId', paramValidator, async (req, res)
     checkToken(req)
 
     const token = req.headers.authorization;
-    const permission = await isAdmin(token)
+    const permission = await getUserByToken(token)
 
     if (!permission) {
       return res.status(403).send('You don\'t have permission');

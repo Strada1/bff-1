@@ -4,9 +4,8 @@ const { validationResult, body, param } = require("express-validator");
 const { validate } = require("../middlewares");
 const app = express()
 const NodeCache = require("node-cache");
+const { getUserByToken } = require("../services/userService");
 const { checkToken } = require("../helpers");
-const { isAdmin } = require("../services/userService");
-const { log } = require("util");
 const movieCache = new NodeCache({ stdTTL: 3600 })
 
 const paramValidator = param('movieId').isMongoId().withMessage('movieId must be MongoId');
@@ -19,12 +18,8 @@ const fieldValidators = [
 
 const showMovies = app.get('/movies', async (req, res) => {
   try {
-    const token = req.headers.authorization;
-    const permission = await isAdmin(token)
 
-    if (!permission) {
-      return res.status(403).send('You don\'t have permission');
-    }
+    checkToken(req)
 
     const hasQueryParams = Object.keys(req.query).length > 0
     const hasCache = movieCache.has('movies')
@@ -49,13 +44,23 @@ const showMovies = app.get('/movies', async (req, res) => {
 const createMovie = app.post("/movies", ...fieldValidators, validate(['title, directorId, year']), async (req, res) => {
   try {
     const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      movieCache.del('movies')
-      await addMovie(req.body);
-      return res.status(201).send('Movie created');
-    } else {
+    if (!errors.isEmpty()) {
       return res.status(400).send({ errors: errors.array() });
     }
+
+    checkToken(req)
+
+    const token = req.headers.authorization;
+    const permission = await getUserByToken(token)
+
+    if (!permission) {
+      return res.status(403).send('You don\'t have permission');
+    }
+
+    movieCache.del('movies')
+    await addMovie(req.body);
+    return res.status(201).send('Movie created');
+
   } catch (e) {
     return res.status(500).send(e.message);
   }
@@ -64,13 +69,23 @@ const createMovie = app.post("/movies", ...fieldValidators, validate(['title, di
 const deleteMovie = app.delete('/movies/:movieId', paramValidator, async (req, res) => {
   try {
     const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      movieCache.del('movies')
-      await removeMovie(req.params.movieId)
-      return res.status(201).send('Movie deleted.');
-    } else {
+    if (!errors.isEmpty()) {
       return res.status(400).send({ errors: errors.array() });
     }
+
+    checkToken(req)
+
+    const token = req.headers.authorization;
+    const permission = await getUserByToken(token)
+
+    if (!permission) {
+      return res.status(403).send('You don\'t have permission');
+    }
+
+    movieCache.del('movies')
+    await removeMovie(req.params.movieId)
+    return res.status(201).send('Movie deleted.');
+
   } catch (e) {
     return res.status(500).send(e.message);
   }
@@ -78,14 +93,24 @@ const deleteMovie = app.delete('/movies/:movieId', paramValidator, async (req, r
 
 const changeMovie = app.put('/movies/:movieId', validate(['title, directorId, year']), paramValidator, async (req, res) => {
   try {
+
     const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      movieCache.del('movies')
-      await updateMovie(req.params.movieId, req.body)
-      return res.status(201).send('Movie change.');
-    } else {
+    if (!errors.isEmpty()) {
       return res.status(400).send({ errors: errors.array() });
     }
+
+    checkToken(req)
+
+    const token = req.headers.authorization;
+    const permission = await getUserByToken(token)
+
+    if (!permission) {
+      return res.status(403).send('You don\'t have permission');
+    }
+
+    movieCache.del('movies')
+    await updateMovie(req.params.movieId, req.body)
+    return res.status(201).send('Movie change.');
   } catch (e) {
     return res.status(500).send(e.message);
   }
