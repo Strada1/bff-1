@@ -25,7 +25,7 @@ router.post(
   PATHS.COMMENTS.ALL,
   [
     body('text').notEmpty().withMessage('the text field should not be empty'),
-    body('movie').notEmpty().withMessage('the movie field should not be empty'),
+    param('movieId').notEmpty().withMessage('movieId is required param'),
   ],
   validate,
   addComment

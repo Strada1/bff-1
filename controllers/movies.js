@@ -1,4 +1,3 @@
-const {validationResult} = require('express-validator');
 const moviesService = require('../service/db/moviesService');
 
 const getMovies = async (req, res) => {

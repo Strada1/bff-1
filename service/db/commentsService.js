@@ -15,7 +15,7 @@ const getCommentById = async (commentId) => {
 
 const addComment = async (movieId, comment) => {
   Comments.create({...comment, movie: movieId}, async (error, comment) => {
-    await Movies.findByIdAndUpdate(movieId, {$push: {comments: [comment.id]}});
+    await Movies.findByIdAndUpdate(movieId, {$push: {comments: comment.id}});
   });
 };
 

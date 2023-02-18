@@ -1,4 +1,3 @@
-const {validationResult} = require('express-validator');
 const directorsService = require('../service/db/directorsService');
 
 const getDirectors = async (req, res) => {
@@ -11,7 +10,6 @@ const getDirectors = async (req, res) => {
 };
 const addDirector = async (req, res) => {
   try {
-    if (!req.body) return res.status(400).send('wrong request body');
     await directorsService.addDirector(req.body);
     return res.status(201).send('director added');
   } catch (error) {
@@ -20,8 +18,6 @@ const addDirector = async (req, res) => {
 };
 const updateDirector = async (req, res) => {
   try {
-    if (!req.body) return res.status(400).send('wrong request body!');
-    if (!req.params['directorId']) return res.status(400).send('wrong request params');
     await directorsService.updateDirector(req.params['directorId'], req.body);
     return res.status(201).send('director updated!');
   } catch (error) {
@@ -30,7 +26,6 @@ const updateDirector = async (req, res) => {
 };
 const deleteDirector = async (req, res) => {
   try {
-    if (!req.params['directorId']) return res.status(400).send('wrong request params');
     await directorsService.deleteDirector(req.params['directorId']);
     return res.status(201).send('director deleted!');
   } catch (error) {

@@ -3,6 +3,8 @@ const PATHS = {
   MOVIES: {
     ALL: '/movies',
     BY_ID: '/movies/:movieId',
+    MOVIES_COUNT_BY_DIRECTOR_ID: '/moviesCountByDirectorId/:directorId',
+    MOVIES_COUNT_BY_YEAR_INTERVAL: '/moviesCountByYearsInterval',
   },
   CATEGORIES: {
     ALL: '/categories',
