@@ -40,22 +40,35 @@ const http_status_1 = __importDefault(require("http-status"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const categoriesService = __importStar(require("../services/categories.service"));
 const ApiError_1 = __importDefault(require("../shared/ApiError"));
+const const_1 = require("../shared/const");
+const cache_service_1 = require("../services/cache.service");
+const categoriesCache = new cache_service_1.CacheService();
 exports.getCategories = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { sort } = req.query;
+    const requestHasOptions = Object.keys(req.query).length > 0;
+    if (!requestHasOptions && categoriesCache.has(const_1.CACHE_KEYS.ALL_CATEGORIES)) {
+        const cachedCategories = categoriesCache.get(const_1.CACHE_KEYS.ALL_CATEGORIES);
+        res.status(http_status_1.default.OK).send(cachedCategories);
+        return;
+    }
     const categories = yield categoriesService.getCategories({ sortOrder: sort });
+    if (!requestHasOptions) {
+        categoriesCache.set(const_1.CACHE_KEYS.ALL_CATEGORIES, categories);
+    }
     res.status(http_status_1.default.OK).send(categories);
 }));
 exports.getCategory = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { categoryId } = req.params;
     const category = yield categoriesService.getCategory(categoryId);
     if (!category) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Category not found');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.CATEGORIES.CATEGORY_NOT_FOUND);
     }
     res.status(http_status_1.default.OK).send(category);
 }));
 exports.createCategory = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title } = req.body;
     const createdCategory = yield categoriesService.createCategory({ title });
+    categoriesCache.delete(const_1.CACHE_KEYS.ALL_CATEGORIES);
     res.status(http_status_1.default.CREATED).send(createdCategory);
 }));
 exports.updateCategory = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,15 +78,17 @@ exports.updateCategory = (0, express_async_handler_1.default)((req, res) => __aw
         title,
     });
     if (!updatedCategory) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Category not found');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.CATEGORIES.CATEGORY_NOT_FOUND);
     }
+    categoriesCache.delete(const_1.CACHE_KEYS.ALL_CATEGORIES);
     res.status(http_status_1.default.OK).send(updatedCategory);
 }));
 exports.deleteCategory = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { categoryId } = req.params;
     const deletedCategory = yield categoriesService.deleteCategory(categoryId);
     if (!deletedCategory) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Category not found');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.CATEGORIES.CATEGORY_NOT_FOUND);
     }
+    categoriesCache.delete(const_1.CACHE_KEYS.ALL_CATEGORIES);
     res.status(http_status_1.default.NO_CONTENT).send();
 }));

@@ -2,17 +2,17 @@ import { body } from 'express-validator';
 import { Types } from 'mongoose';
 import { db } from '../ext/db';
 import { createLengthErrorMessage } from '../shared/helpers';
-import { Optional } from '../shared/types';
 
 export interface IComment {
+  user: Types.ObjectId;
   movie: Types.ObjectId;
   text: String;
   readonly __v?: number;
 }
-export type CommentOptional = Optional<IComment, 'movie' | 'text'>;
 
 const CommentSchema = new db.Schema<IComment>(
   {
+    user: { type: 'ObjectId', ref: 'User', required: true },
     movie: { type: 'ObjectId', ref: 'Movie', required: true },
     text: { type: 'String', required: true },
     __v: { type: Number, select: false },
@@ -25,6 +25,7 @@ const validLengths = {
 };
 
 export const commentValidation = [
+  body('user').optional().isMongoId(),
   body('movie').optional().isMongoId(),
   body('text')
     .optional()

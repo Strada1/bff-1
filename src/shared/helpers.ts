@@ -1,3 +1,5 @@
+import { ROLES } from './const';
+
 export function convertQueryToArray(string: string) {
   return string ? string.split(',') : [];
 }
@@ -23,4 +25,8 @@ export function createLengthErrorMessage(
   }
 
   return `${field} must be between ${min} and ${max} characters long`;
+}
+
+export function isAdmin(roles: string[]) {
+  return roles.includes(ROLES.ADMIN);
 }

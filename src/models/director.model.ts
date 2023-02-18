@@ -1,14 +1,12 @@
 import { body } from 'express-validator';
 import { db } from '../ext/db';
 import { createLengthErrorMessage } from '../shared/helpers';
-import { Optional } from '../shared/types';
 
 export interface IDirector {
   firstName: String;
   lastName: String;
   readonly __v?: number;
 }
-export type DirectorOptional = Optional<IDirector, 'firstName' | 'lastName'>;
 
 const DirectorSchema = new db.Schema<IDirector>(
   {

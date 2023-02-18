@@ -5,9 +5,9 @@ import * as moviesService from '../services/movies.service';
 import { convertQueryToArray } from '../shared/helpers';
 import ApiError from '../shared/ApiError';
 import { CacheService } from '../services/cache.service';
-import { CACHE_KEYS } from '../shared/const';
+import { CACHE_KEYS, ERROR_TEXT } from '../shared/const';
 
-const moviesCache = new CacheService();
+export const moviesCache = new CacheService();
 
 export const getMovies = asyncHandler(async (req, res) => {
   const { year, sort, populatedFields } = req.query as {
@@ -20,7 +20,7 @@ export const getMovies = asyncHandler(async (req, res) => {
   if (!requestHasOptions && moviesCache.has(CACHE_KEYS.ALL_MOVIES)) {
     const cachedMovies = moviesCache.get(CACHE_KEYS.ALL_MOVIES);
 
-    res.status(STATUS.OK).send({ movies: cachedMovies });
+    res.status(STATUS.OK).send(cachedMovies);
     return;
   }
 
@@ -34,7 +34,7 @@ export const getMovies = asyncHandler(async (req, res) => {
     moviesCache.set(CACHE_KEYS.ALL_MOVIES, movies);
   }
 
-  res.status(STATUS.OK).send({ movies });
+  res.status(STATUS.OK).send(movies);
 });
 
 export const getMovie = asyncHandler(async (req, res) => {
@@ -46,20 +46,22 @@ export const getMovie = asyncHandler(async (req, res) => {
   );
 
   if (!movie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
+    throw new ApiError(STATUS.NOT_FOUND, ERROR_TEXT.MOVIES.MOVIE_NOT_FOUND);
   }
 
   res.status(STATUS.OK).send(movie);
 });
 
 export const createMovie = asyncHandler(async (req, res) => {
-  const { title, category, year, duration, director } = req.body;
+  const { title, category, year, duration, director, description } = req.body;
+
   const createdMovie = await moviesService.createMovie({
     title,
     category,
     year,
     duration,
     director,
+    description,
   });
 
   moviesCache.delete(CACHE_KEYS.ALL_MOVIES);
@@ -78,7 +80,7 @@ export const updateMovie = asyncHandler(async (req, res) => {
   });
 
   if (!updatedMovie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
+    throw new ApiError(STATUS.NOT_FOUND, ERROR_TEXT.MOVIES.MOVIE_NOT_FOUND);
   }
 
   moviesCache.delete(CACHE_KEYS.ALL_MOVIES);
@@ -90,7 +92,7 @@ export const deleteMovie = asyncHandler(async (req, res) => {
   const deletedMovie = await moviesService.deleteMovie(movieId);
 
   if (!deletedMovie) {
-    throw new ApiError(STATUS.NOT_FOUND, 'Movie not found');
+    throw new ApiError(STATUS.NOT_FOUND, ERROR_TEXT.MOVIES.MOVIE_NOT_FOUND);
   }
 
   moviesCache.delete(CACHE_KEYS.ALL_MOVIES);
@@ -100,7 +102,7 @@ export const deleteMovie = asyncHandler(async (req, res) => {
 export const aggregateByDirector = asyncHandler(async (req, res) => {
   const movies = await moviesService.aggregateByDirector();
 
-  res.status(STATUS.OK).send({ movies });
+  res.status(STATUS.OK).send(movies);
 });
 
 export const aggregateByDates = asyncHandler(async (req, res) => {
@@ -113,5 +115,5 @@ export const aggregateByDates = asyncHandler(async (req, res) => {
     to: Number(to),
   });
 
-  res.status(STATUS.OK).send({ movies });
+  res.status(STATUS.OK).send(movies);
 });

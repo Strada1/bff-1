@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Comment, IComment, CommentOptional } from '../models/comments.model';
+import { Comment, IComment } from '../models/comments.model';
 
 export function getComments(options: { movieId: string }) {
   const query = Comment.find().lean();
@@ -15,13 +15,13 @@ export function getComment(id: string | Types.ObjectId) {
   return Comment.findById(id);
 }
 
-export function createComment(comment: IComment) {
+export function createComment(comment: Partial<IComment>) {
   return Comment.create(comment);
 }
 
 export function updateComment(
   id: string | Types.ObjectId,
-  data: CommentOptional
+  data: Partial<IComment>
 ) {
   return Comment.findByIdAndUpdate(id, data, { new: true });
 }

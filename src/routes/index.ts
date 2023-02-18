@@ -3,6 +3,7 @@ import { categoriesRoute } from './categories.route';
 import { moviesRoute } from './movies.route';
 import { commentsRoute } from './comments.route';
 import { directorsRoute } from './directors.route';
+import { usersRoute } from './users.route';
 
 const router = Router();
 
@@ -27,6 +28,10 @@ const routeList: IRoute[] = [
   {
     path: '/directors',
     route: directorsRoute,
+  },
+  {
+    path: '/users',
+    route: usersRoute,
   },
 ];
 

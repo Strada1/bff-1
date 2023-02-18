@@ -5,6 +5,7 @@ namespace NodeJS {
     PORT: number;
     MONGO_URL: string;
     SERVER_URL: string;
+    JWT_SECRET: string;
     ALLOWED_ORIGINS: string[];
   }
 }

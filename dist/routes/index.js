@@ -5,6 +5,7 @@ const categories_route_1 = require("./categories.route");
 const movies_route_1 = require("./movies.route");
 const comments_route_1 = require("./comments.route");
 const directors_route_1 = require("./directors.route");
+const users_route_1 = require("./users.route");
 const router = (0, express_1.Router)();
 const routeList = [
     {
@@ -22,6 +23,10 @@ const routeList = [
     {
         path: '/directors',
         route: directors_route_1.directorsRoute,
+    },
+    {
+        path: '/users',
+        route: users_route_1.usersRoute,
     },
 ];
 routeList.forEach(({ path, route }) => {

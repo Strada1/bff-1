@@ -29,6 +29,7 @@ module.exports = {
     'no-underscore-dangle': 0,
     'operator-linebreak': 0,
     'newline-per-chained-call': 0,
+    'no-prototype-builtins': 0,
     'import/extensions': [
       'error',
       'ignorePackages',

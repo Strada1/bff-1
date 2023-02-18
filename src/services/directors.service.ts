@@ -1,9 +1,5 @@
 import { Types } from 'mongoose';
-import {
-  IDirector,
-  Director,
-  DirectorOptional,
-} from '../models/director.model';
+import { IDirector, Director } from '../models/director.model';
 
 export function getDirectors() {
   return Director.find().lean();
@@ -19,7 +15,7 @@ export function createDirector(director: IDirector) {
 
 export function updateDirector(
   id: Types.ObjectId | string,
-  data: DirectorOptional
+  data: Partial<IDirector>
 ) {
   return Director.findByIdAndUpdate(id, data, { new: true });
 }

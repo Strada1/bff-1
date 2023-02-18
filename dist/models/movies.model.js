@@ -9,6 +9,7 @@ const MovieSchema = new db_1.db.Schema({
     category: { type: 'ObjectId', ref: 'Category', required: true },
     year: Number,
     duration: Number,
+    description: String,
     director: { type: 'ObjectId', ref: 'Director' },
     comments: [{ type: 'ObjectId', ref: 'Comment' }],
     __v: { type: Number, select: false },
@@ -16,6 +17,7 @@ const MovieSchema = new db_1.db.Schema({
 const validLengths = {
     title: { min: 2, max: 15 },
     year: { min: 4, max: 4 },
+    description: { min: 1, max: 300 },
 };
 exports.movieValidation = [
     (0, express_validator_1.body)('title')
@@ -23,6 +25,12 @@ exports.movieValidation = [
         .trim()
         .isLength(validLengths.title)
         .withMessage((0, helpers_1.createLengthErrorMessage)('title', validLengths.title))
+        .escape(),
+    (0, express_validator_1.body)('description')
+        .optional()
+        .trim()
+        .isLength(validLengths.description)
+        .withMessage((0, helpers_1.createLengthErrorMessage)('description', validLengths.description))
         .escape(),
     (0, express_validator_1.body)('category').optional().isMongoId(),
     (0, express_validator_1.body)('year')

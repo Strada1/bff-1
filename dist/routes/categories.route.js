@@ -26,20 +26,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.categoriesRoute = void 0;
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
+const authorization_1 = require("../middlewares/authorization");
 const categoriesController = __importStar(require("../controllers/categories.controller"));
 const validate_1 = require("../middlewares/validate");
 const categories_model_1 = require("../models/categories.model");
 const validations_1 = require("../shared/validations");
+const const_1 = require("../shared/const");
+const authenticate_1 = require("../middlewares/authenticate");
 const router = (0, express_1.Router)();
 exports.categoriesRoute = router;
 router
     .route('/')
     .all((0, validate_1.validate)([...categories_model_1.categoryValidation]))
     .get((0, validate_1.validate)([...validations_1.sortOrderValidation]), categoriesController.getCategories)
-    .post((0, validate_1.validate)([(0, express_validator_1.body)('title').exists()]), categoriesController.createCategory);
+    .post((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), (0, validate_1.validate)([(0, express_validator_1.body)('title').exists()]), categoriesController.createCategory);
 router
     .route('/:categoryId')
     .all((0, validate_1.validate)([(0, express_validator_1.param)('categoryId').isMongoId(), ...categories_model_1.categoryValidation]))
     .get(categoriesController.getCategory)
-    .put(categoriesController.updateCategory)
-    .delete(categoriesController.deleteCategory);
+    .put((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), categoriesController.updateCategory)
+    .delete((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), categoriesController.deleteCategory);

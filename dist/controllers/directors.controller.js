@@ -40,15 +40,24 @@ const http_status_1 = __importDefault(require("http-status"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const directorsService = __importStar(require("../services/directors.service"));
 const ApiError_1 = __importDefault(require("../shared/ApiError"));
+const const_1 = require("../shared/const");
+const cache_service_1 = require("../services/cache.service");
+const directorsCache = new cache_service_1.CacheService();
 exports.getDirectors = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (directorsCache.has(const_1.CACHE_KEYS.ALL_DIRECTORS)) {
+        const cachedDirectors = directorsCache.get(const_1.CACHE_KEYS.ALL_DIRECTORS);
+        res.status(http_status_1.default.OK).send(cachedDirectors);
+        return;
+    }
     const directors = yield directorsService.getDirectors();
+    directorsCache.set(const_1.CACHE_KEYS.ALL_DIRECTORS, directors);
     res.status(http_status_1.default.OK).send(directors);
 }));
 exports.getDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { directorId } = req.params;
     const director = yield directorsService.getDirector(directorId);
     if (!director) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Director not found');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.DIRECTORS.DIRECTOR_NOT_FOUND);
     }
     res.status(http_status_1.default.OK).send(director);
 }));
@@ -58,6 +67,7 @@ exports.createDirector = (0, express_async_handler_1.default)((req, res) => __aw
         firstName,
         lastName,
     });
+    directorsCache.delete(const_1.CACHE_KEYS.ALL_DIRECTORS);
     res.status(http_status_1.default.CREATED).send(createdDirector);
 }));
 exports.updateDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -68,15 +78,17 @@ exports.updateDirector = (0, express_async_handler_1.default)((req, res) => __aw
         lastName,
     });
     if (!updatedDirector) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Director not found');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.DIRECTORS.DIRECTOR_NOT_FOUND);
     }
+    directorsCache.delete(const_1.CACHE_KEYS.ALL_DIRECTORS);
     res.status(http_status_1.default.OK).send(updatedDirector);
 }));
 exports.deleteDirector = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { directorId } = req.params;
     const deletedDirector = yield directorsService.deleteDirector(directorId);
     if (!deletedDirector) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Director not found');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.DIRECTORS.DIRECTOR_NOT_FOUND);
     }
+    directorsCache.delete(const_1.CACHE_KEYS.ALL_DIRECTORS);
     res.status(http_status_1.default.NO_CONTENT).send({});
 }));

@@ -2,7 +2,6 @@ import { body } from 'express-validator';
 import { Types } from 'mongoose';
 import { db } from '../ext/db';
 import { createLengthErrorMessage } from '../shared/helpers';
-import { Optional } from '../shared/types';
 
 export interface IMovie {
   title: String;
@@ -10,10 +9,10 @@ export interface IMovie {
   year?: Number;
   duration?: Number;
   director?: Types.ObjectId;
+  description?: String;
   comments?: [Types.ObjectId];
   readonly __v?: number;
 }
-export type MovieOptional = Optional<IMovie, 'title' | 'category'>;
 
 const MovieSchema = new db.Schema<IMovie>(
   {
@@ -21,6 +20,7 @@ const MovieSchema = new db.Schema<IMovie>(
     category: { type: 'ObjectId', ref: 'Category', required: true },
     year: Number,
     duration: Number,
+    description: String,
     director: { type: 'ObjectId', ref: 'Director' },
     comments: [{ type: 'ObjectId', ref: 'Comment' }],
     __v: { type: Number, select: false },
@@ -31,6 +31,7 @@ const MovieSchema = new db.Schema<IMovie>(
 const validLengths = {
   title: { min: 2, max: 15 },
   year: { min: 4, max: 4 },
+  description: { min: 1, max: 300 },
 };
 
 export const movieValidation = [
@@ -39,6 +40,14 @@ export const movieValidation = [
     .trim()
     .isLength(validLengths.title)
     .withMessage(createLengthErrorMessage('title', validLengths.title))
+    .escape(),
+  body('description')
+    .optional()
+    .trim()
+    .isLength(validLengths.description)
+    .withMessage(
+      createLengthErrorMessage('description', validLengths.description)
+    )
     .escape(),
   body('category').optional().isMongoId(),
   body('year')

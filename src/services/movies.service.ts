@@ -1,5 +1,5 @@
 import { SortOrder, Types } from 'mongoose';
-import { IMovie, MovieOptional, Movie } from '../models/movies.model';
+import { IMovie, Movie } from '../models/movies.model';
 
 export function getMovies({
   year,
@@ -54,7 +54,10 @@ export function deleteComment(
   );
 }
 
-export function updateMovie(id: string | Types.ObjectId, data: MovieOptional) {
+export function updateMovie(
+  id: string | Types.ObjectId,
+  data: Partial<IMovie>
+) {
   return Movie.findByIdAndUpdate(id, data, { new: true });
 }
 
