@@ -12,18 +12,19 @@ const validate = (req, res, next) => {
   next();
 };
 
+
 const authentication = async (req, res, next) => {
 
   if (req.originalUrl === '/user/create' || req.originalUrl ==='/user/auth') {
     return next();
   }
 
-  const authToken = req.get('Authorization');
-  if (!authToken) {
+  const token = req.get('Authorization');
+  if (!token) {
     return res.status(401).send('You are not authenticated!');
   }
 
-  const user = await findOneByToken({ authToken });
+  const user = await findOneByToken({ token });
 
   if (!user) {
     return res.status(401).send('This token does not exist');

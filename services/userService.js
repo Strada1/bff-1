@@ -12,8 +12,17 @@ const findOneByEmail = ({email}) => {
 	return UserModel.findOne({ email: email });
 }
 
-const findOneByToken = ({token}) => { 
+const findOneByToken = (token) => { 
+	console.log('TOKEN+++', token)
 	return UserModel.findOne({ token: token });
 }
 
-module.exports = { findAllUsers, createUser, findOneByEmail, findOneByToken };
+const findAndUpdate = (id, body, options) => {
+	return UserModel.findByIdAndUpdate(id, body, options);
+}
+
+const findAndDelete = (id) => {
+	return UserModel.findByIdAndDelete(id);
+}
+
+module.exports = { findAllUsers, createUser, findOneByEmail, findOneByToken, findAndUpdate,  findAndDelete};

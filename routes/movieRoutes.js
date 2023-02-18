@@ -6,7 +6,8 @@ const { validate } = require('../middlewares');
 const { moviePostValidatorSchema, movieDeleteValidatorSchema, movieEditValidatorSchema } = require('../validatorSchema/movie');
 const myCache = new NodeCache({ stdTTL: 3600 });
 
-router.get('/', async (req, res) => {
+router.get('/', 
+async (req, res) => {
   const { director, year, sort, onyears } = req.query;
   const cacheKey = `${director}:${year?.toString()}:${sort?.toString()}:${onyears?.toString()} `
   try {

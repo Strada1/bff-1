@@ -15,6 +15,12 @@ const userPostValidatorSchema = [
         .withMessage(`Pssword must be at least five characters long.`),
 ];
 
+const userDeleteValidatorSchema = [
+    param('userId')
+        .exists({ checkFalsy: true })
+        .withMessage(`User ID not found in request`)
+        .isMongoId()
+        .withMessage(`Incorrect User ID`)
+];
 
-
-module.exports = { userPostValidatorSchema };
+module.exports = { userPostValidatorSchema, userDeleteValidatorSchema };
