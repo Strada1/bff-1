@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
   token: { type: String, required: true },
   username: String,
   roles: [String],
+  favorites: [String],
 });
 
 const User = mongoose.model('User', UserSchema);

@@ -9,10 +9,10 @@ router.post('/create',
   userPostValidatorSchema,
   validate,
   async (req, res) => {
-    const { email, password, username, roles } = req.body;
+    const { email, password, username, roles, favorites } = req.body;
     try {
       const token = createToken(email, password);
-      const user = await createUser({ email, token, username, roles });
+      const user = await createUser({ email, token, username, roles, favorites });
       return res.status(201).send('user created');
     } catch (err) {
       return res.status(500).send(err);
@@ -47,7 +47,7 @@ router.put('/:userId/edit/info',
   userPostValidatorSchema,
   validate,
   async (req, res) => {
-    const { email, password, username, roles } = req.body;
+    const { email, password, username, roles, favorites } = req.body;
     const id = req.params.userId;
     try {
 
@@ -64,7 +64,8 @@ router.put('/:userId/edit/info',
           email: email,
           token: token,
           username: username,
-          roles: roles
+          roles: roles,
+          favorites: favorites,
         },
         { new: true });
       return res.status(201).send(user);

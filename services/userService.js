@@ -4,8 +4,8 @@ const findAllUsers = () => {
 	return UserModel.find();
 }
 
-const createUser = ({ email, token, username, roles }) => { 
-	return UserModel.create({ email, token, username, roles }); 
+const createUser = ({ email, token, username, roles, favorites }) => { 
+	return UserModel.create({ email, token, username, roles, favorites }); 
 }
 
 const findOneByEmail = ({email}) => { 
