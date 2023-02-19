@@ -2,8 +2,12 @@ const moviesService = require('../service/db/moviesService');
 
 const getMovies = async (req, res) => {
   try {
-    const allMovies = await moviesService.getAllMovies();
-    return res.status(200).json(allMovies);
+    const {query} = req;
+    const sortBy = query['sortBy'];
+    const filters = query;
+    delete filters.sortBy;
+    const movies = await moviesService.getAllMovies(filters, sortBy);
+    return res.status(200).json(movies);
   } catch (error) {
     return res.status(500).send(error);
   }

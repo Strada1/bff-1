@@ -1,9 +1,25 @@
 const Movies = require('../../models/Movies');
 const Comments = require('../../models/Comments');
 
-const getAllMovies = async () => {
-  const allMovies = await Movies.find({}).lean();
-  return allMovies;
+const getAllMovies = async ({title, category, director, year, duration}, sortBy = 'title') => {
+  console.log(sortBy);
+  const movies = Movies.find({}).sort(`field ${sortBy}`);
+  if (title) {
+    movies.where('title', title);
+  }
+  if (category) {
+    movies.where('category', category);
+  }
+  if (director) {
+    movies.where('director', director);
+  }
+  if (year) {
+    movies.where('year', year);
+  }
+  if (duration) {
+    movies.where('duration', duration);
+  }
+  return await movies;
 };
 
 const getMovieById = async (movieId) => {
