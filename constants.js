@@ -1,4 +1,8 @@
 const PATHS = {
+  USERS: {
+    ALL: '/users',
+    BY_ID: '/users/:userId',
+  },
   HOME: '/',
   MOVIES: {
     ALL: '/movies',
