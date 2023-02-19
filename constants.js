@@ -1,4 +1,5 @@
 const PATHS = {
+  AUTH: '/authorization',
   USERS: {
     ALL: '/users',
     BY_ID: '/users/:userId',

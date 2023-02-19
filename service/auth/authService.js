@@ -1,8 +1,10 @@
 const Users = require('../../models/Users');
 
-const findUser = async ({username, password}) => {
-  const user = await Users.find({
-    username: username,
+const findUser = async ({email, password}) => {
+  const user = await Users.findOne({
+    email: email,
   });
-  console.log(user);
+  return `${user?.email} ${user?.password}`;
 };
+
+module.exports = {findUser};

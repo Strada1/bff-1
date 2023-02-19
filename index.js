@@ -4,6 +4,7 @@ const cors = require('cors');
 const {CORS_OPTIONS} = require('./config');
 
 const app = express();
+const authorization = require('./routers/auth');
 const homeRoute = require('./routers/home');
 const usersRoute = require('./routers/users');
 const moviesRoute = require('./routers/movies');
@@ -14,6 +15,7 @@ const testRoute = require('./routers/test');
 
 app.use(express.json());
 app.use(cors(CORS_OPTIONS));
+app.use(authorization);
 app.use(homeRoute);
 app.use(usersRoute);
 app.use(moviesRoute);
