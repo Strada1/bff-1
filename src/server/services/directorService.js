@@ -5,11 +5,11 @@ const addDirector = ({ title, movies }) => {
 }
 
 const removeDirector = ({ id }) => {
-  return DirectorModel.findOneAndDelete(id)
+  return DirectorModel.findOneAndDelete({ _id: id })
 }
 
 const updateDirector = (id, { title }) => {
-  return DirectorModel.findOneAndUpdate(id, { title }, { new: true });
+  return DirectorModel.findOneAndUpdate({ _id: id }, { title }, { new: true });
 }
 
 const getDirector = () => {

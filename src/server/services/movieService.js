@@ -15,7 +15,7 @@ const updateMovie = (id, { title, year, movie, duration }) => {
     movie,
     duration,
   };
-  return MovieModel.findOneAndUpdate(id, update, { new: true });
+  return MovieModel.findOneAndUpdate({ _id: id }, update, { new: true });
 }
 
 const getAllMovies = ({ sort, title, year }) => {
@@ -27,7 +27,7 @@ const getAllMovies = ({ sort, title, year }) => {
 }
 
 const getMovie = (id) => {
-  return MovieModel.findById(id)
+  return MovieModel.findById({ _id: id })
 }
 
 module.exports = { addMovie, removeMovie, updateMovie, getAllMovies, getMovie };

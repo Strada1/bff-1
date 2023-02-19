@@ -10,12 +10,12 @@ const addCategory = (data) => {
   return CategoryModel.create(data);
 }
 
-const removeCategory = ({ id }) => {
-  return CategoryModel.findOneAndDelete(id)
+const removeCategory = (id) => {
+  return CategoryModel.findOneAndDelete({ _id: id })
 }
 
 const updateCategory = (id, { title }) => {
-  return CategoryModel.findOneAndUpdate(id, { title }, { new: true });
+  return CategoryModel.findOneAndUpdate({ _id: id }, { title }, { new: true });
 }
 
 module.exports = { getAllCategories, addCategory, removeCategory, updateCategory };

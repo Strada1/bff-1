@@ -1,7 +1,8 @@
 const express = require("express")
 const { getAllCategories, addCategory, removeCategory, updateCategory } = require("../services/categoryService");
 const { validationResult, body, param } = require('express-validator');
-const { validate } = require("../middlewares");
+const { validate, checkIsAdmin } = require("../middlewares");
+const passport = require("passport");
 const app = express()
 
 const fieldValidator = body('title').matches(/[a-zA-Zа-яА-Я]/).trim().optional().withMessage('title must contain only letters');
@@ -18,20 +19,24 @@ const showCategories = app.get('/categories', async (req, res) => {
   }
 })
 
-const createCategory = app.post('/categories', validate(['title']), fieldValidator, async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ errors: errors.array() });
+const createCategory = app.post('/categories',
+  passport.authenticate('bearer', { session: false }),
+  validate(['title']),
+  fieldValidator,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
+      await addCategory(req.body);
+      return res.status(201).send('Category created');
+    } catch (e) {
+      return res.status(500).send(e.message);
     }
-    await addCategory(req.body);
-    return res.status(201).send('Category created');
-  } catch (e) {
-    return res.status(500).send(e.message);
-  }
-})
+  })
 
-const deleteCategory = app.delete('/categories/:categoryId', paramValidator, async (req, res) => {
+const deleteCategory = app.delete('/categories/:categoryId', checkIsAdmin, paramValidator, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -44,7 +49,7 @@ const deleteCategory = app.delete('/categories/:categoryId', paramValidator, asy
   }
 })
 
-const changeCategory = app.put('/categories/:categoryId', validate(['title']), fieldValidator, paramValidator, async (req, res) => {
+const changeCategory = app.put('/categories/:categoryId', checkIsAdmin, validate(['title']), fieldValidator, paramValidator, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

@@ -1,7 +1,7 @@
 const express = require("express")
 const { getDirector, addDirector, removeDirector, updateDirector } = require("../services/directorService");
 const { validationResult, body, param } = require("express-validator");
-const { validate } = require("../middlewares");
+const { validate, checkIsAdmin } = require("../middlewares");
 const app = express()
 
 const fieldValidator = body('title').matches(/[a-zA-Zа-яА-Я]/).trim().optional().withMessage('title must contain only letters');
@@ -30,7 +30,7 @@ const createDirector = app.post("/director", fieldValidator, validate(['title'])
   }
 })
 
-const deleteDirector = app.delete('/director/:directorId', paramValidator, async (req, res) => {
+const deleteDirector = app.delete('/director/:directorId', paramValidator, checkIsAdmin, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -43,7 +43,7 @@ const deleteDirector = app.delete('/director/:directorId', paramValidator, async
   }
 })
 
-const changeDirector = app.put('/director/:directorId', validate(['title']), fieldValidator, paramValidator, async (req, res) => {
+const changeDirector = app.put('/director/:directorId', validate(['title']), checkIsAdmin, fieldValidator, paramValidator, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

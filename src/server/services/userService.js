@@ -11,13 +11,13 @@ const getAllUsers = () => {
   return UserModel.find().lean()
 }
 
-const updateUser = (id, { email, password, username }) => {
+const updateUser = (id, { email, roles, username }) => {
   const update = {
     email,
-    password,
+    roles,
     username,
   };
-  return UserModel.findOneAndUpdate(id, update, { new: true });
+  return UserModel.findOneAndUpdate({ _id: id }, update, { new: true }).lean();
 }
 
 const removeUser = (id) => {
@@ -39,4 +39,4 @@ const getUserByToken = async (token) => {
   return user;
 }
 
-module.exports = { addUser, getAllUsers, updateUser, removeUser, authUser, getUserByToken }
+module.exports = { addUser, getAllUsers, updateUser, removeUser, authUser, getUserByToken, userRoles }

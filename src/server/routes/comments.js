@@ -1,15 +1,15 @@
 const express = require("express")
 const { addComment, getAllComments, removeComment, updateComment, getAllCommentsInMovie } = require("../services/commentService");
 const { validationResult, body, param } = require("express-validator");
-const { validate } = require("../middlewares");
+const { validate, checkIsAdmin } = require("../middlewares");
 const app = express()
 
 const fieldValidator = body('title').matches(/[a-zA-Zа-яА-Я]/).trim().optional().withMessage('title must contain only letters');
 
-const paramValidator = param('movieIdId').isMongoId().withMessage('movieIdId must be MongoId');
+const paramValidator = param('movieId').isMongoId().withMessage('movieIdId must be MongoId');
 
 const paramsValidators = [
-  param('movieIdId').isMongoId().withMessage('movieIdId must be MongoId'),
+  param('movieId').isMongoId().withMessage('movieId must be MongoId'),
   param('commentId').isMongoId().withMessage('commentId must be MongoId'),
 ]
 
@@ -26,7 +26,7 @@ const createComment = app.post('/movies/:movieId/comments', validate(['title']),
   }
 })
 
-const showAllComments = app.get('/movies/comments',  async (req, res) => {
+const showAllComments = app.get('/movies/comments', checkIsAdmin,  async (req, res) => {
   try {
     const allComments = await getAllComments();
     return res.status(200).json(allComments);
@@ -48,7 +48,7 @@ const showComments = app.get('/movies/:movieId/comments', paramValidator, async 
   }
 })
 
-const deleteComment = app.delete('/movies/:movieId/comments/:commentId', ...paramsValidators, async (req, res) => {
+const deleteComment = app.delete('/movies/:movieId/comments/:commentId', checkIsAdmin, ...paramsValidators, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

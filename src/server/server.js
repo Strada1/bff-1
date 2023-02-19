@@ -9,8 +9,10 @@ const { showDirector, createDirector, deleteDirector, changeDirector } = require
 const { uploadFile, addToDB } = require("./services/uploadFile");
 const { getDirectorForId, getMoviesCount } = require("./routes/testRoute");
 const { createUser, getUsers, changeUser, deleteUser, authUserWithToken } = require("./routes/userRoute");
+const { usePassport } = require("./middlewares");
 
 connectDB();
+usePassport();
 
 const allowedOrigins = [
   `http://localhost:${process.env.PORT}`
@@ -54,8 +56,8 @@ app.use(getMoviesCount)
 
 
 app.listen(process.env.PORT, async () => {
-  const movies = await uploadFile('./movies.json')
-  await addToDB(movies)
+  // const movies = await uploadFile('./movies.json')
+  // await addToDB(movies)
   console.log(`Example app listening on port ${process.env.PORT}`)
 });
 

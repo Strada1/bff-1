@@ -1,7 +1,9 @@
 const { validationResult, body, param } = require("express-validator");
 const express = require("express")
-const { addUser, getAllUsers, updateUser, removeUser, authUser, getUserByToken } = require("../services/userService");
-const { checkToken, createToken } = require("../helpers");
+const { addUser, getAllUsers, updateUser, removeUser, authUser } = require("../services/userService");
+const { createToken } = require("../helpers");
+const { checkIsAdmin } = require("../middlewares");
+const passport = require("passport");
 const app = express()
 
 const paramValidator = param('userId').isMongoId().withMessage('userId must be MongoId');
@@ -27,75 +29,59 @@ const createUser = app.post('/users', ...fieldValidators, async (req, res) => {
   }
 })
 
-const getUsers = app.get('/users', ...fieldValidators, async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ errors: errors.array() });
+const getUsers = app.get('/users',
+  ...fieldValidators,
+  passport.authenticate('bearer', { session: false }),
+  checkIsAdmin,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
+
+      const users = await getAllUsers()
+      return res.status(201).send(users);
+    } catch (e) {
+      return res.status(500).send(e.message);
     }
+  })
 
-    checkToken(req)
+const changeUser = app.put('/users/:userId',
+  passport.authenticate('bearer', { session: false }),
+  ...fieldValidators, paramValidator,
+  checkIsAdmin,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
 
-    const token = req.headers.authorization;
-    const permission = await getUserByToken(token)
-
-    if (!permission) {
-      return res.status(403).send('You don\'t have permission');
+      await updateUser(req.params.userId, req.body)
+      return res.status(201).send('User change');
+    } catch (e) {
+      return res.status(500).send(e.message);
     }
+  })
 
-    const users = await getAllUsers()
-    return res.status(201).send(users);
-  } catch (e) {
-    return res.status(500).send(e.message);
-  }
-})
+const deleteUser = app.delete('/users/:userId',
+  passport.authenticate('bearer', { session: false }),
+  checkIsAdmin, paramValidator,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
 
-const changeUser = app.put('/users/:userId', ...fieldValidators, paramValidator, async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ errors: errors.array() });
+      const user = await removeUser(req.params.userId)
+      if (!user) return res.status(403).send('User is not found')
+      return res.status(201).send(`User ${user?.username} deleted.`);
+    } catch (e) {
+      return res.status(500).send(e.message);
     }
-
-    checkToken(req)
-
-    const token = req.headers.authorization;
-    const permission = await getUserByToken(token)
-
-    if (!permission) {
-      return res.status(403).send('You don\'t have permission');
-    }
-
-    await updateUser(req.params.userId, req.body)
-    return res.status(201).send('User change');
-  } catch (e) {
-    return res.status(500).send(e.message);
-  }
-})
-
-const deleteUser = app.delete('/users/:userId', paramValidator, async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ errors: errors.array() });
-    }
-
-    checkToken(req)
-
-    const token = req.headers.authorization;
-    const permission = await getUserByToken(token)
-
-    if (!permission) {
-      return res.status(403).send('You don\'t have permission');
-    }
-
-    const user = await removeUser(req.params.userId)
-    if (!user) return res.status(403).send('User is not found')
-    return res.status(201).send(`User ${user?.username} deleted.`);
-  } catch (e) {
-    return res.status(500).send(e.message);
-  }
-})
+  })
 
 const authUserWithToken = app.get('/users/authentication', ...fieldValidators, async (req, res) => {
   try {

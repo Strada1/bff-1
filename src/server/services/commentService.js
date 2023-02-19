@@ -2,10 +2,8 @@ const MovieModel = require("../models/movie");
 const CommentModel = require("../models/comment");
 
 const addComment = async (id, { title }) => {
-  const movie = await MovieModel.findById(id)
   const comment = await CommentModel.create({ title })
-  movie.comments.push(comment)
-  movie.save();
+  await MovieModel.findByIdAndUpdate({ _id: id }, { $push: { comments: comment } })
 };
 
 const getAllComments = async () => {
@@ -13,27 +11,26 @@ const getAllComments = async () => {
 }
 
 const getAllCommentsInMovie = async (id) => {
-  const movie = await MovieModel.findById(id);
+  const movie = await MovieModel.findById({ _id: id });
   return movie.comments
 }
 
 const removeComment = async (movieId, commentId) => {
-  await CommentModel.findByIdAndDelete(commentId)
-  const movie = await MovieModel.findById(movieId)
-  movie.comments = movie.comments.filter(item => item._id.toString() !== commentId)
-  movie.save();
+  await CommentModel.findByIdAndDelete({ _id: commentId })
+  await MovieModel.findByIdAndUpdate({ _id: movieId }, { $pull: { comments: { _id: commentId } } })
 }
 
 const updateComment = async (movieId, commentId, { title }) => {
-  await CommentModel.findByIdAndUpdate(commentId, { title })
-  const movie = await MovieModel.findById(movieId)
-  movie.comments = movie.comments.map(item => {
-    if (item._id.toString() === commentId) {
-      item.title = title
+  await CommentModel.findByIdAndUpdate({ _id: commentId }, { title })
+  await MovieModel.findByIdAndUpdate({ _id: movieId }, {
+    $set: {
+      comments: {
+        _id: commentId,
+        title,
+        date: new Date()
+      }
     }
-    return item
   })
-  movie.save();
 }
 
 
