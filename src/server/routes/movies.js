@@ -51,7 +51,7 @@ const createMovie = app.post("/movies",
         return res.status(400).send({ errors: errors.array() });
       }
 
-      const token = req.headers.authorization;
+      const token = req?.headers?.authorization?.split(' ')[1];
       const permission = await getUserByToken(token)
 
       if (!permission) {

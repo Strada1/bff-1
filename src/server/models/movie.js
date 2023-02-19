@@ -13,6 +13,7 @@ const MovieSchema = new mongoose.Schema({
   year: Number,
   movie: String,
   duration: Number,
+  description: String,
   directorId: {
     type: ObjectId,
     ref: 'Director'

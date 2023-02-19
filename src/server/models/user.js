@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  favourites: [],
   username: String,
   roles: [String]
 })

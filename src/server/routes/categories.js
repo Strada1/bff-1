@@ -29,6 +29,20 @@ const createCategory = app.post('/categories',
       if (!errors.isEmpty()) {
         return res.status(400).send({ errors: errors.array() });
       }
+
+      // 504 ERROR
+      // const date = new Date()
+      // const seconds = 2;
+      // const counts = 10000000;
+      // const arr = []
+      // for (let i = 0; i < counts; i++) {
+      //   arr.push(i);
+      // }
+      // const result = new Date - date
+      // if (result > seconds) {
+      //   return res.status(504).send('Error, max limit');
+      // }
+
       await addCategory(req.body);
       return res.status(201).send('Category created');
     } catch (e) {

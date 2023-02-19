@@ -49,7 +49,8 @@ const getUsers = app.get('/users',
 
 const changeUser = app.put('/users/:userId',
   passport.authenticate('bearer', { session: false }),
-  ...fieldValidators, paramValidator,
+  ...fieldValidators,
+  paramValidator,
   checkIsAdmin,
   async (req, res) => {
     try {
