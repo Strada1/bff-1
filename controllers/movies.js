@@ -1,3 +1,4 @@
+const {myCache} = require('../middlewares/cache');
 const moviesService = require('../service/db/moviesService');
 
 const getMovies = async (req, res) => {
@@ -7,6 +8,7 @@ const getMovies = async (req, res) => {
     const filters = query;
     delete filters.sortBy;
     const movies = await moviesService.getAllMovies(filters, sortBy);
+    myCache.set(req.originalUrl, movies);
     return res.status(200).json(movies);
   } catch (error) {
     return res.status(500).send(error);

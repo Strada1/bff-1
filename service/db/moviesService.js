@@ -2,7 +2,6 @@ const Movies = require('../../models/Movies');
 const Comments = require('../../models/Comments');
 
 const getAllMovies = async ({title, category, director, year, duration}, sortBy = 'title') => {
-  console.log(sortBy);
   const movies = Movies.find({}).sort(`field ${sortBy}`);
   if (title) {
     movies.where('title', title);

@@ -2,11 +2,13 @@ const {Router} = require('express');
 const {body, param} = require('express-validator');
 const {PATHS} = require('../constants');
 const {getMovies, getMovie, addMovie, updateMovie, deleteMovie} = require('../controllers/movies');
+const {getCache} = require('../middlewares/cache');
 const validate = require('../middlewares/validate');
 
 const router = Router();
 
-router.get(PATHS.MOVIES.ALL, [], validate, getMovies);
+router.use(getCache);
+router.get(PATHS.MOVIES.ALL, validate, getMovies);
 
 router.get(
   PATHS.MOVIES.BY_ID,
