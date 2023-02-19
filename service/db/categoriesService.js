@@ -1,7 +1,7 @@
 const Categories = require('../../models/Categories');
 
-const getAllCategories = async () => {
-  const allCategories = await Categories.find({}).lean();
+const getAllCategories = async (sortBy = 'title') => {
+  const allCategories = await Categories.find({}).sort(`field ${sortBy}`).lean();
   return allCategories;
 };
 
