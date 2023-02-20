@@ -1,4 +1,5 @@
 const { MovieModal } = require('../models/Movies');
+const MoviesService = require('../services/movies.service');
 
 const createMovie = async (req, res) => {
   try {
@@ -21,7 +22,13 @@ const createMovie = async (req, res) => {
 
 const getAllMovies = async (req, res) => {
   try {
-    const allMovies = await MovieModal.find().populate('director');
+    const hasQueryParams = Object.entries(req.query).length > 0;
+
+    if (hasQueryParams) {
+      const allMovies = await MoviesService.getAllMovies(req.query);
+      return res.status(200).send(allMovies);
+    }
+    const allMovies = await MoviesService.getAllMovies(req.query);
     return res.status(200).json(allMovies);
   } catch (err) {
     return res.status(500).send(err);

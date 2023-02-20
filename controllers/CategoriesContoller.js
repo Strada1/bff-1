@@ -1,4 +1,5 @@
 const { CategoryModal } = require('../models/Categories');
+const { CategoryService } = require('../services/сategories.service');
 
 const createCategory = async (req, res) => {
   try {
@@ -18,7 +19,8 @@ const createCategory = async (req, res) => {
 
 const getAllCategories = async (req, res) => {
   try {
-    const allCategories = await CategoryModal.find();
+    const { sort } = req.query;
+    const allCategories = await CategoryService.getAllCategories(sort);
     return res.status(200).json(allCategories);
   } catch (err) {
     return res.status(500).send(err);

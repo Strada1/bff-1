@@ -4,14 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added env file">
-      <change afterPath="$PROJECT_DIR$/middleware/handleValidationErrors.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/validation/validation.js" afterDir="false" />
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added express-validator lib">
+      <change afterPath="$PROJECT_DIR$/controllers/TestController.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/movies.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/tets.routes.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/movies.service.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/сategories.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Movies.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Movies.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/movies.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/movies.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/CategoriesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/CategoriesContoller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/MoviesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/MoviesContoller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/Categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Categories.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +53,7 @@
     "WebServerToolWindowFactoryState": "false",
     "javascript.nodejs.core.library.configured.version": "18.13.0",
     "javascript.nodejs.core.library.typings.version": "18.11.18",
-    "last_opened_file_path": "C:/projects/bff-1",
+    "last_opened_file_path": "C:/projects/bff-1/services",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -64,6 +68,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\projects\bff-1\services" />
       <recent name="C:\projects\bff-1" />
       <recent name="D:\WebstormProjects\bff-1-den.soldugeev\controllers" />
       <recent name="D:\WebstormProjects\bff-1-den.soldugeev\models" />
@@ -121,6 +126,10 @@
       <workItem from="1676140240962" duration="611000" />
       <workItem from="1676217458020" duration="1640000" />
       <workItem from="1676308093693" duration="1627000" />
+      <workItem from="1676543584075" duration="3000" />
+      <workItem from="1676552415670" duration="3118000" />
+      <workItem from="1676620569174" duration="778000" />
+      <workItem from="1676920809650" duration="5028000" />
     </task>
     <task id="LOCAL-00001" summary="Project init">
       <created>1674753075589</created>
@@ -185,7 +194,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676479623658</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat: Added express-validator lib">
+      <created>1676498078510</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1676498078510</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,6 +239,7 @@
     <MESSAGE value="refactor: Code" />
     <MESSAGE value="feat: Added rout directors" />
     <MESSAGE value="feat: Added env file" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Added env file" />
+    <MESSAGE value="feat: Added express-validator lib" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Added express-validator lib" />
   </component>
 </project>

@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Avatar",
+    "year": "2009",
+    "rating": 8,
+    "category": "Action, Adventure, Fantasy",
+    "director": "63ee2ae553fafad473ef4d45"
+  },
+  {
+    "title": "I Am Legend",
+    "year": "2007",
+    "rating": 5,
+    "category": "Drama, Horror, Sci-Fi",
+    "director": "63ee2b0253fafad473ef4d47"
+  },
+  {
+    "title": "300",
+    "year": "2006",
+    "rating": 9,
+    "category": "Action, Drama, Fantasy",
+    "director": "63ee2b0e53fafad473ef4d49"
+  },
+  {
+    "title": "The Avengers",
+    "year": "2012",
+    "rating": 9,
+    "category": "Action, Sci-Fi, Thriller",
+    "director": "63ee2b1b53fafad473ef4d4b"
+  },
+  {
+    "title": "The Wolf of Wall Street",
+    "year": "2013",
+    "rating": 10,
+    "category": "Biography, Comedy, Crime",
+    "director": "63ee2b2653fafad473ef4d4d"
+  },
+  {
+    "title": "Interstellar",
+    "year": "2014",
+    "rating": 6,
+    "category": "Adventure, Drama, Sci-Fi",
+    "director": "63ee2b3253fafad473ef4d4f"
+  }
+]
