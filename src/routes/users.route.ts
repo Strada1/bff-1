@@ -6,8 +6,6 @@ import { validate } from '../middlewares/validate';
 import { userValidation } from '../models/users.model';
 import { ROLES } from '../shared/const';
 import { authentication } from '../middlewares/authenticate';
-import { rateLimiter } from '../middlewares/rateLimiter';
-import { config } from '../config';
 
 const router = Router();
 
@@ -17,7 +15,6 @@ router
   .get(usersController.getUsers)
   .post(
     validate([body('email').exists(), body('username').exists()]),
-    rateLimiter(config.rateLimits.registration),
     usersController.createUser
   );
 
@@ -26,7 +23,6 @@ router
   .all(validate([...userValidation]))
   .post(
     validate([body('email').exists(), body('password').exists()]),
-    rateLimiter(config.rateLimits.authentication),
     usersController.authUser
   );
 

@@ -30,15 +30,13 @@ const commentsController = __importStar(require("../controllers/comments.control
 const validate_1 = require("../middlewares/validate");
 const comments_model_1 = require("../models/comments.model");
 const authenticate_1 = require("../middlewares/authenticate");
-const rateLimiter_1 = require("../middlewares/rateLimiter");
-const config_1 = require("../config");
 const router = (0, express_1.Router)();
 exports.commentsRoute = router;
 router
     .route('/')
     .all((0, validate_1.validate)([...comments_model_1.commentValidation]))
     .get((0, validate_1.validate)([(0, express_validator_1.query)('movieId').optional().isMongoId()]), commentsController.getComments)
-    .post((0, validate_1.validate)([(0, express_validator_1.body)('movieId').isMongoId(), (0, express_validator_1.body)('text').exists()]), (0, rateLimiter_1.rateLimiter)(config_1.config.rateLimits.comments), (0, authenticate_1.authentication)(), commentsController.createComment);
+    .post((0, validate_1.validate)([(0, express_validator_1.body)('movieId').isMongoId(), (0, express_validator_1.body)('text').exists()]), (0, authenticate_1.authentication)(), commentsController.createComment);
 router
     .route('/:commentId')
     .all((0, validate_1.validate)([(0, express_validator_1.param)('commentId').isMongoId(), ...comments_model_1.commentValidation]))

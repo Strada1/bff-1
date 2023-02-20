@@ -19,19 +19,17 @@ const const_1 = require("../shared/const");
 function authorization(roles) {
     return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         const user = req.user;
-        if (!user) {
-            return next(new ApiError_1.default(http_status_1.default.BAD_REQUEST, const_1.ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS));
+        const userRoles = user === null || user === void 0 ? void 0 : user.roles;
+        if (!userRoles) {
+            return next(new ApiError_1.default(http_status_1.default.UNAUTHORIZED, const_1.ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS));
         }
-        if (!user.roles) {
-            return next(new ApiError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, const_1.ERROR_TEXT.SERVER.INTERNAL_ERROR));
-        }
-        for (let i = 0; i < user.roles.length; i += 1) {
-            const role = user.roles[i];
+        for (let i = 0; i < userRoles.length; i += 1) {
+            const role = userRoles[i];
             if (roles.includes(role)) {
                 return next();
             }
         }
-        next(new ApiError_1.default(http_status_1.default.BAD_REQUEST, const_1.ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS));
+        next(new ApiError_1.default(http_status_1.default.UNAUTHORIZED, const_1.ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS));
     });
 }
 exports.authorization = authorization;

@@ -4,8 +4,6 @@ import * as commentsController from '../controllers/comments.controller';
 import { validate } from '../middlewares/validate';
 import { commentValidation } from '../models/comments.model';
 import { authentication } from '../middlewares/authenticate';
-import { rateLimiter } from '../middlewares/rateLimiter';
-import { config } from '../config';
 
 const router = Router();
 
@@ -18,7 +16,6 @@ router
   )
   .post(
     validate([body('movieId').isMongoId(), body('text').exists()]),
-    rateLimiter(config.rateLimits.comments),
     authentication(),
     commentsController.createComment
   );

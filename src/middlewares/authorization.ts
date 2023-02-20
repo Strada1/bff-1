@@ -7,29 +7,21 @@ import { ERROR_TEXT } from '../shared/const';
 export function authorization(roles: string[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as IUser;
+    const userRoles = user?.roles;
 
-    if (!user) {
+    if (!userRoles) {
       return next(
-        new ApiError(STATUS.BAD_REQUEST, ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS)
+        new ApiError(STATUS.UNAUTHORIZED, ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS)
       );
     }
 
-    if (!user.roles) {
-      return next(
-        new ApiError(
-          STATUS.INTERNAL_SERVER_ERROR,
-          ERROR_TEXT.SERVER.INTERNAL_ERROR
-        )
-      );
-    }
-
-    for (let i = 0; i < user.roles.length; i += 1) {
-      const role = user.roles[i];
+    for (let i = 0; i < userRoles.length; i += 1) {
+      const role = userRoles[i];
       if (roles.includes(role)) {
         return next();
       }
     }
 
-    next(new ApiError(STATUS.BAD_REQUEST, ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS));
+    next(new ApiError(STATUS.UNAUTHORIZED, ERROR_TEXT.AUTH.NOT_ENOUGH_RIGHTS));
   };
 }

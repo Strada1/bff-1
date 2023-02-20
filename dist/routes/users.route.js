@@ -32,19 +32,17 @@ const validate_1 = require("../middlewares/validate");
 const users_model_1 = require("../models/users.model");
 const const_1 = require("../shared/const");
 const authenticate_1 = require("../middlewares/authenticate");
-const rateLimiter_1 = require("../middlewares/rateLimiter");
-const config_1 = require("../config");
 const router = (0, express_1.Router)();
 exports.usersRoute = router;
 router
     .route('/')
     .all((0, validate_1.validate)([...users_model_1.userValidation]))
     .get(usersController.getUsers)
-    .post((0, validate_1.validate)([(0, express_validator_1.body)('email').exists(), (0, express_validator_1.body)('username').exists()]), (0, rateLimiter_1.rateLimiter)(config_1.config.rateLimits.registration), usersController.createUser);
+    .post((0, validate_1.validate)([(0, express_validator_1.body)('email').exists(), (0, express_validator_1.body)('username').exists()]), usersController.createUser);
 router
     .route('/auth')
     .all((0, validate_1.validate)([...users_model_1.userValidation]))
-    .post((0, validate_1.validate)([(0, express_validator_1.body)('email').exists(), (0, express_validator_1.body)('password').exists()]), (0, rateLimiter_1.rateLimiter)(config_1.config.rateLimits.authentication), usersController.authUser);
+    .post((0, validate_1.validate)([(0, express_validator_1.body)('email').exists(), (0, express_validator_1.body)('password').exists()]), usersController.authUser);
 router
     .route('/me')
     .all((0, authenticate_1.authentication)(), (0, validate_1.validate)([...users_model_1.userValidation]))
