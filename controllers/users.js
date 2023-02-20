@@ -25,6 +25,7 @@ const updateUser = async (req, res) => {
 };
 const deleteUser = async (req, res) => {
   try {
+    await usersService.deleteUser(req.params['userId']);
     return res.status(201).send('user deleted');
   } catch (error) {
     return res.status(500).send(error);

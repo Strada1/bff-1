@@ -4,7 +4,7 @@ const usersSchema = new Schema({
   email: String,
   username: String,
   roles: [String],
-  password: String,
+  token: String,
 });
 
 const Users = model('Users', usersSchema);

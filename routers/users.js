@@ -2,11 +2,12 @@ const {Router} = require('express');
 const {body} = require('express-validator');
 const {PATHS} = require('../constants');
 const {getUsers, createUser, updateUser, deleteUser} = require('../controllers/users');
+const authenticateToken = require('../middlewares/authenticate');
 const validate = require('../middlewares/validate');
 
 const router = Router();
 
-router.get(PATHS.USERS.ALL, validate, getUsers);
+router.get(PATHS.USERS.ALL, validate, authenticateToken, getUsers);
 
 router.post(
   PATHS.USERS.ALL,
@@ -17,6 +18,7 @@ router.post(
     body('roles').notEmpty().withMessage('the roles field should not be empty'),
   ],
   validate,
+
   createUser
 );
 router.put(PATHS.USERS.BY_ID, [], validate, updateUser);

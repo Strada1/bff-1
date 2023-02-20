@@ -2,11 +2,14 @@ const loginService = require('../service/auth/loginService');
 
 const login = async (req, res) => {
   try {
-    const token = await loginService.findUser(req.body);
+    const encodedLogin = req.headers.authorization.split(' ')[1];
+    const decodedLogin = Buffer.from(encodedLogin, 'base64').toString();
+    const [email, password] = decodedLogin.split(':');
+    const token = await loginService.findUser({email, password});
     if (!token) {
       return res.status(401).send('Неверный логин или пароль.');
     }
-    return res.status(201).json(token);
+    return res.status(200).send(token);
   } catch (error) {
     return res.status(500).send(error);
   }
