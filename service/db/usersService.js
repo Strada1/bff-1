@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken');
-const {generateAccessToken} = require('../auth/loginService');
 const Users = require('../../models/Users');
 
 const getUsers = async () => {
@@ -14,5 +12,10 @@ const updateUser = async (user) => {};
 const deleteUser = async (userId) => {
   await Users.findByIdAndDelete(userId);
 };
-
-module.exports = {getUsers, createUser, updateUser, deleteUser};
+const findUser = async ({email, password}) => {
+  const user = await Users.findOne({
+    email: email,
+  });
+  return user;
+};
+module.exports = {getUsers, createUser, updateUser, deleteUser, findUser};

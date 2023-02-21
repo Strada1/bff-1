@@ -2,7 +2,7 @@ const {Router} = require('express');
 const {body} = require('express-validator');
 const {PATHS} = require('../constants');
 const {getUsers, createUser, updateUser, deleteUser} = require('../controllers/users');
-const authenticateToken = require('../middlewares/authenticate');
+const {authenticateToken} = require('../middlewares/authenticate');
 const validate = require('../middlewares/validate');
 
 const router = Router();
