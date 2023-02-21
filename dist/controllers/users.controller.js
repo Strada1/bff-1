@@ -133,7 +133,7 @@ exports.authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(
     const { email, password } = req.body;
     const { user, isPasswordCorrect } = yield usersService.authUser(email, password);
     if (!user || !isPasswordCorrect) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, const_1.ERROR_TEXT.USERS.WRONG_USER_OR_PASSWORD);
+        throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, const_1.ERROR_TEXT.USERS.WRONG_USER_OR_PASSWORD);
     }
     res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(user));
 }));

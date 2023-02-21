@@ -138,7 +138,7 @@ export const authUser = asyncHandler(async (req, res) => {
 
   if (!user || !isPasswordCorrect) {
     throw new ApiError(
-      STATUS.BAD_REQUEST,
+      STATUS.UNAUTHORIZED,
       ERROR_TEXT.USERS.WRONG_USER_OR_PASSWORD
     );
   }

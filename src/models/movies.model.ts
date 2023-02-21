@@ -29,7 +29,7 @@ const MovieSchema = new db.Schema<IMovie>(
 );
 
 const validLengths = {
-  title: { min: 2, max: 15 },
+  title: { min: 2, max: 45 },
   year: { min: 4, max: 4 },
   description: { min: 1, max: 300 },
 };

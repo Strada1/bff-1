@@ -7,6 +7,9 @@ exports.db = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 exports.db = mongoose_1.default;
 const config_1 = require("../config");
-mongoose_1.default.connect(config_1.config.mongoUrl).catch((err) => {
+const DBName = process.env.NODE_ENV === 'test'
+    ? config_1.config.mongoTestDBName
+    : config_1.config.mongoMainDBName;
+mongoose_1.default.connect(config_1.config.mongoUrl + DBName).catch((err) => {
     console.log(`MongoDB connection error. Please make sure MongoDB is running. ${err}`);
 });

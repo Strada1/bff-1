@@ -35,18 +35,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.app = void 0;
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
 const passport_http_bearer_1 = require("passport-http-bearer");
+const passport_mock_strategy_1 = require("passport-mock-strategy");
 const routes_1 = __importDefault(require("./routes"));
 const config_1 = require("./config");
 const errorLog_1 = require("./middlewares/errorLog");
 const errorHandler_1 = require("./middlewares/errorHandler");
 const usersService = __importStar(require("./services/users.service"));
 const JSONSyntaxErr = require('json-syntax-error');
-const app = (0, express_1.default)();
-app.use((0, cors_1.default)({
+exports.app = (0, express_1.default)();
+exports.app.use((0, cors_1.default)({
     origin: config_1.config.allowedOrigins,
 }), express_1.default.json(), JSONSyntaxErr({ meta: 'bad json' }));
 passport_1.default.use(new passport_http_bearer_1.Strategy((token, done) => __awaiter(void 0, void 0, void 0, function* () {
@@ -61,8 +63,15 @@ passport_1.default.use(new passport_http_bearer_1.Strategy((token, done) => __aw
         return done(null, false);
     }
 })));
-app.use(routes_1.default);
-app.use(errorLog_1.errorLog, errorHandler_1.errorHandler);
-app.listen(config_1.config.port, () => {
-    console.log(`server running at ${config_1.config.serverUrl}:${config_1.config.port}`);
-});
+passport_1.default.use(new passport_mock_strategy_1.MockStrategy((token, done) => {
+    // В этом примере мы всегда возвращаем успешный результат аутентификации
+    const user = { id: 1, name: 'Test User' };
+    return done(null, user, { scope: 'all' });
+}));
+exports.app.use(routes_1.default);
+exports.app.use(errorLog_1.errorLog, errorHandler_1.errorHandler);
+if (process.env.NODE_ENV !== 'test') {
+    exports.app.listen(config_1.config.port, () => {
+        console.log(`server running at ${config_1.config.serverUrl}:${config_1.config.port}`);
+    });
+}

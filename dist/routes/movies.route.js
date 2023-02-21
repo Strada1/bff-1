@@ -26,12 +26,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.moviesRoute = void 0;
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
-const authorization_1 = require("../middlewares/authorization");
 const moviesController = __importStar(require("../controllers/movies.controller"));
 const validate_1 = require("../middlewares/validate");
 const movies_model_1 = require("../models/movies.model");
 const validations_1 = require("../shared/validations");
-const const_1 = require("../shared/const");
 const authenticate_1 = require("../middlewares/authenticate");
 const router = (0, express_1.Router)();
 exports.moviesRoute = router;
@@ -39,13 +37,21 @@ router
     .route('/')
     .all((0, validate_1.validate)([...movies_model_1.movieValidation]))
     .get((0, validate_1.validate)([...validations_1.sortOrderValidation, (0, express_validator_1.query)('year').optional().isNumeric()]), moviesController.getMovies)
-    .post((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), (0, validate_1.validate)([(0, express_validator_1.body)('title').exists(), (0, express_validator_1.body)('category').exists()]), moviesController.createMovie);
+    .post((0, authenticate_1.authentication)(), 
+// authorization([ROLES.ADMIN]),
+(0, validate_1.validate)([(0, express_validator_1.body)('title').exists(), (0, express_validator_1.body)('category').exists()]), moviesController.createMovie);
 router
     .route('/:movieId')
     .all((0, validate_1.validate)([(0, express_validator_1.param)('movieId').isMongoId(), ...movies_model_1.movieValidation]))
     .get(moviesController.getMovie)
-    .put((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), moviesController.updateMovie)
-    .delete((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), moviesController.deleteMovie);
+    .put(
+// authentication(),
+// authorization([ROLES.ADMIN]),
+moviesController.updateMovie)
+    .delete(
+// authentication(),
+// authorization([ROLES.ADMIN]),
+moviesController.deleteMovie);
 router
     .route('/test-aggregation/count-by-director')
     .get(moviesController.aggregateByDirector);
