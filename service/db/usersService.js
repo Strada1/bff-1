@@ -4,6 +4,10 @@ const getUsers = async () => {
   const users = await Users.find({});
   return users;
 };
+const getUserById = async (userId) => {
+  const user = await Users.findById(userId);
+  return user;
+};
 const createUser = async ({email, username, password, roles}) => {
   const token = await generateAccessToken({email, password});
   await Users.create({email, username, token, roles});
@@ -18,4 +22,11 @@ const findUser = async ({email, password}) => {
   });
   return user;
 };
-module.exports = {getUsers, createUser, updateUser, deleteUser, findUser};
+const findUserByToken = async (token, cb) => {
+  const user = await Users.findOne({
+    token: token,
+  });
+  if (user) return cb(null, user);
+  return cb(null, null);
+};
+module.exports = {getUsers, getUserById, createUser, updateUser, deleteUser, findUser, findUserByToken};

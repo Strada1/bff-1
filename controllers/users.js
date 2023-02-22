@@ -8,6 +8,15 @@ const getUsers = async (req, res) => {
     return res.status(500).send(error);
   }
 };
+const getUserById = async (req, res) => {
+  try {
+    const user = await usersService.getUserById(req.params['userId']);
+    if (!user) return res.status(201).send('Пользователь не найден');
+    return res.status(201).json(user);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
 const createUser = async (req, res) => {
   try {
     await usersService.createUser(req.body);
@@ -32,4 +41,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = {getUsers, createUser, updateUser, deleteUser};
+module.exports = {getUsers, getUserById, createUser, updateUser, deleteUser};
