@@ -11,7 +11,7 @@ const {
 const artistIdLink = '/:artistId';
 
 const reviewPostValidation = validateStringField('title');
-const reviewParamValidation = validateParamId('reviewId');
+const reviewParamValidation = validateParamId('artistId');
 
 router.post('/', reviewPostValidation, async (req, res) => {
   try {
