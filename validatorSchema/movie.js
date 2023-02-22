@@ -19,7 +19,10 @@ const moviePostValidatorSchema = [
         .exists({ checkFalsy: true })
         .withMessage(`Fill in the 'Category' field`)
         .isMongoId()
-        .withMessage(`Incorrect Category ID`)
+        .withMessage(`Incorrect Category ID`),
+    body('description')
+        .exists({ checkFalsy: true })
+        .withMessage(`Fill in the 'Description' field`)
 ];
 
 const movieDeleteValidatorSchema = [
@@ -54,7 +57,10 @@ const movieEditValidatorSchema = [
         .exists({ checkFalsy: true })
         .withMessage(`Fill in the 'Category' field`)
         .isMongoId()
-        .withMessage(`Incorrect Category ID`)
+        .withMessage(`Incorrect Category ID`),
+    body('description')
+        .exists({ checkFalsy: true })
+        .withMessage(`Fill in the 'Description' field`)
 ];
 
 

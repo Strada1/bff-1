@@ -25,12 +25,12 @@ app.use(express.json());
 
 //app.use(authentication)
 
-app.use((req, res, next) => {
-  if (req.originalUrl === '/user/create' || req.originalUrl ==='/user/auth') {
-    return next();
-  }
-  passport.authenticate('bearer', { session: false })(req, res, next)
-})
+// app.use((req, res, next) => {
+//   if (req.originalUrl === '/user/create' || req.originalUrl ==='/user/auth') {
+//     return next();
+//   }
+//   passport.authenticate('bearer', { session: false })(req, res, next)
+// })
 
 
 app.use("/movies", require("./routes/movieRoutes"));
@@ -38,9 +38,12 @@ app.use("/categories", require("./routes/categoryRoutes"));
 app.use("/movies", require("./routes/commentRoutes"));
 app.use("/directors", require("./routes/directorRoutes"));
 app.use("/aggregate", require("./routes/aggregate"));
-app.use("/user", require("./routes/userRoutes"));
+app.use("/users", require("./routes/userRoutes"));
 
 
 app.listen(port, () => {
   console.log(`Server run at ${port}`)
 });
+
+
+module.exports = app;

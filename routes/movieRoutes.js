@@ -6,21 +6,21 @@ const { validate } = require('../middlewares');
 const { moviePostValidatorSchema, movieDeleteValidatorSchema, movieEditValidatorSchema } = require('../validatorSchema/movie');
 const myCache = new NodeCache({ stdTTL: 3600 });
 
-router.get('/', 
-async (req, res) => {
-  const { director, year, sort, onyears } = req.query;
-  const cacheKey = `${director}:${year?.toString()}:${sort?.toString()}:${onyears?.toString()} `
-  try {
-    let allMovies = myCache.get(cacheKey);
-    if (!allMovies) {
-      allMovies = await findAllMovies({ director, year, sort, onyears });
-      myCache.set(cacheKey, allMovies);
+router.get('/',
+  async (req, res) => {
+    const { director, year, sort, onyears } = req.query;
+    const cacheKey = `${director}:${year?.toString()}:${sort?.toString()}:${onyears?.toString()} `
+    try {
+      let allMovies = myCache.get(cacheKey);
+      if (!allMovies) {
+        allMovies = await findAllMovies({ director, year, sort, onyears });
+        myCache.set(cacheKey, allMovies);
+      }
+      return res.status(201).send(allMovies);
+    } catch (err) {
+      return res.status(500).send(err);
     }
-    return res.status(201).send(allMovies);
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
+  });
 
 router.get('/:movieId', async (req, res) => {
   const id = req.params.movieId;
@@ -42,10 +42,11 @@ router.post('/',
         category: req.body.category,
         year: req.body.year,
         duration: req.body.duration,
-        director: req.body.director
+        director: req.body.director,
+        description: req.body.description,
       });
       myCache.flushAll();
-      return res.status(201).send('movie created');
+      return res.status(201).send(movie);
     } catch (err) {
       return res.status(500).send(err);
     }
@@ -57,7 +58,10 @@ router.delete('/:movieId',
   async (req, res) => {
     const id = req.params.movieId;
     try {
-      const movie = await findAndDelete(id);
+      const deletedMovie = await findAndDelete(id);
+      if (!deletedMovie) {
+        return res.status(400).send('movie not found');
+      }
       myCache.flushAll();
       return res.status(201).send('movie deleted');
     } catch (err) {
@@ -77,7 +81,8 @@ router.put('/:movieId/edit',
           category: req.body.category,
           year: req.body.year,
           duration: req.body.duration,
-          director: req.body.director
+          director: req.body.director,
+          description: req.body.description,
         },
         { new: true });
       myCache.flushAll();

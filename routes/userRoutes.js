@@ -89,6 +89,10 @@ router.delete('/:userId',
       }
 
       const deletedUser = await findAndDelete(id);
+      if (!deletedUser) {
+        return res.status(400).send('user not found');
+      }
+
       return res.status(201).send('user deleted');
     } catch (err) {
       return res.status(500).send(err);

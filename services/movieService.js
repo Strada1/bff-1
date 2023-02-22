@@ -33,8 +33,8 @@ const findAllMovies = ({ director, year, sort, onyears }) => {
 	return query;
 }
 
-const createMovie = ({ title, category, year, duration, director }) => {
-	return MovieModel.create({ title, category, year, duration, director });
+const createMovie = ({ title, category, year, duration, director, description }) => {
+	return MovieModel.create({ title, category, year, duration, director, description });
 }
 
 const findAndDelete = (id) => {
