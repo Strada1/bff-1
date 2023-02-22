@@ -10,9 +10,7 @@ const getUsers = async (req, res) => {
 };
 const getUserById = async (req, res) => {
   try {
-    const user = await usersService.getUserById(req.params['userId']);
-    if (!user) return res.status(201).send('Пользователь не найден');
-    return res.status(201).json(user);
+    return res.status(201).json(req.user);
   } catch (error) {
     return res.status(500).send(error);
   }
