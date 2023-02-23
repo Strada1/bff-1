@@ -10,7 +10,8 @@ const getUsers = async (req, res) => {
 };
 const getUserById = async (req, res) => {
   try {
-    return res.status(201).json(req.user);
+    const user = await usersService.getUserById(req.params['userId']);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -25,6 +26,7 @@ const createUser = async (req, res) => {
 };
 const updateUser = async (req, res) => {
   try {
+    await usersService.updateUser(req.params['userId'], req.body);
     return res.status(201).send('user updated');
   } catch (error) {
     return res.status(500).send(error);

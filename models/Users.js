@@ -3,7 +3,10 @@ const {Schema, model} = require('../db');
 const usersSchema = new Schema({
   email: String,
   username: String,
-  roles: [String],
+  roles: {
+    type: [String],
+    default: 'user',
+  },
   token: String,
 });
 

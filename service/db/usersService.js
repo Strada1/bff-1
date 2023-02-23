@@ -1,3 +1,4 @@
+const {generateAccessToken} = require('../../middlewares/authenticate');
 const Users = require('../../models/Users');
 
 const getUsers = async () => {
@@ -8,11 +9,18 @@ const getUserById = async (userId) => {
   const user = await Users.findById(userId);
   return user;
 };
-const createUser = async ({email, username, password, roles}) => {
+const createUser = async ({email, username, password}) => {
   const token = await generateAccessToken({email, password});
-  await Users.create({email, username, token, roles});
+  await Users.create({email, username, token});
 };
-const updateUser = async (user) => {};
+const updateUser = async (userId, {email, username}) => {
+  await Users.findByIdAndUpdate(userId, {
+    $set: {
+      email,
+      username,
+    },
+  });
+};
 const deleteUser = async (userId) => {
   await Users.findByIdAndDelete(userId);
 };
