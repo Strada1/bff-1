@@ -1,15 +1,12 @@
 module.exports = {
   async up(db, client) {
-    return db.collection('movies').updateMany(
-      {},
+    return db.collection('movies').updateMany({}, [
       {
         $set: {
           description: '$title',
         },
-      }
-    );
-    // Example:
-    // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: true}});
+      },
+    ]);
   },
 
   async down(db, client) {
@@ -21,7 +18,5 @@ module.exports = {
         },
       }
     );
-    // Example:
-    // await db.collection('albums').updateOne({artist: 'The Beatles'}, {$set: {blacklisted: false}});
   },
 };
