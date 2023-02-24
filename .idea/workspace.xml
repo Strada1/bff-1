@@ -4,18 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added express-validator lib">
-      <change afterPath="$PROJECT_DIR$/controllers/TestController.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/movies.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/tets.routes.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/movies.service.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/сategories.service.js" afterDir="false" />
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added req query">
+      <change afterPath="$PROJECT_DIR$/controllers/users.controller.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/User.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/routes/users.routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/CategoriesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/CategoriesContoller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/MoviesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/MoviesContoller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/Categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/Categories.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/MoviesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/movies.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/movies.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/movies.routes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,27 +44,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "javascript.nodejs.core.library.configured.version": "18.13.0",
-    "javascript.nodejs.core.library.typings.version": "18.11.18",
-    "last_opened_file_path": "C:/projects/bff-1/services",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "JavaScript.Libraries",
-    "ts.external.directory.path": "C:\\Users\\den\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\223.8214.51\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;18.13.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;18.11.18&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/projects/bff-1/services&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;JavaScript.Libraries&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\den\\AppData\\Local\\JetBrains\\Toolbox\\apps\\WebStorm\\ch-0\\223.8214.51\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\projects\bff-1\services" />
@@ -129,7 +128,11 @@
       <workItem from="1676543584075" duration="3000" />
       <workItem from="1676552415670" duration="3118000" />
       <workItem from="1676620569174" duration="778000" />
-      <workItem from="1676920809650" duration="5028000" />
+      <workItem from="1676920809650" duration="5559000" />
+      <workItem from="1676932437059" duration="705000" />
+      <workItem from="1677062305788" duration="3824000" />
+      <workItem from="1677074687919" duration="1005000" />
+      <workItem from="1677271103826" duration="4468000" />
     </task>
     <task id="LOCAL-00001" summary="Project init">
       <created>1674753075589</created>
@@ -201,7 +204,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676498078510</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="feat: Added req query">
+      <created>1676928400534</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1676928400534</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -240,6 +250,7 @@
     <MESSAGE value="feat: Added rout directors" />
     <MESSAGE value="feat: Added env file" />
     <MESSAGE value="feat: Added express-validator lib" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Added express-validator lib" />
+    <MESSAGE value="feat: Added req query" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Added req query" />
   </component>
 </project>

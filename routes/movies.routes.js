@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const {
   createMovie, getAllMovies, removeMovie, updateMovie,
-} = require('../controllers/MoviesContoller');
+} = require('../controllers/movies.controller');
 const { handleValidationErrors } = require('../middleware/handleValidationErrors');
 const { movieCreateValidation } = require('../validation/validation');
 
