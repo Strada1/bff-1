@@ -4,6 +4,7 @@ import { db } from '../ext/db';
 import { createLengthErrorMessage } from '../shared/helpers';
 
 export interface IMovie {
+  _id?: Types.ObjectId;
   title: String;
   category: Types.ObjectId;
   year?: Number;

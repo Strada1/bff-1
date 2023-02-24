@@ -49,6 +49,11 @@ router
     .get(usersController.getUserInfo)
     .put(usersController.updateUserInfo);
 router
+    .route('/me/favorites')
+    .all((0, authenticate_1.authentication)(), (0, validate_1.validate)([...users_model_1.userValidation]))
+    .post(usersController.addMovieToFavorites)
+    .delete(usersController.removeMovieFromFavorites);
+router
     .route('/:userId')
     .all((0, express_validator_1.param)('userId').isMongoId(), (0, validate_1.validate)([...users_model_1.userValidation]))
     .get(usersController.getUser)

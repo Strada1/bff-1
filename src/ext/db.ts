@@ -3,7 +3,7 @@ import { config } from '../config';
 
 const DBName =
   process.env.NODE_ENV === 'test'
-    ? config.mongoTestDBName
+    ? `${config.mongoMainDBName}--test--`
     : config.mongoMainDBName;
 
 mongoose.connect(config.mongoUrl + DBName).catch((err) => {

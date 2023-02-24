@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authUser = exports.deleteUser = exports.updateUser = exports.removeRoleFromUser = exports.addRoleToUser = exports.createUser = exports.checkRole = exports.getUserByToken = exports.getUserByEmail = exports.getUser = exports.getUsers = void 0;
+exports.authUser = exports.deleteUser = exports.updateUser = exports.removeRoleFromUser = exports.addRoleToUser = exports.removeMovieFromFavorites = exports.addMovieToFavorites = exports.createUser = exports.checkRole = exports.getUserByToken = exports.getUserByEmail = exports.getUser = exports.getUsers = void 0;
 const users_model_1 = require("../models/users.model");
 const passwordService = __importStar(require("./password.service"));
 const tokenService = __importStar(require("./token.service"));
@@ -65,6 +65,18 @@ function createUser(user) {
     });
 }
 exports.createUser = createUser;
+function addMovieToFavorites(id, movie) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return users_model_1.User.findByIdAndUpdate({ _id: id }, { $addToSet: { favorites: movie } }, { new: true });
+    });
+}
+exports.addMovieToFavorites = addMovieToFavorites;
+function removeMovieFromFavorites(id, movie) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return users_model_1.User.findByIdAndUpdate({ _id: id }, { $pull: { favorites: movie } }, { new: true });
+    });
+}
+exports.removeMovieFromFavorites = removeMovieFromFavorites;
 function addRoleToUser(id, role) {
     return __awaiter(this, void 0, void 0, function* () {
         return users_model_1.User.findByIdAndUpdate({ _id: id }, { $addToSet: { roles: role } }, { new: true });

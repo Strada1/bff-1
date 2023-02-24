@@ -1,137 +1,192 @@
 // @ts-nocheck
 import request from 'supertest';
-import { MockStrategy } from 'passport-mock-strategy';
 import passport from 'passport';
+import STATUS from 'http-status';
 import { jest } from '@jest/globals';
 import { Movie } from '../models/movies.model';
+import { mockStrategy } from '../middlewares/passportStrategies';
 import { app } from '../server';
 import { createMovie } from '../services/movies.service';
+import * as movieMock from './fixtures/movies.fixture';
+import { ROLES } from '../shared/const';
 
 beforeAll(async () => {
-  await Movie.collection.drop();
+  await Movie.deleteMany({});
 });
 
-const movie = {
-  title: 'kek2!',
-  year: 1234,
-  duration: 200,
-  category: '63e382d1848d4c8af8847773',
-  director: '63de2aa638e756a3922dfc0b',
-  description: 'test',
-};
+afterAll(async () => {
+  await Movie.deleteMany({});
+});
 
-jest
-  .spyOn(passport, 'authenticate')
-  .mockImplementation(() => (req, res, next) => {
-    next();
-  });
+jest.spyOn(console, 'log').mockImplementation(() => undefined);
 
 describe('GET /movies/:movieId', () => {
   describe('given the movie does not exist', () => {
-    it('should return a 404', async () => {
-      const movieId = '63e382d1848d4c8af8847773';
-
-      await request(app).get(`/movies/${movieId}`).expect(404);
+    it(`should return a ${STATUS.NOT_FOUND}`, async () => {
+      await request(app)
+        .get(`/movies/${movieMock.wrongMovieId}`)
+        .expect(STATUS.NOT_FOUND);
     });
   });
 
   describe('given the movie does exist', () => {
-    it('should return a 200 and the movie', async () => {
-      const createdMovie = await createMovie(movie);
+    it(`should return a ${STATUS.OK} and the movie`, async () => {
+      const createdMovie = await createMovie(movieMock.movie);
 
-      await request(app).get(`/movies/${createdMovie._id}`).expect(200);
+      await request(app).get(`/movies/${createdMovie._id}`).expect(STATUS.OK);
     });
   });
 });
 
 describe('POST /movies', () => {
-  describe('given wrong payload', () => {
-    it('should return a 400', async () => {
+  describe('request with a wrong role', () => {
+    it(`should return a ${STATUS.UNAUTHORIZED}`, async () => {
+      passport.unuse('bearer');
+      passport.use('bearer', mockStrategy({ roles: [ROLES.USER] }));
+
       await request(app)
         .post('/movies')
-        .send({ ...movie, title: 0 })
-        .expect(400);
+        .send(movieMock.movie)
+        .expect(STATUS.UNAUTHORIZED);
     });
   });
 
-  describe('given right payload', () => {
-    it('should return a 201 and the movie', async () => {
+  describe('request with a valid role', () => {
+    it(`should return a ${STATUS.CREATED} and the movie`, async () => {
       passport.unuse('bearer');
-      passport.use('bearer', new MockStrategy());
+      passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
 
       const { body } = await request(app)
         .post('/movies')
-        .send(movie)
-        .expect(201);
+        .send(movieMock.movie)
+        .expect(STATUS.CREATED);
 
-      expect(body.title).toEqual(movie.title);
-      expect(body.year).toEqual(movie.year);
-      expect(body.duration).toEqual(movie.duration);
-      expect(body.category).toEqual(movie.category);
-      expect(body.director).toEqual(movie.director);
-      expect(body.description).toEqual(movie.description);
+      expect(body.title).toEqual(movieMock.movie.title);
+      expect(body.year).toEqual(movieMock.movie.year);
+      expect(body.duration).toEqual(movieMock.movie.duration);
+      expect(body.category).toEqual(movieMock.movie.category);
+      expect(body.director).toEqual(movieMock.movie.director);
+      expect(body.description).toEqual(movieMock.movie.description);
+    });
+  });
+
+  describe('request with a valid role but wrong payload', () => {
+    it(`should return a ${STATUS.BAD_REQUEST}`, async () => {
+      await request(app)
+        .post('/movies')
+        .send(movieMock.invalidMovie)
+        .expect(STATUS.BAD_REQUEST);
     });
   });
 });
 
-// describe('update movie route', () => {
-//   describe('given the movie does not exist', () => {
-//     it('should return a 400', async () => {
-//       const newData = {
-//         title: 'edited!',
-//         year: 4321,
-//         duration: 123,
-//       };
+describe('PUT /movies/:movieId', () => {
+  describe('given the movie does not exist', () => {
+    it(`should return a ${STATUS.NOT_FOUND}`, async () => {
+      const newData = {
+        title: 'edited!',
+        year: 4321,
+        duration: 123,
+      };
 
-//       await request(app).put('/movies/42').send(newData).expect(400);
-//     });
-//   });
+      await request(app)
+        .put(`/movies/${movieMock.wrongMovieId}`)
+        .send(newData)
+        .expect(STATUS.NOT_FOUND);
+    });
+  });
 
-//   describe('given the movie does exist', () => {
-//     it('should return a 200 and the movie', async () => {
-//       const newData = {
-//         title: 'edited!',
-//         year: 4321,
-//         duration: 123,
-//       };
+  describe('given the movie does exist', () => {
+    describe('request with a wrong role', () => {
+      it(`should return a ${STATUS.UNAUTHORIZED}`, async () => {
+        passport.unuse('bearer');
+        passport.use('bearer', mockStrategy());
 
-//       const createdMovie = await request(app).post('/movies').send(movie);
-//       const { body } = await request(app)
-//         .put(`/movies/${createdMovie.body._id}`)
-//         .send(newData)
-//         .expect(200);
-//       expect(body.title).toEqual(newData.title);
-//       expect(body.year).toEqual(newData.year);
-//       expect(body.duration).toEqual(newData.duration);
-//     });
-//   });
+        const newData = {
+          title: 'edited!',
+          year: 4321,
+          duration: 123,
+        };
 
-//   describe('given wrong payload', () => {
-//     it('should return a 400', async () => {
-//       const newData = {
-//         title: '0',
-//       };
+        const createdMovie = await createMovie(movieMock.movie);
 
-//       const createdMovie = await request(app).post('/movies').send(movie);
-//       await request(app)
-//         .put(`/movies/${createdMovie.body._id}`)
-//         .send(newData)
-//         .expect(400);
-//     });
-//   });
-// });
+        await request(app)
+          .put(`/movies/${createdMovie._id}`)
+          .send(newData)
+          .expect(STATUS.UNAUTHORIZED);
+      });
+    });
 
-// describe('delete movie route', () => {
-//   describe('given the movie does not exist', () => {
-//     it('should return a 404', async () => {
-//       await request(app).delete('/movies/63e382d1848d4c8af8847773').expect(404);
-//     });
-//   });
+    describe('request with a valid role', () => {
+      it(`should return a ${STATUS.OK} and the movie`, async () => {
+        passport.unuse('bearer');
+        passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
 
-//   describe('given the movie does exist', () => {
-//     it('should return a 204', async () => {
-//       const createdMovie = await request(app).post('/movies').send(movie);
+        const newData = {
+          title: 'edited!',
+          year: 4321,
+          duration: 123,
+        };
 
-//       await request(app).delete(`/movies/${createdMovie.body._id}`).expect(204);
-//     });
-//   });
+        const createdMovie = await createMovie(movieMock.movie);
+
+        const { body } = await request(app)
+          .put(`/movies/${createdMovie._id}`)
+          .send(newData)
+          .expect(STATUS.OK);
+        expect(body.title).toEqual(newData.title);
+        expect(body.year).toEqual(newData.year);
+        expect(body.duration).toEqual(newData.duration);
+      });
+    });
+
+    describe('request with a valid role but wrong payload', () => {
+      it(`should return a ${STATUS.BAD_REQUEST}`, async () => {
+        const createdMovie = await createMovie(movieMock.movie);
+
+        await request(app)
+          .put(`/movies/${createdMovie._id}`)
+          .send(movieMock.invalidMovie)
+          .expect(STATUS.BAD_REQUEST);
+      });
+    });
+  });
+});
+
+describe('DELETE /movies/:movieId', () => {
+  describe('given the movie does not exist', () => {
+    it(`should return a ${STATUS.NOT_FOUND}`, async () => {
+      await request(app)
+        .delete(`/movies/${movieMock.wrongMovieId}`)
+        .expect(STATUS.NOT_FOUND);
+    });
+  });
+
+  describe('given the movie does exist', () => {
+    describe('request with a wrong role', () => {
+      it(`should return a ${STATUS.UNAUTHORIZED}`, async () => {
+        passport.unuse('bearer');
+        passport.use('bearer', mockStrategy({ roles: [ROLES.USER] }));
+
+        const createdMovie = await createMovie(movieMock.movie);
+
+        await request(app)
+          .delete(`/movies/${createdMovie._id}`)
+          .expect(STATUS.UNAUTHORIZED);
+      });
+    });
+
+    describe('request with a valid role', () => {
+      it(`should return a ${STATUS.NO_CONTENT}`, async () => {
+        passport.unuse('bearer');
+        passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
+
+        const createdMovie = await createMovie(movieMock.movie);
+
+        await request(app)
+          .delete(`/movies/${createdMovie._id}`)
+          .expect(STATUS.NO_CONTENT);
+      });
+    });
+  });
+});

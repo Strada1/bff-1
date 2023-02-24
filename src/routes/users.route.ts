@@ -33,6 +33,21 @@ router
   .put(usersController.updateUserInfo);
 
 router
+  .route('/me/favorites')
+  .all(authentication(), validate([...userValidation]))
+  .post(usersController.addMovieToFavorites)
+  .delete(usersController.removeMovieFromFavorites);
+
+router
+  .route('/favorites-count')
+  .all(
+    authentication(),
+    authorization([ROLES.ADMIN]),
+    validate([...userValidation])
+  )
+  .get(usersController.getFavoritesCount);
+
+router
   .route('/:userId')
   .all(param('userId').isMongoId(), validate([...userValidation]))
   .get(usersController.getUser)

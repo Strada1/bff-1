@@ -27,6 +27,12 @@ export const getUser = asyncHandler(async (req, res) => {
   res.status(STATUS.OK).send(getUserResponseDTO(user));
 });
 
+export const getFavoritesCount = asyncHandler(async (req, res) => {
+  const result = await usersService.aggregateByMovies();
+
+  res.status(STATUS.OK).send(result ?? []);
+});
+
 export const getUserRoles = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   const user = await usersService.getUser(userId);
@@ -58,6 +64,35 @@ export const createUser = asyncHandler(async (req, res) => {
   });
 
   res.status(STATUS.CREATED).send(getFullUserResponseDTO(createdUser));
+});
+
+export const addMovieToFavorites = asyncHandler(async (req, res) => {
+  const { _id } = req.user as IUser;
+  const { movieId } = req.body;
+
+  const updatedUser = await usersService.addMovieToFavorites(_id!, movieId);
+
+  if (!updatedUser) {
+    throw new ApiError(STATUS.NOT_FOUND, ERROR_TEXT.USERS.USER_NOT_FOUND);
+  }
+
+  res.status(STATUS.OK).send(getFullUserResponseDTO(updatedUser));
+});
+
+export const removeMovieFromFavorites = asyncHandler(async (req, res) => {
+  const { _id } = req.user as IUser;
+  const { movieId } = req.body;
+
+  const updatedUser = await usersService.removeMovieFromFavorites(
+    _id!,
+    movieId
+  );
+
+  if (!updatedUser) {
+    throw new ApiError(STATUS.NOT_FOUND, ERROR_TEXT.USERS.USER_NOT_FOUND);
+  }
+
+  res.status(STATUS.OK).send(getFullUserResponseDTO(updatedUser));
 });
 
 export const addRoleToUser = asyncHandler(async (req, res) => {

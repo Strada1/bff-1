@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { IUser, User } from '../models/users.model';
+import { ROLES } from '../shared/const';
 import * as passwordService from './password.service';
 import * as tokenService from './token.service';
 
@@ -27,12 +28,36 @@ export function checkRole(user: IUser, role: string) {
 export async function createUser(user: IUser) {
   const hashPassword = await passwordService.encryptPassword(user.password);
   const token = tokenService.createToken({ _id: user._id });
+  const defaultRoles = [ROLES.USER];
 
   return User.create({
     ...user,
+    roles: user.roles ?? defaultRoles,
     password: hashPassword,
     token,
   });
+}
+
+export async function addMovieToFavorites(
+  id: string | Types.ObjectId,
+  movie: string
+) {
+  return User.findByIdAndUpdate(
+    { _id: id },
+    { $addToSet: { favorites: movie } },
+    { new: true }
+  );
+}
+
+export async function removeMovieFromFavorites(
+  id: string | Types.ObjectId,
+  movie: string
+) {
+  return User.findByIdAndUpdate(
+    { _id: id },
+    { $pull: { favorites: movie } },
+    { new: true }
+  );
 }
 
 export async function addRoleToUser(id: string | Types.ObjectId, role: string) {
@@ -90,4 +115,29 @@ export async function authUser(
     user,
     isPasswordCorrect,
   };
+}
+
+export async function aggregateByMovies() {
+  const counts = await User.aggregate([
+    { $unwind: { path: '$favorites' } },
+    {
+      $group: {
+        _id: '$favorites',
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $lookup: {
+        from: 'movies',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'movie',
+      },
+    },
+  ]);
+
+  return counts.reduce(
+    (accum, current) => ({ ...accum, [current.movie[0].title]: current.count }),
+    {}
+  );
 }

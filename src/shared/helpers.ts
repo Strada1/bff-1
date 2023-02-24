@@ -30,3 +30,7 @@ export function createLengthErrorMessage(
 export function isAdmin(roles: string[]) {
   return roles.includes(ROLES.ADMIN);
 }
+
+export function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
+}

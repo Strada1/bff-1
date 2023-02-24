@@ -19,7 +19,7 @@ router
   )
   .post(
     authentication(),
-    // authorization([ROLES.ADMIN]),
+    authorization([ROLES.ADMIN]),
     validate([body('title').exists(), body('category').exists()]),
     moviesController.createMovie
   );
@@ -29,13 +29,13 @@ router
   .all(validate([param('movieId').isMongoId(), ...movieValidation]))
   .get(moviesController.getMovie)
   .put(
-    // authentication(),
-    // authorization([ROLES.ADMIN]),
+    authentication(),
+    authorization([ROLES.ADMIN]),
     moviesController.updateMovie
   )
   .delete(
-    // authentication(),
-    // authorization([ROLES.ADMIN]),
+    authentication(),
+    authorization([ROLES.ADMIN]),
     moviesController.deleteMovie
   );
 

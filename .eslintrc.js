@@ -31,6 +31,7 @@ module.exports = {
     'operator-linebreak': 0,
     'newline-per-chained-call': 0,
     'no-prototype-builtins': 0,
+    'function-paren-newline': 0,
     'import/extensions': [
       'error',
       'ignorePackages',
