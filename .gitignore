@@ -3,6 +3,8 @@
 # dependencies
 /.idea
 /node_modules
+/dump
+/backup
 /.pnp
 .pnp.js
 
