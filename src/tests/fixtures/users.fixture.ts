@@ -40,19 +40,11 @@ export function favoritesCountMock(
   users: Partial<IUser>[],
   movies: Partial<IMovie>[]
 ) {
-  if (!users || !movies) {
-    return [];
-  }
-
-  const allFavorites = users
-    .map((user: Partial<IUser>) => [
-      ...user.favorites!.map((movieId: ObjectId | string) =>
-        movies.find(
-          (movie: Partial<IMovie>) => movie._id!.toString() === movieId
-        )
-      ),
-    ])
-    .flat(1);
+  const allFavorites = users.flatMap((user: Partial<IUser>) => [
+    ...user.favorites!.map((movieId: ObjectId | string) =>
+      movies.find((movie: Partial<IMovie>) => movie._id!.toString() === movieId)
+    ),
+  ]);
 
   const grouped = _(allFavorites)
     .groupBy((x: any) => x.title)

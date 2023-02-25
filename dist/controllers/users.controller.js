@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.authUser = exports.updateUser = exports.updateUserInfo = exports.removeRoleFromUser = exports.addRoleToUser = exports.removeMovieFromFavorites = exports.addMovieToFavorites = exports.createUser = exports.getUserInfo = exports.getUserRoles = exports.getUser = exports.getUsers = void 0;
+exports.deleteUser = exports.authUser = exports.updateUser = exports.updateUserInfo = exports.removeRoleFromUser = exports.addRoleToUser = exports.removeMovieFromFavorites = exports.addMovieToFavorites = exports.createUser = exports.getUserInfo = exports.getUserRoles = exports.getFavoritesCount = exports.getUser = exports.getUsers = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const usersService = __importStar(require("../services/users.service"));
@@ -53,6 +53,10 @@ exports.getUser = (0, express_async_handler_1.default)((req, res) => __awaiter(v
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.USERS.USER_NOT_FOUND);
     }
     res.status(http_status_1.default.OK).send((0, user_dto_1.getUserResponseDTO)(user));
+}));
+exports.getFavoritesCount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield usersService.aggregateByMovies();
+    res.status(http_status_1.default.OK).send(result !== null && result !== void 0 ? result : []);
 }));
 exports.getUserRoles = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;

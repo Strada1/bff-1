@@ -20,8 +20,11 @@ exports.app.use((0, cors_1.default)({
 passport_1.default.use(passportStrategies_1.tokenStrategy);
 exports.app.use(routes_1.default);
 exports.app.use(errorHandler_1.errorHandler);
-if (process.env.NODE_ENV !== 'test') {
+function startServer() {
     exports.app.listen(config_1.config.port, () => {
         console.log(`server running at ${config_1.config.serverUrl}:${config_1.config.port}`);
     });
+}
+if (process.env.NODE_ENV !== 'test') {
+    startServer();
 }

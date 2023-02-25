@@ -41,7 +41,6 @@ describe('GET /movies/:movieId', () => {
 describe('POST /movies', () => {
   describe('request with a wrong role', () => {
     it(`should return a ${STATUS.UNAUTHORIZED}`, async () => {
-      passport.unuse('bearer');
       passport.use('bearer', mockStrategy({ roles: [ROLES.USER] }));
 
       await request(app)
@@ -53,7 +52,6 @@ describe('POST /movies', () => {
 
   describe('request with a valid role', () => {
     it(`should return a ${STATUS.CREATED} and the movie`, async () => {
-      passport.unuse('bearer');
       passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
 
       const { body } = await request(app)
@@ -72,6 +70,8 @@ describe('POST /movies', () => {
 
   describe('request with a valid role but wrong payload', () => {
     it(`should return a ${STATUS.BAD_REQUEST}`, async () => {
+      passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
+
       await request(app)
         .post('/movies')
         .send(movieMock.invalidMovie)
@@ -83,6 +83,8 @@ describe('POST /movies', () => {
 describe('PUT /movies/:movieId', () => {
   describe('given the movie does not exist', () => {
     it(`should return a ${STATUS.NOT_FOUND}`, async () => {
+      passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
+
       const newData = {
         title: 'edited!',
         year: 4321,
@@ -99,8 +101,7 @@ describe('PUT /movies/:movieId', () => {
   describe('given the movie does exist', () => {
     describe('request with a wrong role', () => {
       it(`should return a ${STATUS.UNAUTHORIZED}`, async () => {
-        passport.unuse('bearer');
-        passport.use('bearer', mockStrategy());
+        passport.use('bearer', mockStrategy({ roles: [ROLES.USER] }));
 
         const newData = {
           title: 'edited!',
@@ -119,7 +120,6 @@ describe('PUT /movies/:movieId', () => {
 
     describe('request with a valid role', () => {
       it(`should return a ${STATUS.OK} and the movie`, async () => {
-        passport.unuse('bearer');
         passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
 
         const newData = {
@@ -142,6 +142,8 @@ describe('PUT /movies/:movieId', () => {
 
     describe('request with a valid role but wrong payload', () => {
       it(`should return a ${STATUS.BAD_REQUEST}`, async () => {
+        passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
+
         const createdMovie = await createMovie(movieMock.movie);
 
         await request(app)
@@ -156,6 +158,8 @@ describe('PUT /movies/:movieId', () => {
 describe('DELETE /movies/:movieId', () => {
   describe('given the movie does not exist', () => {
     it(`should return a ${STATUS.NOT_FOUND}`, async () => {
+      passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
+
       await request(app)
         .delete(`/movies/${movieMock.wrongMovieId}`)
         .expect(STATUS.NOT_FOUND);
@@ -165,7 +169,6 @@ describe('DELETE /movies/:movieId', () => {
   describe('given the movie does exist', () => {
     describe('request with a wrong role', () => {
       it(`should return a ${STATUS.UNAUTHORIZED}`, async () => {
-        passport.unuse('bearer');
         passport.use('bearer', mockStrategy({ roles: [ROLES.USER] }));
 
         const createdMovie = await createMovie(movieMock.movie);
@@ -178,7 +181,6 @@ describe('DELETE /movies/:movieId', () => {
 
     describe('request with a valid role', () => {
       it(`should return a ${STATUS.NO_CONTENT}`, async () => {
-        passport.unuse('bearer');
         passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
 
         const createdMovie = await createMovie(movieMock.movie);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isAdmin = exports.createLengthErrorMessage = exports.convertQueryToArray = void 0;
+exports.getRandomInt = exports.isAdmin = exports.createLengthErrorMessage = exports.convertQueryToArray = void 0;
 const const_1 = require("./const");
 function convertQueryToArray(string) {
     return string ? string.split(',') : [];
@@ -26,3 +26,7 @@ function isAdmin(roles) {
     return roles.includes(const_1.ROLES.ADMIN);
 }
 exports.isAdmin = isAdmin;
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+exports.getRandomInt = getRandomInt;

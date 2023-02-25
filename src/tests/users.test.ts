@@ -31,7 +31,6 @@ afterAll(async () => {
 describe('GET /users/favorites-count', () => {
   describe('Request with right role', () => {
     it(`should return a ${STATUS.OK}`, async () => {
-      passport.unuse('bearer');
       passport.use('bearer', mockStrategy({ roles: [ROLES.ADMIN] }));
 
       const mockUsers = generateUsersMock(10);
@@ -56,7 +55,6 @@ describe('GET /users/favorites-count', () => {
 
   describe('Request with wrong role', () => {
     it(`should return a ${STATUS.UNAUTHORIZED}`, async () => {
-      passport.unuse('bearer');
       passport.use('bearer', mockStrategy({ roles: [ROLES.USER] }));
 
       await request(app)
@@ -69,7 +67,6 @@ describe('GET /users/favorites-count', () => {
 describe('POST /users/me/favorites', () => {
   describe('Add to favorites', () => {
     it(`should return a ${STATUS.OK}`, async () => {
-      passport.unuse('bearer');
       passport.use('bearer', tokenStrategy);
 
       const createdMovie = await createMovie(movieMock.movie);
@@ -88,7 +85,6 @@ describe('POST /users/me/favorites', () => {
 
   describe('Remove from favorites', () => {
     it(`should return a ${STATUS.OK}`, async () => {
-      passport.unuse('bearer');
       passport.use('bearer', tokenStrategy);
 
       const createdMovie = await createMovie(movieMock.movie);

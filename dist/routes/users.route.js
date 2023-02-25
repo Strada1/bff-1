@@ -54,6 +54,10 @@ router
     .post(usersController.addMovieToFavorites)
     .delete(usersController.removeMovieFromFavorites);
 router
+    .route('/favorites-count')
+    .all((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), (0, validate_1.validate)([...users_model_1.userValidation]))
+    .get(usersController.getFavoritesCount);
+router
     .route('/:userId')
     .all((0, express_validator_1.param)('userId').isMongoId(), (0, validate_1.validate)([...users_model_1.userValidation]))
     .get(usersController.getUser)

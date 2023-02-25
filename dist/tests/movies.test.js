@@ -45,11 +45,12 @@ const passportStrategies_1 = require("../middlewares/passportStrategies");
 const server_1 = require("../server");
 const movies_service_1 = require("../services/movies.service");
 const movieMock = __importStar(require("./fixtures/movies.fixture"));
+const const_1 = require("../shared/const");
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield movies_model_1.Movie.collection.drop();
+    yield movies_model_1.Movie.deleteMany({});
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield movies_model_1.Movie.collection.drop();
+    yield movies_model_1.Movie.deleteMany({});
 }));
 globals_1.jest.spyOn(console, 'log').mockImplementation(() => undefined);
 describe('GET /movies/:movieId', () => {
@@ -68,20 +69,18 @@ describe('GET /movies/:movieId', () => {
     });
 });
 describe('POST /movies', () => {
-    describe('request with wrong role', () => {
+    describe('request with a wrong role', () => {
         it(`should return a ${http_status_1.default.UNAUTHORIZED}`, () => __awaiter(void 0, void 0, void 0, function* () {
-            passport_1.default.unuse('bearer');
-            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: ['user'] }));
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.USER] }));
             yield (0, supertest_1.default)(server_1.app)
                 .post('/movies')
                 .send(movieMock.movie)
                 .expect(http_status_1.default.UNAUTHORIZED);
         }));
     });
-    describe('request with right role', () => {
+    describe('request with a valid role', () => {
         it(`should return a ${http_status_1.default.CREATED} and the movie`, () => __awaiter(void 0, void 0, void 0, function* () {
-            passport_1.default.unuse('bearer');
-            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: ['admin'] }));
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
             const { body } = yield (0, supertest_1.default)(server_1.app)
                 .post('/movies')
                 .send(movieMock.movie)
@@ -94,8 +93,9 @@ describe('POST /movies', () => {
             expect(body.description).toEqual(movieMock.movie.description);
         }));
     });
-    describe('request with right role but wrong payload', () => {
+    describe('request with a valid role but wrong payload', () => {
         it(`should return a ${http_status_1.default.BAD_REQUEST}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
             yield (0, supertest_1.default)(server_1.app)
                 .post('/movies')
                 .send(movieMock.invalidMovie)
@@ -106,6 +106,7 @@ describe('POST /movies', () => {
 describe('PUT /movies/:movieId', () => {
     describe('given the movie does not exist', () => {
         it(`should return a ${http_status_1.default.NOT_FOUND}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
             const newData = {
                 title: 'edited!',
                 year: 4321,
@@ -118,10 +119,9 @@ describe('PUT /movies/:movieId', () => {
         }));
     });
     describe('given the movie does exist', () => {
-        describe('request with wrong role', () => {
+        describe('request with a wrong role', () => {
             it(`should return a ${http_status_1.default.UNAUTHORIZED}`, () => __awaiter(void 0, void 0, void 0, function* () {
-                passport_1.default.unuse('bearer');
-                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)());
+                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.USER] }));
                 const newData = {
                     title: 'edited!',
                     year: 4321,
@@ -134,10 +134,9 @@ describe('PUT /movies/:movieId', () => {
                     .expect(http_status_1.default.UNAUTHORIZED);
             }));
         });
-        describe('request with right role', () => {
+        describe('request with a valid role', () => {
             it(`should return a ${http_status_1.default.OK} and the movie`, () => __awaiter(void 0, void 0, void 0, function* () {
-                passport_1.default.unuse('bearer');
-                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: ['admin'] }));
+                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
                 const newData = {
                     title: 'edited!',
                     year: 4321,
@@ -153,8 +152,9 @@ describe('PUT /movies/:movieId', () => {
                 expect(body.duration).toEqual(newData.duration);
             }));
         });
-        describe('request with right role but wrong payload', () => {
+        describe('request with a valid role but wrong payload', () => {
             it(`should return a ${http_status_1.default.BAD_REQUEST}`, () => __awaiter(void 0, void 0, void 0, function* () {
+                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
                 const createdMovie = yield (0, movies_service_1.createMovie)(movieMock.movie);
                 yield (0, supertest_1.default)(server_1.app)
                     .put(`/movies/${createdMovie._id}`)
@@ -167,26 +167,25 @@ describe('PUT /movies/:movieId', () => {
 describe('DELETE /movies/:movieId', () => {
     describe('given the movie does not exist', () => {
         it(`should return a ${http_status_1.default.NOT_FOUND}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
             yield (0, supertest_1.default)(server_1.app)
                 .delete(`/movies/${movieMock.wrongMovieId}`)
                 .expect(http_status_1.default.NOT_FOUND);
         }));
     });
     describe('given the movie does exist', () => {
-        describe('request with wrong role', () => {
+        describe('request with a wrong role', () => {
             it(`should return a ${http_status_1.default.UNAUTHORIZED}`, () => __awaiter(void 0, void 0, void 0, function* () {
-                passport_1.default.unuse('bearer');
-                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: ['user'] }));
+                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.USER] }));
                 const createdMovie = yield (0, movies_service_1.createMovie)(movieMock.movie);
                 yield (0, supertest_1.default)(server_1.app)
                     .delete(`/movies/${createdMovie._id}`)
                     .expect(http_status_1.default.UNAUTHORIZED);
             }));
         });
-        describe('request with right role', () => {
+        describe('request with a valid role', () => {
             it(`should return a ${http_status_1.default.NO_CONTENT}`, () => __awaiter(void 0, void 0, void 0, function* () {
-                passport_1.default.unuse('bearer');
-                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: ['admin'] }));
+                passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
                 const createdMovie = yield (0, movies_service_1.createMovie)(movieMock.movie);
                 yield (0, supertest_1.default)(server_1.app)
                     .delete(`/movies/${createdMovie._id}`)

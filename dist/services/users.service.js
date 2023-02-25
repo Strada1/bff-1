@@ -32,8 +32,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authUser = exports.deleteUser = exports.updateUser = exports.removeRoleFromUser = exports.addRoleToUser = exports.removeMovieFromFavorites = exports.addMovieToFavorites = exports.createUser = exports.checkRole = exports.getUserByToken = exports.getUserByEmail = exports.getUser = exports.getUsers = void 0;
+exports.aggregateByMovies = exports.authUser = exports.deleteUser = exports.updateUser = exports.removeRoleFromUser = exports.addRoleToUser = exports.removeMovieFromFavorites = exports.addMovieToFavorites = exports.createUser = exports.checkRole = exports.getUserByToken = exports.getUserByEmail = exports.getUser = exports.getUsers = void 0;
 const users_model_1 = require("../models/users.model");
+const const_1 = require("../shared/const");
 const passwordService = __importStar(require("./password.service"));
 const tokenService = __importStar(require("./token.service"));
 function getUsers() {
@@ -58,10 +59,12 @@ function checkRole(user, role) {
 }
 exports.checkRole = checkRole;
 function createUser(user) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const hashPassword = yield passwordService.encryptPassword(user.password);
         const token = tokenService.createToken({ _id: user._id });
-        return users_model_1.User.create(Object.assign(Object.assign({}, user), { password: hashPassword, token }));
+        const defaultRoles = [const_1.ROLES.USER];
+        return users_model_1.User.create(Object.assign(Object.assign({}, user), { roles: (_a = user.roles) !== null && _a !== void 0 ? _a : defaultRoles, password: hashPassword, token }));
     });
 }
 exports.createUser = createUser;
@@ -117,3 +120,26 @@ function authUser(email, password) {
     });
 }
 exports.authUser = authUser;
+function aggregateByMovies() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const counts = yield users_model_1.User.aggregate([
+            { $unwind: { path: '$favorites' } },
+            {
+                $group: {
+                    _id: '$favorites',
+                    count: { $sum: 1 },
+                },
+            },
+            {
+                $lookup: {
+                    from: 'movies',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'movie',
+                },
+            },
+        ]);
+        return counts.reduce((accum, current) => (Object.assign(Object.assign({}, accum), { [current.movie[0].title]: current.count })), {});
+    });
+}
+exports.aggregateByMovies = aggregateByMovies;

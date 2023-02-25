@@ -24,8 +24,12 @@ passport.use(tokenStrategy);
 app.use(routes);
 app.use(errorHandler);
 
-if (process.env.NODE_ENV !== 'test') {
+function startServer() {
   app.listen(config.port, () => {
     console.log(`server running at ${config.serverUrl}:${config.port}`);
   });
+}
+
+if (process.env.NODE_ENV !== 'test') {
+  startServer();
 }
