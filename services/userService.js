@@ -13,7 +13,6 @@ const findOneByEmail = ({email}) => {
 }
 
 const findOneByToken = (token) => { 
-	console.log('TOKEN+++', token)
 	return UserModel.findOne({ token: token });
 }
 

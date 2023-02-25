@@ -4,7 +4,7 @@
   "description": "",
   "main": "serevr.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --forceExit --maxWorkers=1"
   },
   "author": "",
   "license": "ISC",
@@ -21,5 +21,8 @@
     "passport": "^0.6.0",
     "passport-http-bearer": "^1.0.1",
     "supertest": "^6.3.3"
+  },
+  "devDependencies": {
+    "passport-mock-strategy": "^2.0.0"
   }
 }

@@ -5,7 +5,7 @@ const app = express();
 const connectDb = require('../bff-1/db');
 const cors = require("cors");
 const port = process.env.PORT;
-const {authentication} = require('../bff-1/middlewares/index') //manual authentication
+const {manualAuthentication} = require('../bff-1/middlewares/index') //manual authentication
 const passport = require('./helpers/passport')
 
 const fileReading = require('../bff-1/fs');
@@ -23,14 +23,7 @@ app.use(cors({
 
 app.use(express.json());
 
-//app.use(authentication)
-
-// app.use((req, res, next) => {
-//   if (req.originalUrl === '/user/create' || req.originalUrl ==='/user/auth') {
-//     return next();
-//   }
-//   passport.authenticate('bearer', { session: false })(req, res, next)
-// })
+//app.use(manualAuthentication)
 
 
 app.use("/movies", require("./routes/movieRoutes"));
@@ -41,9 +34,11 @@ app.use("/aggregate", require("./routes/aggregate"));
 app.use("/users", require("./routes/userRoutes"));
 
 
-app.listen(port, () => {
-  console.log(`Server run at ${port}`)
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(port, () => {
+    console.log(`server running at ${port}`);
+  });
+}
 
 
 module.exports = app;

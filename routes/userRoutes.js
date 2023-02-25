@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, findOneByEmail, findAndUpdate, findOneByToken, findAndDelete } = require('../services/userService');
-const { validate } = require('../middlewares');
+const { createUser, findOneByEmail, findAndUpdate, findAndDelete } = require('../services/userService');
+const { validate, authorization, authentication } = require('../middlewares');
 const { userPostValidatorSchema, userDeleteValidatorSchema } = require('../validatorSchema/user');
 const { createToken, verifyToken } = require('../helpers/token')
+
 
 router.post('/create',
   userPostValidatorSchema,
@@ -11,9 +12,11 @@ router.post('/create',
   async (req, res) => {
     const { email, password, username, roles, favorites } = req.body;
     try {
+
       const token = createToken(email, password);
       const user = await createUser({ email, token, username, roles, favorites });
-      return res.status(201).send('user created');
+
+      return res.status(201).send(user);
     } catch (err) {
       return res.status(500).send(err);
     }
@@ -46,18 +49,12 @@ router.get('/auth',
 router.put('/:userId/edit/info',
   userPostValidatorSchema,
   validate,
+  authentication,
+  authorization,  
   async (req, res) => {
     const { email, password, username, roles, favorites } = req.body;
     const id = req.params.userId;
     try {
-
-      const activeUser = await findOneByToken(req.user.token);
-      const isAdmin = activeUser.roles.find(role => role === "admin");
-
-      if (!isAdmin && email !== activeUser.email) {
-        return res.status(201).send('Email not valid');
-      }
-
       const token = createToken(email, password);
       const user = await findAndUpdate(id,
         {
@@ -77,16 +74,11 @@ router.put('/:userId/edit/info',
 router.delete('/:userId',
   userDeleteValidatorSchema,
   validate,
+  authentication,
+  authorization,
   async (req, res) => {
     const id = req.params.userId;
     try {
-
-      const activeUser = await findOneByToken(req.user.token);
-      const isAdmin = activeUser.roles.find(role => role === "admin");
-
-      if (!isAdmin && email !== activeUser.email) {
-        return res.status(201).send('You do not have permission for this operation');
-      }
 
       const deletedUser = await findAndDelete(id);
       if (!deletedUser) {
