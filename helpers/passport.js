@@ -2,6 +2,12 @@ const passport = require('passport');
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const UserModel = require('../models/userModel');
 const MockStrategy = require('passport-mock-strategy');
+const customUser = {
+  _id: process.env.ID,
+  token: process.env.TOKEN,
+  email:process.env.EMAIL,
+  username: process.env.USER_NAME
+}
 
 passport.use(new BearerStrategy(
 
@@ -15,21 +21,10 @@ passport.use(new BearerStrategy(
   }
 ));
 
-
-const customUserObject = {
-  _id: "63efa6f63ada3c422f5d04a9",
-  email: 'adm@ukr.net',
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbUB1a3IubmV0IiwicGFzc3dvcmQiOiIxMjM0NWFkbSIsImlhdCI6MTY3NjY1MDIzMH0.CuJyeHDNeTFkZc8k22wIoNsRLbam54Q8mxwwLzg7pK0',
-  username: 'adm',
-  roles: ['admin'],
-  favorites: []
-}
-
-
 passport.use(new MockStrategy(
   {
     name: 'mock',
-    user: customUserObject
+    user: customUser
   },
   (user, done) => {
     done(null, user, { scope: 'all' });
