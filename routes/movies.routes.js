@@ -2,7 +2,7 @@ const { Router } = require('express');
 const {
   createMovie, getAllMovies, removeMovie, updateMovie,
 } = require('../controllers/movies.controller');
-const { handleValidationErrors } = require('../middleware/handleValidationErrors');
+const { handleValidationErrors } = require('../middleware');
 const { movieCreateValidation } = require('../validation/validation');
 
 const router = Router();

@@ -4,17 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added req query">
-      <change afterPath="$PROJECT_DIR$/controllers/users.controller.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/User.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/users.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
+    <list default="true" id="7c68482e-5db0-41e2-8f0d-1ab24e75c826" name="Changes" comment="feat: Added create and login routes">
+      <change afterPath="$PROJECT_DIR$/helpers.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/middleware/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/middleware/usePassport.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.template" beforeDir="false" afterPath="$PROJECT_DIR$/.env.template" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/MoviesContoller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/movies.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/users.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/users.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/User.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/movies.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/movies.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/users.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/users.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/services/users.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/validation/validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/validation/validation.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +136,10 @@
       <workItem from="1676932437059" duration="705000" />
       <workItem from="1677062305788" duration="3824000" />
       <workItem from="1677074687919" duration="1005000" />
-      <workItem from="1677271103826" duration="4468000" />
+      <workItem from="1677271103826" duration="4911000" />
+      <workItem from="1677277856367" duration="25000" />
+      <workItem from="1677278451386" duration="1442000" />
+      <workItem from="1677323140314" duration="9261000" />
     </task>
     <task id="LOCAL-00001" summary="Project init">
       <created>1674753075589</created>
@@ -211,7 +218,21 @@
       <option name="project" value="LOCAL" />
       <updated>1676928400534</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="feat: Added create and login routes">
+      <created>1677276193152</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1677276193152</updated>
+    </task>
+    <task id="LOCAL-00013" summary="feat: Added create and login routes">
+      <created>1677276205830</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1677276205830</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,6 +272,7 @@
     <MESSAGE value="feat: Added env file" />
     <MESSAGE value="feat: Added express-validator lib" />
     <MESSAGE value="feat: Added req query" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Added req query" />
+    <MESSAGE value="feat: Added create and login routes" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Added create and login routes" />
   </component>
 </project>

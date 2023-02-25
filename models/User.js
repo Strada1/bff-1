@@ -7,7 +7,10 @@ const UserSchema = new mongoose.Schema({
   },
   username: String,
   roles: [String],
-  password: String,
+  token: {
+    type: String,
+    require: true,
+  },
 });
 
 const UserModal = mongoose.model('Users', UserSchema);

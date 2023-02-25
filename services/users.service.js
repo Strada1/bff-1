@@ -1,13 +1,23 @@
-const { MovieModal } = require('../models/Movies');
+const { UserModal } = require('../models/User');
 
-class MoviesService {
-  getAllMovies({ sort, title, year }) {
-    const query = MovieModal.find().populate('director');
-    if (title) query.where('title', title);
-    if (year) query.where('year', year);
-    if (sort) query.sort({ year: sort });
-    return query.exec();
+const USER_ROLES = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+};
+class UsersService {
+  createUser(email, token, username) {
+    const doc = new UserModal({
+      email,
+      username,
+      token,
+      roles: [USER_ROLES.USER],
+    });
+    return doc.save();
+  }
+
+  getUser(email) {
+    return UserModal.findOne({ email }).exec();
   }
 }
 
-module.exports = new MoviesService();
+module.exports = new UsersService();

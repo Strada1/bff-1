@@ -8,6 +8,19 @@ const movieCreateValidation = [
   body('rating', 'Неверная формат рейтинга').optional().isNumeric(),
 ];
 
+const userRegisterValidation = [
+  body('email', 'Неверный формат Email').isEmail(),
+  body('password', 'Пароль должен содерждать мнимум 5 символов').isLength({ min: 5 }),
+  body('username', 'Имя пользователя должно быть минимум 3 символа').isLength({ min: 3 }).isString(),
+  body('roles', 'Поле roles должно быть массивом').isArray().optional(),
+];
+
+const userLoginValidation = [
+  body('email', 'Неверный формат Email').isEmail(),
+  body('password', 'Пароль должен содерждать мнимум 5 символов').isLength({ min: 5 }),
+];
 module.exports = {
   movieCreateValidation,
+  userRegisterValidation,
+  userLoginValidation,
 };
