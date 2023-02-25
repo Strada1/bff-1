@@ -1,6 +1,6 @@
 const { validationResult, body, param } = require("express-validator");
 const express = require("express")
-const { addUser, getAllUsers, updateUser, removeUser, authUser } = require("../services/userService");
+const { addUser, getAllUsers, updateUser, removeUser, authUser, getFavoriteMoviesCount } = require("../services/userService");
 const { createToken } = require("../helpers");
 const { checkIsAdmin } = require("../middlewares");
 const passport = require("passport");
@@ -101,5 +101,23 @@ const authUserWithToken = app.get('/users/authentication', ...fieldValidators, a
   }
 })
 
+const getFavoriteMovies = app.get('/favorites_movies',
+  passport.authenticate('bearer', { session: false }),
+  checkIsAdmin,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
 
-module.exports = { createUser, getUsers, changeUser, deleteUser, authUserWithToken }
+      const favoriteMovies = await getFavoriteMoviesCount();
+      return res.status(200).send(favoriteMovies);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+);
+
+
+module.exports = { createUser, getUsers, changeUser, deleteUser, authUserWithToken, getFavoriteMovies }

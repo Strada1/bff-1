@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { ObjectId } = require('mongodb')
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -9,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  favourites: [],
+  favorites: [{ type: ObjectId, ref: 'Movie' }],
   username: String,
   roles: [String]
 })

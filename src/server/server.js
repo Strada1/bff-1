@@ -3,12 +3,12 @@ const app = express();
 const cors = require('cors');
 const connectDB = require("./connectDB");
 const { createCategory, deleteCategory, changeCategory, showCategories } = require("./routes/categories");
-const { createMovie, showMovies, changeMovie, deleteMovie } = require("./routes/movies");
+const { createMovie, showMovies, changeMovie, deleteMovie, addMovieToFavorite, deleteMovieFromFavorite } = require("./routes/movies");
 const { createComment, showComments, deleteComment, changeComment, showAllComments } = require('./routes/comments')
 const { showDirector, createDirector, deleteDirector, changeDirector } = require("./routes/director");
 const { uploadFile, addToDB } = require("./services/uploadFile");
 const { getDirectorForId, getMoviesCount } = require("./routes/testRoute");
-const { createUser, getUsers, changeUser, deleteUser, authUserWithToken } = require("./routes/userRoute");
+const { createUser, getUsers, changeUser, deleteUser, authUserWithToken, getFavoriteMovies } = require("./routes/userRoute");
 const { usePassport } = require("./middlewares");
 
 connectDB();
@@ -45,6 +45,7 @@ app.use(getUsers)
 app.use(changeUser)
 app.use(deleteUser)
 app.use(authUserWithToken)
+app.use(getFavoriteMovies)
 
 app.use(showDirector)
 app.use(createDirector)
@@ -54,10 +55,12 @@ app.use(deleteDirector)
 app.use(getDirectorForId)
 app.use(getMoviesCount)
 
+app.use(addMovieToFavorite)
+app.use(deleteMovieFromFavorite)
 
-app.listen(process.env.PORT, async () => {
+
+module.exports = app.listen(process.env.PORT, async () => {
   // const movies = await uploadFile('./movies.json')
   // await addToDB(movies)
   console.log(`Example app listening on port ${process.env.PORT}`)
 });
-

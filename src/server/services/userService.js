@@ -39,4 +39,36 @@ const getUserByToken = async (token) => {
   return user;
 }
 
-module.exports = { addUser, getAllUsers, updateUser, removeUser, authUser, getUserByToken, userRoles }
+const getFavoriteMoviesCount = async () => {
+  const counted = await UserModel.aggregate([
+    {
+      $lookup: {
+        from: 'movies',
+        localField: 'favorites',
+        foreignField: '_id',
+        as: 'favoriteMovie',
+      },
+    },
+    { $unwind: '$favoriteMovie' },
+    {
+      $group: { _id: '$favoriteMovie.title', count: { $sum: 1 } },
+    },
+  ]);
+  const favoriteMovies = {};
+
+  counted.forEach((film) => {
+    favoriteMovies[film._id] = film.count;
+  });
+  return favoriteMovies;
+}
+
+module.exports = {
+  addUser,
+  getAllUsers,
+  updateUser,
+  removeUser,
+  authUser,
+  getUserByToken,
+  userRoles,
+  getFavoriteMoviesCount
+}

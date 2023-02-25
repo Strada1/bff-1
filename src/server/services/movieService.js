@@ -1,4 +1,5 @@
 const MovieModel = require("../models/movie");
+const UserModel = require("../models/user");
 
 const addMovie = ({ title, category, year, movie, duration, directorId }) => {
   return MovieModel.create({ title, category, year, movie, duration, directorId, comments: [] })
@@ -30,4 +31,20 @@ const getMovie = (id) => {
   return MovieModel.findById({ _id: id })
 }
 
-module.exports = { addMovie, removeMovie, updateMovie, getAllMovies, getMovie };
+const addMovieToFavorites = async (userId, movieId) => {
+  await UserModel.findByIdAndUpdate({ _id: userId }, { $push: { favorites: movieId } }).lean();
+}
+
+const deleteMovieFromFavorites = async (userId, movieId) => {
+  await UserModel.findByIdAndUpdate({ _id: userId }, { $pull: { favorites: movieId } }).lean();
+}
+
+module.exports = {
+  addMovie,
+  removeMovie,
+  updateMovie,
+  getAllMovies,
+  getMovie,
+  addMovieToFavorites,
+  deleteMovieFromFavorites
+};

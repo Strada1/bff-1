@@ -1,5 +1,12 @@
 const express = require("express")
-const { removeMovie, addMovie, updateMovie, getAllMovies } = require("../services/movieService");
+const {
+  removeMovie,
+  addMovie,
+  updateMovie,
+  getAllMovies,
+  addMovieToFavorites,
+  deleteMovieFromFavorites
+} = require("../services/movieService");
 const { validationResult, body, param } = require("express-validator");
 const { validate, checkIsAdmin } = require("../middlewares");
 const app = express()
@@ -59,8 +66,8 @@ const createMovie = app.post("/movies",
       }
 
       movieCache.del('movies')
-      await addMovie(req.body);
-      return res.status(201).send('Movie created');
+      const movie = await addMovie(req.body);
+      return res.status(201).send(movie);
 
     } catch (e) {
       return res.status(500).send(e.message);
@@ -79,8 +86,8 @@ const deleteMovie = app.delete('/movies/:movieId',
       }
 
       movieCache.del('movies')
-      await removeMovie(req.params.movieId)
-      return res.status(201).send('Movie deleted.');
+      const movie = await removeMovie(req.params.movieId)
+      return res.status(201).send(movie);
 
     } catch (e) {
       return res.status(500).send(e.message);
@@ -89,9 +96,10 @@ const deleteMovie = app.delete('/movies/:movieId',
 
 const changeMovie = app.put('/movies/:movieId',
   passport.authenticate('bearer', { session: false }),
-  validate(['title, directorId, year']),
+  ...fieldValidators,
   checkIsAdmin,
-  paramValidator, async (req, res) => {
+  paramValidator,
+  async (req, res) => {
     try {
 
       const errors = validationResult(req);
@@ -100,11 +108,52 @@ const changeMovie = app.put('/movies/:movieId',
       }
 
       movieCache.del('movies')
-      await updateMovie(req.params.movieId, req.body)
-      return res.status(201).send('Movie change.');
+      const movie = await updateMovie(req.params.movieId, req.body)
+      return res.status(201).send(movie);
     } catch (e) {
       return res.status(500).send(e.message);
     }
   })
 
-module.exports = { createMovie, showMovies, changeMovie, deleteMovie };
+const addMovieToFavorite = app.patch('/movies/:movieId/add_favorite',
+  passport.authenticate('bearer', { session: false }),
+  paramValidator,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
+
+      const token = req?.headers?.authorization?.split(' ')[1];
+      const user = await getUserByToken(token)
+
+      await addMovieToFavorites(user._id, req.params.movieId);
+      return res.status(201).send('Movie added to favorites')
+    } catch (e) {
+      console.log(e)
+      return res.status(500).send(e.message);
+    }
+  })
+const deleteMovieFromFavorite = app.patch('/movies/:movieId/delete_favorite',
+  passport.authenticate('bearer', { session: false }),
+  paramValidator,
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array() });
+      }
+
+      const token = req?.headers?.authorization?.split(' ')[1];
+      const user = await getUserByToken(token)
+
+      await deleteMovieFromFavorites(user._id, req.params.movieId)
+      return res.status(201).send('Movie removed from favorites')
+    } catch (e) {
+      console.log(e)
+      return res.status(500).send(e.message);
+    }
+  })
+
+module.exports = { createMovie, showMovies, changeMovie, deleteMovie, addMovieToFavorite, deleteMovieFromFavorite };
