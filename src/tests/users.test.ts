@@ -6,7 +6,7 @@ import { mockStrategy, tokenStrategy } from '../middlewares/passportStrategies';
 import { app } from '../server';
 import { createMovie } from '../services/movies.service';
 import * as movieMock from './fixtures/movies.fixture';
-import { createUser } from '../services/users.service';
+import { createUser, addMovieToFavorites } from '../services/users.service';
 import { ROLES } from '../shared/const';
 import { User } from '../models/users.model';
 import { Movie } from '../models/movies.model';
@@ -88,12 +88,9 @@ describe('POST /users/me/favorites', () => {
       passport.use('bearer', tokenStrategy);
 
       const createdMovie = await createMovie(movieMock.movie);
-      const { token } = await createUser(userTemplate);
+      const { token, _id } = await createUser(userTemplate);
 
-      await request(app)
-        .post('/users/me/favorites')
-        .set('Authorization', `Bearer ${token}`)
-        .send({ movieId: createdMovie._id });
+      await addMovieToFavorites(_id, createdMovie._id);
 
       const { body } = await request(app)
         .delete('/users/me/favorites')
