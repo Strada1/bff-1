@@ -2,13 +2,14 @@ const request = require('supertest');
 const app = require('../server');
 jest.spyOn(console, 'log').mockImplementation(() => '');
 const createTestUser = require('./fixtures/usersTest');
-
+const createTestFavoriteMovie = require('./fixtures/favoriteTest');
 
 
 describe('/users', () => {
     let userEmail;
     let userPass;
     let userId;
+    let userIdForFavorites = "63ef24c016cec8810a01fd4b";
 
     it('POST', async () => {
         const user = createTestUser();
@@ -42,7 +43,6 @@ describe('/users', () => {
         expect(body.errors[0].param).toEqual('email');
     })
 
-
     it('GET', async () => {
         const reqBody = {
             email: userEmail,
@@ -60,7 +60,6 @@ describe('/users', () => {
             .expect(201);
     })
 
-
     it('GET invalid id', async () => {
         await request(app)
             .get(`/users/${userId}`)
@@ -72,7 +71,6 @@ describe('/users', () => {
             .delete(`/users/${userId}`)
             .expect(400);
     })
-
 
     it('POST without email', async () => {
         const user = createTestUser(['email'])
@@ -91,4 +89,28 @@ describe('/users', () => {
             .expect(404);
     })
 
+    it('POST favorites', async () => {
+        const { body } = await request(app)
+          .put(`/users/${userIdForFavorites}/edit/favorites`)
+          .send(createTestFavoriteMovie())
+          .expect(201);
+          expect(body.favorites).toBeTruthy();
+      });
+
+      it('DELETE favorites', async () => {
+        const testFavoriteMovie = createTestFavoriteMovie();
+        const { body } = await request(app)
+          .delete(`/users/${userIdForFavorites}/edit/favorites`)
+          .send(testFavoriteMovie)
+          .expect(201);
+          expect(body.favorites).not.toContain(testFavoriteMovie.favoriteMovieId);
+      });
+
+      it('DELETE favorites with invalid movieId', async () => {
+        const testFavoriteMovie = createTestFavoriteMovie(true);
+        const { body } = await request(app)
+          .delete(`/users/${userIdForFavorites}/edit/favorites`)
+          .send(testFavoriteMovie)
+          .expect(400);
+      });
 });

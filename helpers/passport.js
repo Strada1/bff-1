@@ -4,7 +4,7 @@ const UserModel = require('../models/userModel');
 const MockStrategy = require('passport-mock-strategy');
 const customUser = {
   _id: process.env.ID,
-  token: process.env.TOKEN,
+  token: process.env.TOKEN_ADMIN,
   email:process.env.EMAIL,
   username: process.env.USER_NAME
 }

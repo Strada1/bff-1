@@ -23,4 +23,18 @@ const userDeleteValidatorSchema = [
         .withMessage(`Incorrect User ID`)
 ];
 
-module.exports = { userPostValidatorSchema, userDeleteValidatorSchema };
+const userAddFavoritesValidatorSchema = [
+    param('userId')
+        .exists({ checkFalsy: true })
+        .withMessage(`User ID not found in request`)
+        .isMongoId()
+        .withMessage(`Incorrect User ID`),
+    body('favoriteMovieId')
+        .exists({ checkFalsy: true })
+        .withMessage(`Fill in the 'favorite' field`)
+        .isMongoId()
+        .withMessage(`Incorrect movie ID`),
+]
+
+
+module.exports = { userPostValidatorSchema, userDeleteValidatorSchema, userAddFavoritesValidatorSchema };

@@ -1,10 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, findOneByEmail, findAndUpdate, findAndDelete } = require('../services/userService');
+const { createUser, findOneByEmail, findAndUpdate, findAndDelete, addFavoriteMovie, findAllUsers, removeFavoriteMovie, getAllFavoritesMovies } = require('../services/userService');
 const { validate, authorization, authentication } = require('../middlewares');
-const { userPostValidatorSchema, userDeleteValidatorSchema } = require('../validatorSchema/user');
+const { userPostValidatorSchema, userDeleteValidatorSchema, userAddFavoritesValidatorSchema } = require('../validatorSchema/user');
 const { createToken, verifyToken } = require('../helpers/token')
 
+router.get('/',
+  async (req, res) => {
+    try {
+      const allUsers = await findAllUsers();
+      return res.status(201).send(allUsers);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  });
 
 router.post('/create',
   userPostValidatorSchema,
@@ -50,7 +59,7 @@ router.put('/:userId/edit/info',
   userPostValidatorSchema,
   validate,
   authentication,
-  authorization,  
+  authorization,
   async (req, res) => {
     const { email, password, username, roles, favorites } = req.body;
     const id = req.params.userId;
@@ -86,6 +95,53 @@ router.delete('/:userId',
       }
 
       return res.status(201).send('user deleted');
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  });
+
+router.put('/:userId/edit/favorites',
+  userAddFavoritesValidatorSchema,
+  validate,
+  authentication,
+  async (req, res) => {
+    const { favoriteMovieId } = req.body;
+    const id = req.params.userId;
+    try {
+      const user = await addFavoriteMovie(id, favoriteMovieId);
+
+      return res.status(201).send(user);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  });
+
+router.delete('/:userId/edit/favorites',
+  userAddFavoritesValidatorSchema,
+  validate,
+  authentication,
+  async (req, res) => {
+    const { favoriteMovieId } = req.body;
+    const id = req.params.userId;
+    try {
+      const user = await removeFavoriteMovie(id, favoriteMovieId, {
+        returnOriginal: false
+      });
+
+      return res.status(201).send(user);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  });
+
+  router.get('/statistics/favorites',
+  validate,
+  authentication,
+  authorization,
+  async (req, res) => {
+    try {
+      const allFavoritesMovies = await getAllFavoritesMovies();
+      return res.status(201).send(allFavoritesMovies);
     } catch (err) {
       return res.status(500).send(err);
     }
