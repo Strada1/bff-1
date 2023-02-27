@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const {body, param} = require('express-validator');
 const {PATHS} = require('../constants');
-const {getMoviesCountByDirector, getMoviesCountByYearsInterval} = require('../controllers/test');
+const {getMoviesCountByDirector, getMoviesCountByYearsInterval} = require('../controllers/example');
 const validate = require('../middlewares/validate');
 
 const router = Router();

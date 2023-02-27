@@ -3,7 +3,7 @@ const categoriesService = require('../service/db/categoriesService');
 const getCategories = async (req, res) => {
   try {
     const allCategories = await categoriesService.getAllCategories(req.query['sortBy']);
-    return res.status(201).json(allCategories);
+    return res.status(200).json(allCategories);
   } catch (error) {
     return res.status(500).send(error);
   }

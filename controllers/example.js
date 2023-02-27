@@ -1,4 +1,4 @@
-const aggregateService = require('../service/db/test');
+const aggregateService = require('../service/db/example');
 
 const getMoviesCountByDirector = async (req, res) => {
   try {
