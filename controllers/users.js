@@ -55,7 +55,7 @@ const deleteMovieFromFavorite = async (req, res) => {
     const {userId} = req.params;
     const {movieId} = req.body;
     await usersService.deleteMovieFromFavorite(userId, movieId);
-    return res.status(201).send('movie deleted');
+    return res.status(200).send('movie deleted');
   } catch (error) {
     return res.status(500).send(error);
   }
