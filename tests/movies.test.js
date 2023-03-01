@@ -1,9 +1,7 @@
 require('dotenv').config();
 const {describe, expect, it} = require('@jest/globals');
-
 const request = require('supertest');
 const app = require('../app');
-const mongoose = require('../db');
 
 describe('GET /movies', () => {
   it('should return all movies', async () => {

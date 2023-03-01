@@ -1,3 +1,4 @@
+require('dotenv').config();
 const {describe, expect, it} = require('@jest/globals');
 const request = require('supertest');
 const app = require('../app');
@@ -6,7 +7,6 @@ describe('GET /categories', () => {
   it('should return all categories', async () => {
     const res = await request(app).get('/categories');
     expect(res.statusCode).toBe(200);
-    console.log(typeof res.body);
   });
 });
 
