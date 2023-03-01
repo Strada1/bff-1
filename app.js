@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cors(CORS_OPTIONS));
 app.use(loginRoute);
 app.use(homeRoute);
-// app.use(usersRoute);
+app.use(usersRoute);
 app.use(moviesRoute);
 app.use(commentsRoute);
 app.use(categoriesRoute);

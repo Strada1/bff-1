@@ -2,9 +2,12 @@ const {describe, expect, it} = require('@jest/globals');
 const request = require('supertest');
 const app = require('../app');
 
+const adminToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEiLCJwYXNzd29yZCI6IjEiLCJpYXQiOjE2NzY5NzExMDF9.CG1cxGmv5bDKzxi_cOvJ3YcjvaiOVhzHRE_E4pzTmlA';
+
 describe('GET /movies', () => {
   it('should return all movies', async () => {
-    const res = await request(app).get('/movies');
+    const res = await request(app).get('/movies').auth(adminToken, {type: 'bearer'});
     expect(res.statusCode).toBe(200);
   });
 });
@@ -18,7 +21,7 @@ describe('POST /movies', () => {
       duration: 120,
       director: '63e5316d70801cccb0ac756b',
     };
-    const res = await request(app).post('/movies').send(movie);
+    const res = await request(app).post('/movies').send(movie).auth(adminToken, {type: 'bearer'});
     expect(res.statusCode).toBe(201);
   });
 });
@@ -31,7 +34,7 @@ describe('POST /movies', () => {
       duration: 120,
       director: '63e5316d70801cccb0ac756b',
     };
-    const res = await request(app).post('/movies').send(movie);
+    const res = await request(app).post('/movies').send(movie).auth(adminToken, {type: 'bearer'});
     expect(res.statusCode).toBe(422);
   });
 });
