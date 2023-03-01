@@ -39,14 +39,22 @@ const findUserByToken = async (token, cb) => {
 };
 
 const addMovieInFavorite = async (userId, movieId) => {
-  console.log('userId -> ', userId);
-  console.log('movieId -> ', movieId);
   await Users.findByIdAndUpdate(userId, {
     $addToSet: {
       favoriteMovies: movieId,
     },
   });
 };
+const deleteMovieFromFavorite = async (userId, movieId) => {
+  await Users.findByIdAndUpdate(userId, {
+    $pull: {
+      favoriteMovies: {
+        _id: movieId,
+      },
+    },
+  });
+};
+
 module.exports = {
   getUsers,
   getUserById,
@@ -56,4 +64,5 @@ module.exports = {
   findUser,
   findUserByToken,
   addMovieInFavorite,
+  deleteMovieFromFavorite,
 };
