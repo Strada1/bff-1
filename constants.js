@@ -3,6 +3,10 @@ const PATHS = {
   USERS: {
     ALL: '/users',
     BY_ID: '/users/:userId',
+    FAVORITE_MOVIES: {
+      ALL: '/users/:userId/favoriteMovies',
+      BY_ID: '/users/:userId/favoriteMovies/',
+    },
   },
   HOME: '/',
   MOVIES: {

@@ -37,4 +37,23 @@ const findUserByToken = async (token, cb) => {
   if (user) return cb(null, user);
   return cb(null, null);
 };
-module.exports = {getUsers, getUserById, createUser, updateUser, deleteUser, findUser, findUserByToken};
+
+const addMovieInFavorite = async (userId, movieId) => {
+  console.log('userId -> ', userId);
+  console.log('movieId -> ', movieId);
+  await Users.findByIdAndUpdate(userId, {
+    $addToSet: {
+      favorites: movieId,
+    },
+  });
+};
+module.exports = {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  findUser,
+  findUserByToken,
+  addMovieInFavorite,
+};

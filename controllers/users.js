@@ -40,5 +40,16 @@ const deleteUser = async (req, res) => {
     return res.status(500).send(error);
   }
 };
+const addMovieInFavorite = async (req, res) => {
+  try {
+    const {userId} = req.params;
+    const {movieId} = req.body;
+    console.log(userId, movieId);
+    await usersService.addMovieInFavorite(userId, movieId);
+    return res.status(201).send('movie added');
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
 
-module.exports = {getUsers, getUserById, createUser, updateUser, deleteUser};
+module.exports = {getUsers, getUserById, createUser, updateUser, deleteUser, addMovieInFavorite};

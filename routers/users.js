@@ -2,7 +2,7 @@ const {Router} = require('express');
 const passport = require('../middlewares/authStrategy');
 const {body, param} = require('express-validator');
 const {PATHS} = require('../constants');
-const {getUsers, getUserById, createUser, updateUser, deleteUser} = require('../controllers/users');
+const {getUsers, getUserById, createUser, updateUser, deleteUser, addMovieInFavorite} = require('../controllers/users');
 const validate = require('../middlewares/validate');
 const {authorizationForAdmin, authorizationForUser} = require('../middlewares/authorization');
 
@@ -31,5 +31,15 @@ router.post(
 );
 router.put(PATHS.USERS.BY_ID, [], validate, authorizationForUser, updateUser);
 router.delete(PATHS.USERS.BY_ID, [], validate, authorizationForUser, deleteUser);
+
+router.post(
+  PATHS.USERS.FAVORITE_MOVIES.ALL,
+  [
+    param('userId').notEmpty().withMessage('the userId param should not be empty'),
+    body('movieId').notEmpty().withMessage('the movieId field should not be empty'),
+  ],
+  validate,
+  addMovieInFavorite
+);
 
 module.exports = router;
