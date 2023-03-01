@@ -6,12 +6,7 @@ module.exports = {
       {},
       {
         $set: {
-          favorite: [
-            {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: 'Comments',
-            },
-          ],
+          favoriteMovies: [],
         },
       }
     );

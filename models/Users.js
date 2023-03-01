@@ -9,6 +9,12 @@ const usersSchema = new Schema({
     default: 'user',
   },
   token: String,
+  favoriteMovies: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Movies',
+    },
+  ],
 });
 
 const Users = model('Users', usersSchema);

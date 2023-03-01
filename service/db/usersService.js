@@ -43,7 +43,7 @@ const addMovieInFavorite = async (userId, movieId) => {
   console.log('movieId -> ', movieId);
   await Users.findByIdAndUpdate(userId, {
     $addToSet: {
-      favorites: movieId,
+      favoriteMovies: movieId,
     },
   });
 };
