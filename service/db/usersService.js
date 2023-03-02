@@ -48,11 +48,26 @@ const addMovieInFavorite = async (userId, movieId) => {
 const deleteMovieFromFavorite = async (userId, movieId) => {
   await Users.findByIdAndUpdate(userId, {
     $pull: {
-      favoriteMovies: {
-        _id: movieId,
-      },
+      favoriteMovies: movieId,
     },
   });
+};
+
+const getFavoriteMoviesCount = async (groupBy) => {
+  const groupedFavoriteMoviesCount =
+    (await Users.aggregate([
+      {
+        $group: {
+          _id: {
+            title: '',
+          },
+          moviesCount: {
+            $sum: 1,
+          },
+        },
+      },
+    ])) || [];
+  return groupedFavoriteMoviesCount;
 };
 
 module.exports = {
@@ -65,4 +80,5 @@ module.exports = {
   findUserByToken,
   addMovieInFavorite,
   deleteMovieFromFavorite,
+  getFavoriteMoviesCount,
 };

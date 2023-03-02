@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const passport = require('../middlewares/authStrategy');
-const {body, param} = require('express-validator');
+const {body, param, query} = require('express-validator');
 const {PATHS} = require('../constants');
 const {
   getUsers,
@@ -10,6 +10,7 @@ const {
   deleteUser,
   addMovieInFavorite,
   deleteMovieFromFavorite,
+  getFavoriteMoviesCount,
 } = require('../controllers/users');
 const validate = require('../middlewares/validate');
 const {authorizationForAdmin, authorizationForUser} = require('../middlewares/authorization');
@@ -57,6 +58,13 @@ router.delete(
   ],
   validate,
   deleteMovieFromFavorite
+);
+router.get(
+  PATHS.USERS.FAVORITE_MOVIES.COUNT,
+  [query('groupBy').notEmpty().withMessage('the groupBy param should not be empty')],
+  validate,
+  authorizationForAdmin,
+  getFavoriteMoviesCount
 );
 
 module.exports = router;

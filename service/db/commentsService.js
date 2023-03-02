@@ -25,7 +25,7 @@ const updateComment = async (commentId, comment) => {
 
 const deleteComment = async (movieId, commentId) => {
   await Comments.findByIdAndDelete(commentId);
-  await Movies.findByIdAndUpdate(movieId, {$pull: {comments: {_id: commentId}}});
+  await Movies.findByIdAndUpdate(movieId, {$pull: {comments: commentId}});
 };
 
 module.exports = {

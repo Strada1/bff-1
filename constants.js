@@ -6,6 +6,7 @@ const PATHS = {
     FAVORITE_MOVIES: {
       ALL: '/users/:userId/favoriteMovies',
       BY_ID: '/users/:userId/favoriteMovies/',
+      COUNT: '/users/:userId/favoriteMoviesCount',
     },
   },
   HOME: '/',

@@ -60,6 +60,15 @@ const deleteMovieFromFavorite = async (req, res) => {
     return res.status(500).send(error);
   }
 };
+const getFavoriteMoviesCount = async (req, res) => {
+  try {
+    const {groupBy} = req.query;
+    const groupedFavoriteMovies = await usersService.getFavoriteMoviesCount(groupBy);
+    return res.status(200).json(groupedFavoriteMovies);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
 
 module.exports = {
   getUsers,
@@ -69,4 +78,5 @@ module.exports = {
   deleteUser,
   addMovieInFavorite,
   deleteMovieFromFavorite,
+  getFavoriteMoviesCount,
 };
