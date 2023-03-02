@@ -4,16 +4,23 @@ const { createUser, findOneByEmail, findAndUpdate, findAndDelete, addFavoriteMov
 const { validate, authorization, authentication } = require('../middlewares');
 const { userPostValidatorSchema, userDeleteValidatorSchema, userAddFavoritesValidatorSchema } = require('../validatorSchema/user');
 const { createToken, verifyToken } = require('../helpers/token')
+const mongoose = require('mongoose');
+
 
 router.get('/',
   async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
       const allUsers = await findAllUsers();
+      await session.commitTransaction();
       return res.status(201).send(allUsers);
-    } catch (err) {
+    } catch (error) {
+      await session.abortTransaction();
       return res.status(500).send(err);
     }
   });
+
 
 router.post('/create',
   userPostValidatorSchema,
