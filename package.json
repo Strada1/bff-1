@@ -1,0 +1,28 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "serevr.js",
+  "scripts": {
+    "test": "jest --forceExit --maxWorkers=1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.3",
+    "jest": "^29.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^4.13.0",
+    "mongoose": "^6.9.0",
+    "node-cache": "^5.1.2",
+    "passport": "^0.6.0",
+    "passport-http-bearer": "^1.0.1",
+    "supertest": "^6.3.3"
+  },
+  "devDependencies": {
+    "passport-mock-strategy": "^2.0.0"
+  }
+}
