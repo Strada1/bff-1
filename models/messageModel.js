@@ -3,8 +3,8 @@ const { ObjectId } = require('mongodb');
 
 const MessageSchema = mongoose.Schema({ 
     user: { type: ObjectId, ref: 'User' },
-    text: String,    
-    chatId: { type: Number, required: true, unique : true }
+    chatId: { type: Number, required: true, unique : true },
+    text: String
   });
 
 const Message = mongoose.model('Message', MessageSchema); 

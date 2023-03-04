@@ -6,6 +6,7 @@ const UserSchema = mongoose.Schema({
   username: { type: String, required: true, unique : true },
   token: { type: String, required: true },
   chats: [{ type: ObjectId, ref: 'Chat' }],
+  roles: [String]
 });
 
 const User = mongoose.model('User', UserSchema);
