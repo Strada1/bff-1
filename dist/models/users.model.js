@@ -10,7 +10,7 @@ const UserSchema = new db_1.db.Schema({
     password: { type: 'String', required: true },
     token: { type: 'String', required: true },
     roles: [String],
-    favorites: [{ type: 'ObjectId', ref: 'Movie' }],
+    chats: [{ type: 'ObjectId', ref: 'Chat' }],
     __v: { type: Number, select: false },
 }, { timestamps: true });
 const validLengths = {

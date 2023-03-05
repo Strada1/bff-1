@@ -41,76 +41,221 @@ const http_status_1 = __importDefault(require("http-status"));
 const passport_1 = __importDefault(require("passport"));
 const passportStrategies_1 = require("../middlewares/passportStrategies");
 const server_1 = require("../server");
-const movies_service_1 = require("../services/movies.service");
-const movieMock = __importStar(require("./fixtures/movies.fixture"));
-const users_service_1 = require("../services/users.service");
 const const_1 = require("../shared/const");
 const users_model_1 = require("../models/users.model");
-const movies_model_1 = require("../models/movies.model");
-const users_fixture_1 = require("./fixtures/users.fixture");
-const movies_fixture_1 = require("./fixtures/movies.fixture");
-beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield movies_model_1.Movie.deleteMany({});
-    yield users_model_1.User.deleteMany({});
-}));
+const usersService = __importStar(require("../services/users.service"));
+const chatsService = __importStar(require("../services/chats.service"));
+const usersMock = __importStar(require("./fixtures/users.fixture"));
+const sharedMock = __importStar(require("./fixtures/shared.fixture"));
+const chatsMock = __importStar(require("./fixtures/chats.fixture"));
+const users_dto_1 = require("../dto/users.dto");
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield movies_model_1.Movie.deleteMany({});
     yield users_model_1.User.deleteMany({});
 }));
-describe('GET /users/favorites-count', () => {
-    describe('Request with right role', () => {
-        it(`should return a ${http_status_1.default.OK}`, () => __awaiter(void 0, void 0, void 0, function* () {
-            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
-            const mockUsers = (0, users_fixture_1.generateUsersMock)(10);
-            const mockMovies = (0, movies_fixture_1.generateMoviesMock)(10);
-            const createdMovies = yield movies_model_1.Movie.insertMany(mockMovies);
-            const usersWithFavorites = mockUsers.map((user) => (Object.assign(Object.assign({}, user), { favorites: (0, users_fixture_1.selectRandomMovieIds)(createdMovies) })));
-            const expectedResult = (0, users_fixture_1.favoritesCountMock)(usersWithFavorites, createdMovies);
-            yield users_model_1.User.insertMany(usersWithFavorites);
-            const { body } = yield (0, supertest_1.default)(server_1.app)
-                .get('/users/favorites-count')
-                .expect(http_status_1.default.OK);
-            expect(body).toEqual(expectedResult);
+describe('GET /users', () => {
+    beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield users_model_1.User.deleteMany({});
+    }));
+    it(`should return a ${http_status_1.default.OK} and the users`, () => __awaiter(void 0, void 0, void 0, function* () {
+        const mockUsers = usersMock.generateUsersMock(10);
+        const createdUsers = yield users_model_1.User.insertMany(mockUsers);
+        const { body } = yield (0, supertest_1.default)(server_1.app).get('/users').expect(http_status_1.default.OK);
+        expect(body).toEqual(sharedMock.jsonTransform((0, users_dto_1.getUsersResponseDTO)(createdUsers)));
+    }));
+});
+describe('GET /users/:userId', () => {
+    describe('given the user does not exist', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.NOT_FOUND}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            yield (0, supertest_1.default)(server_1.app)
+                .get(`/users/${usersMock.wrongUserId}`)
+                .expect(http_status_1.default.NOT_FOUND);
         }));
     });
-    describe('Request with wrong role', () => {
-        it(`should return a ${http_status_1.default.UNAUTHORIZED}`, () => __awaiter(void 0, void 0, void 0, function* () {
-            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.USER] }));
-            yield (0, supertest_1.default)(server_1.app)
-                .get('/users/favorites-count')
-                .expect(http_status_1.default.UNAUTHORIZED);
+    describe('given the user does exist', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.OK} and the user`, () => __awaiter(void 0, void 0, void 0, function* () {
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            yield (0, supertest_1.default)(server_1.app).get(`/users/${createdUser._id}`).expect(http_status_1.default.OK);
         }));
     });
 });
-describe('POST /users/me/favorites', () => {
-    describe('Add to favorites', () => {
-        it(`should return a ${http_status_1.default.OK}`, () => __awaiter(void 0, void 0, void 0, function* () {
-            passport_1.default.use('bearer', passportStrategies_1.tokenStrategy);
-            const createdMovie = yield (0, movies_service_1.createMovie)(movieMock.movie);
-            const { token } = yield (0, users_service_1.createUser)(users_fixture_1.userTemplate);
-            const { body } = yield (0, supertest_1.default)(server_1.app)
-                .post('/users/me/favorites')
-                .set('Authorization', `Bearer ${token}`)
-                .send({ movieId: createdMovie._id })
-                .expect(http_status_1.default.OK);
-            expect(body.favorites).toEqual(expect.arrayContaining([createdMovie._id.toString()]));
+describe('POST /users', () => {
+    describe('request with wrong payload', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.BAD_REQUEST}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            const wrongPayload = {
+                email: '1',
+                password: '2',
+            };
+            yield (0, supertest_1.default)(server_1.app)
+                .post('/users')
+                .send(wrongPayload)
+                .expect(http_status_1.default.BAD_REQUEST);
         }));
     });
-    describe('Remove from favorites', () => {
-        it(`should return a ${http_status_1.default.OK}`, () => __awaiter(void 0, void 0, void 0, function* () {
-            passport_1.default.use('bearer', passportStrategies_1.tokenStrategy);
-            const createdMovie = yield (0, movies_service_1.createMovie)(movieMock.movie);
-            const { token } = yield (0, users_service_1.createUser)(users_fixture_1.userTemplate);
+    describe('request with valid payload', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.CREATED} and the user`, () => __awaiter(void 0, void 0, void 0, function* () {
             yield (0, supertest_1.default)(server_1.app)
-                .post('/users/me/favorites')
-                .set('Authorization', `Bearer ${token}`)
-                .send({ movieId: createdMovie._id });
+                .post('/users')
+                .send(usersMock.userTemplate)
+                .expect(http_status_1.default.CREATED);
+        }));
+    });
+});
+describe('PUT /users/:userId', () => {
+    describe('request with a wrong role', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.UNAUTHORIZED}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.USER] }));
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            yield (0, supertest_1.default)(server_1.app)
+                .put(`/users/${createdUser._id}`)
+                .send({ username: 'test' })
+                .expect(http_status_1.default.UNAUTHORIZED);
+        }));
+    });
+    describe('request with a valid role', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.OK} and the user`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            const payload = { username: 'test' };
             const { body } = yield (0, supertest_1.default)(server_1.app)
-                .delete('/users/me/favorites')
-                .set('Authorization', `Bearer ${token}`)
-                .send({ movieId: createdMovie._id })
+                .put(`/users/${createdUser._id}`)
+                .send(payload)
                 .expect(http_status_1.default.OK);
-            expect(body.favorites).not.toEqual(expect.arrayContaining([createdMovie._id.toString()]));
+            expect(body.username).toEqual(payload.username);
+        }));
+    });
+    describe('request with a valid role but wrong payload', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.BAD_REQUEST}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            const wrongPayload = {
+                email: '1',
+                password: '2',
+            };
+            yield (0, supertest_1.default)(server_1.app)
+                .put(`/users/${createdUser._id}`)
+                .send(wrongPayload)
+                .expect(http_status_1.default.BAD_REQUEST);
+        }));
+    });
+});
+describe('DELETE /users/:userId', () => {
+    describe('request with a wrong role', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.UNAUTHORIZED}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.USER] }));
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            yield (0, supertest_1.default)(server_1.app)
+                .delete(`/users/${createdUser._id}`)
+                .expect(http_status_1.default.UNAUTHORIZED);
+        }));
+    });
+    describe('request with a valid role', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.NO_CONTENT}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', (0, passportStrategies_1.mockStrategy)({ roles: [const_1.ROLES.ADMIN] }));
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            yield (0, supertest_1.default)(server_1.app)
+                .delete(`/users/${createdUser._id}`)
+                .expect(http_status_1.default.NO_CONTENT);
+        }));
+    });
+});
+describe('POST /users/me/chats', () => {
+    describe('request with a wrong payload', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.BAD_REQUEST}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', passportStrategies_1.tokenStrategy);
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            yield (0, supertest_1.default)(server_1.app)
+                .post('/users/me/chats')
+                .set('Authorization', `Bearer ${createdUser.token}`)
+                .send({ chatId: 1 })
+                .expect(http_status_1.default.BAD_REQUEST);
+        }));
+    });
+    describe('request with a valid payload', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.OK} and the user`, () => __awaiter(void 0, void 0, void 0, function* () {
+            var _a;
+            passport_1.default.use('bearer', passportStrategies_1.tokenStrategy);
+            const createdChat = yield chatsService.createChat(chatsMock.chat);
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            const { body } = yield (0, supertest_1.default)(server_1.app)
+                .post('/users/me/chats')
+                .set('Authorization', `Bearer ${createdUser.token}`)
+                .send({ chatId: createdChat._id })
+                .expect(http_status_1.default.OK);
+            const chat = yield chatsService.getChat(createdChat._id);
+            const isUserAddedToChat = (_a = chat === null || chat === void 0 ? void 0 : chat.users) === null || _a === void 0 ? void 0 : _a.includes(createdUser._id);
+            expect(body.chats[0]._id).toEqual(createdChat._id.toString());
+            expect(isUserAddedToChat).toBeTruthy();
+        }));
+    });
+});
+describe('DELETE /users/me/chats', () => {
+    describe('request with a wrong payload', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.BAD_REQUEST}`, () => __awaiter(void 0, void 0, void 0, function* () {
+            passport_1.default.use('bearer', passportStrategies_1.tokenStrategy);
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            yield (0, supertest_1.default)(server_1.app)
+                .delete('/users/me/chats')
+                .set('Authorization', `Bearer ${createdUser.token}`)
+                .send({ chatId: '' })
+                .expect(http_status_1.default.BAD_REQUEST);
+        }));
+    });
+    describe('with a valid payload', () => {
+        beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+            yield users_model_1.User.deleteMany({});
+        }));
+        it(`should return a ${http_status_1.default.OK} and the user`, () => __awaiter(void 0, void 0, void 0, function* () {
+            var _a;
+            passport_1.default.use('bearer', passportStrategies_1.tokenStrategy);
+            const createdChat = yield chatsService.createChat(chatsMock.chat);
+            const createdUser = yield usersService.createUser(usersMock.userTemplate);
+            yield usersService.addChatToUser(createdUser._id, createdChat._id);
+            yield chatsService.addUserToChat(createdChat._id, createdUser._id);
+            const { body } = yield (0, supertest_1.default)(server_1.app)
+                .delete('/users/me/chats')
+                .set('Authorization', `Bearer ${createdUser.token}`)
+                .send({ chatId: createdChat._id })
+                .expect(http_status_1.default.OK);
+            const chat = yield chatsService.getChat(createdChat._id);
+            const isUserRemovedFromChat = !((_a = chat === null || chat === void 0 ? void 0 : chat.users) === null || _a === void 0 ? void 0 : _a.includes(createdUser._id));
+            expect(body.chats).not.toEqual(expect.arrayContaining([createdChat._id.toString()]));
+            expect(isUserRemovedFromChat).toBeTruthy();
         }));
     });
 });

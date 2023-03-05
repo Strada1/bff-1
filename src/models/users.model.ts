@@ -10,7 +10,7 @@ export interface IUser {
   password: string;
   token?: string;
   roles?: string[];
-  favorites?: string[];
+  chats?: Types.ObjectId[];
   createdAt?: string;
   updatedAt?: string;
   readonly __v?: number;
@@ -23,7 +23,7 @@ const UserSchema = new db.Schema<IUser>(
     password: { type: 'String', required: true },
     token: { type: 'String', required: true },
     roles: [String],
-    favorites: [{ type: 'ObjectId', ref: 'Movie' }],
+    chats: [{ type: 'ObjectId', ref: 'Chat' }],
     __v: { type: Number, select: false },
   },
   { timestamps: true }

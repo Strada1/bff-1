@@ -4,6 +4,13 @@ export function convertQueryToArray(string: string) {
   return string ? string.split(',') : [];
 }
 
+export function validateLength(
+  value: string,
+  { min, max }: { min: number; max: number }
+) {
+  return value?.length > min && value?.length < max;
+}
+
 export function createLengthErrorMessage(
   field: string,
   { min, max }: { min?: number; max?: number }
@@ -33,4 +40,8 @@ export function isAdmin(roles: string[]) {
 
 export function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
+}
+
+export function getTokenFromBearerString(authorization: string) {
+  return authorization ? authorization.split(' ')[1] : '';
 }

@@ -35,16 +35,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.authUser = exports.updateUser = exports.updateUserInfo = exports.removeRoleFromUser = exports.addRoleToUser = exports.removeMovieFromFavorites = exports.addMovieToFavorites = exports.createUser = exports.getUserInfo = exports.getUserRoles = exports.getFavoritesCount = exports.getUser = exports.getUsers = void 0;
+exports.deleteUser = exports.authUser = exports.updateUser = exports.updateUserInfo = exports.removeRoleFromUser = exports.addRoleToUser = exports.leaveChat = exports.joinChat = exports.createUser = exports.getUserInfo = exports.getUserRoles = exports.getUser = exports.getUsers = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const usersService = __importStar(require("../services/users.service"));
+const chatsService = __importStar(require("../services/chats.service"));
 const ApiError_1 = __importDefault(require("../shared/ApiError"));
 const const_1 = require("../shared/const");
-const user_dto_1 = require("../dto/user.dto");
+const users_dto_1 = require("../dto/users.dto");
 exports.getUsers = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield usersService.getUsers();
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getUsersResponseDTO)(users));
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getUsersResponseDTO)(users));
 }));
 exports.getUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
@@ -52,11 +53,7 @@ exports.getUser = (0, express_async_handler_1.default)((req, res) => __awaiter(v
     if (!user) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.USERS.USER_NOT_FOUND);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getUserResponseDTO)(user));
-}));
-exports.getFavoritesCount = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield usersService.aggregateByMovies();
-    res.status(http_status_1.default.OK).send(result !== null && result !== void 0 ? result : []);
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getUserResponseDTO)(user));
 }));
 exports.getUserRoles = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
@@ -67,7 +64,7 @@ exports.getUserRoles = (0, express_async_handler_1.default)((req, res) => __awai
     res.status(http_status_1.default.OK).send({ roles: user.roles });
 }));
 exports.getUserInfo = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(req.user));
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(req.user));
 }));
 exports.createUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, username, password } = req.body;
@@ -81,25 +78,27 @@ exports.createUser = (0, express_async_handler_1.default)((req, res) => __awaite
         password,
         roles: [const_1.ROLES.USER],
     });
-    res.status(http_status_1.default.CREATED).send((0, user_dto_1.getFullUserResponseDTO)(createdUser));
+    res.status(http_status_1.default.CREATED).send((0, users_dto_1.getFullUserResponseDTO)(createdUser));
 }));
-exports.addMovieToFavorites = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.joinChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { _id } = req.user;
-    const { movieId } = req.body;
-    const updatedUser = yield usersService.addMovieToFavorites(_id, movieId);
+    const { chatId } = req.body;
+    const updatedUser = yield usersService.addChatToUser(_id, chatId);
     if (!updatedUser) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.USERS.USER_NOT_FOUND);
+        throw new ApiError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, const_1.ERROR_TEXT.SERVER.INTERNAL_ERROR);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(updatedUser));
+    yield chatsService.addUserToChat(chatId, _id);
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(updatedUser));
 }));
-exports.removeMovieFromFavorites = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.leaveChat = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { _id } = req.user;
-    const { movieId } = req.body;
-    const updatedUser = yield usersService.removeMovieFromFavorites(_id, movieId);
+    const { chatId } = req.body;
+    const updatedUser = yield usersService.removeChatFromUser(_id, chatId);
     if (!updatedUser) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.USERS.USER_NOT_FOUND);
+        throw new ApiError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, const_1.ERROR_TEXT.SERVER.INTERNAL_ERROR);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(updatedUser));
+    yield chatsService.removeUserFromChat(chatId, _id);
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(updatedUser));
 }));
 exports.addRoleToUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
@@ -112,7 +111,7 @@ exports.addRoleToUser = (0, express_async_handler_1.default)((req, res) => __awa
     if (!updatedUser) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.USERS.USER_NOT_FOUND);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(updatedUser));
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(updatedUser));
 }));
 exports.removeRoleFromUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
@@ -125,7 +124,7 @@ exports.removeRoleFromUser = (0, express_async_handler_1.default)((req, res) => 
     if (!updatedUser) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.USERS.USER_NOT_FOUND);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(updatedUser));
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(updatedUser));
 }));
 exports.updateUserInfo = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { _id } = req.user;
@@ -137,7 +136,7 @@ exports.updateUserInfo = (0, express_async_handler_1.default)((req, res) => __aw
     if (!updatedUser) {
         throw new ApiError_1.default(http_status_1.default.INTERNAL_SERVER_ERROR, const_1.ERROR_TEXT.SERVER.INTERNAL_ERROR);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(updatedUser));
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(updatedUser));
 }));
 exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
@@ -149,7 +148,7 @@ exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaite
     if (!updatedUser) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, const_1.ERROR_TEXT.USERS.USER_NOT_FOUND);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(updatedUser));
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(updatedUser));
 }));
 exports.authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
@@ -157,7 +156,7 @@ exports.authUser = (0, express_async_handler_1.default)((req, res) => __awaiter(
     if (!user || !isPasswordCorrect) {
         throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, const_1.ERROR_TEXT.USERS.WRONG_USER_OR_PASSWORD);
     }
-    res.status(http_status_1.default.OK).send((0, user_dto_1.getFullUserResponseDTO)(user));
+    res.status(http_status_1.default.OK).send((0, users_dto_1.getFullUserResponseDTO)(user));
 }));
 exports.deleteUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;

@@ -14,7 +14,11 @@ router
   .all(validate([...userValidation]))
   .get(usersController.getUsers)
   .post(
-    validate([body('email').exists(), body('username').exists()]),
+    validate([
+      body('email').exists(),
+      body('username').exists(),
+      body('password').exists(),
+    ]),
     usersController.createUser
   );
 
@@ -33,19 +37,10 @@ router
   .put(usersController.updateUserInfo);
 
 router
-  .route('/me/favorites')
+  .route('/me/chats')
   .all(authentication(), validate([...userValidation]))
-  .post(usersController.addMovieToFavorites)
-  .delete(usersController.removeMovieFromFavorites);
-
-router
-  .route('/favorites-count')
-  .all(
-    authentication(),
-    authorization([ROLES.ADMIN]),
-    validate([...userValidation])
-  )
-  .get(usersController.getFavoritesCount);
+  .post(usersController.joinChat)
+  .delete(usersController.leaveChat);
 
 router
   .route('/:userId')

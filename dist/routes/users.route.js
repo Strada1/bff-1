@@ -38,7 +38,11 @@ router
     .route('/')
     .all((0, validate_1.validate)([...users_model_1.userValidation]))
     .get(usersController.getUsers)
-    .post((0, validate_1.validate)([(0, express_validator_1.body)('email').exists(), (0, express_validator_1.body)('username').exists()]), usersController.createUser);
+    .post((0, validate_1.validate)([
+    (0, express_validator_1.body)('email').exists(),
+    (0, express_validator_1.body)('username').exists(),
+    (0, express_validator_1.body)('password').exists(),
+]), usersController.createUser);
 router
     .route('/auth')
     .all((0, validate_1.validate)([...users_model_1.userValidation]))
@@ -49,14 +53,10 @@ router
     .get(usersController.getUserInfo)
     .put(usersController.updateUserInfo);
 router
-    .route('/me/favorites')
+    .route('/me/chats')
     .all((0, authenticate_1.authentication)(), (0, validate_1.validate)([...users_model_1.userValidation]))
-    .post(usersController.addMovieToFavorites)
-    .delete(usersController.removeMovieFromFavorites);
-router
-    .route('/favorites-count')
-    .all((0, authenticate_1.authentication)(), (0, authorization_1.authorization)([const_1.ROLES.ADMIN]), (0, validate_1.validate)([...users_model_1.userValidation]))
-    .get(usersController.getFavoritesCount);
+    .post(usersController.joinChat)
+    .delete(usersController.leaveChat);
 router
     .route('/:userId')
     .all((0, express_validator_1.param)('userId').isMongoId(), (0, validate_1.validate)([...users_model_1.userValidation]))

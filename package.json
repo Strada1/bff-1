@@ -9,6 +9,7 @@
     "@types/lodash": "^4.14.191",
     "@types/mongodb-memory-server": "^2.3.0",
     "@types/passport-http-bearer": "^1.0.37",
+    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "eslint": "^8.32.0",
@@ -52,6 +53,7 @@
     "node-cache": "^5.1.2",
     "passport": "^0.6.0",
     "passport-http-bearer": "^1.0.1",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "ws": "^8.12.1"
   }
 }

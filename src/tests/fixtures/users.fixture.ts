@@ -1,15 +1,12 @@
-import { ObjectId } from 'mongoose';
-import _ from 'lodash';
 import { ROLES } from '../../shared/const';
 import * as tokenService from '../../services/token.service';
-import { getRandomInt } from '../../shared/helpers';
-import { IUser } from '../../models/users.model';
-import { IMovie } from '../../models/movies.model';
+
+export const wrongUserId = '63e382d1848d4c8af8847773';
 
 export const userTemplate = {
   email: 'lorem@ipsum.dev',
   username: 'dolor',
-  password: 'sit amet',
+  password: 'sit amet123',
 };
 
 export function generateUsersMock(count: number) {
@@ -23,35 +20,10 @@ export function generateUsersMock(count: number) {
       username: userTemplate.username + i,
       password: userTemplate.password + i,
       roles: [ROLES.USER],
+      chats: ['64032e40e4b706cfe6224847'],
       token,
     });
   }
 
   return result;
-}
-
-export function selectRandomMovieIds(movies: any) {
-  return movies
-    .slice(0, getRandomInt(movies.length))
-    .map((item: any) => item._id.toString());
-}
-
-export function favoritesCountMock(
-  users: Partial<IUser>[],
-  movies: Partial<IMovie>[]
-) {
-  const allFavorites = users.flatMap((user: Partial<IUser>) => [
-    ...user.favorites!.map((movieId: ObjectId | string) =>
-      movies.find((movie: Partial<IMovie>) => movie._id!.toString() === movieId)
-    ),
-  ]);
-
-  const grouped = _(allFavorites)
-    .groupBy((x: any) => x.title)
-    .value();
-
-  return Object.keys(grouped).reduce(
-    (accum, key) => ({ ...accum, [key]: grouped[key].length }),
-    {}
-  );
 }

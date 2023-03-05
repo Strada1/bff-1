@@ -1,13 +1,14 @@
 import STATUS from 'http-status';
 import asyncHandler from 'express-async-handler';
 import * as usersService from '../services/users.service';
+import * as chatsService from '../services/chats.service';
 import ApiError from '../shared/ApiError';
 import { ERROR_TEXT, ROLES } from '../shared/const';
 import {
   getUserResponseDTO,
   getUsersResponseDTO,
   getFullUserResponseDTO,
-} from '../dto/user.dto';
+} from '../dto/users.dto';
 import { IUser } from '../models/users.model';
 
 export const getUsers = asyncHandler(async (req, res) => {
@@ -25,12 +26,6 @@ export const getUser = asyncHandler(async (req, res) => {
   }
 
   res.status(STATUS.OK).send(getUserResponseDTO(user));
-});
-
-export const getFavoritesCount = asyncHandler(async (req, res) => {
-  const result = await usersService.aggregateByMovies();
-
-  res.status(STATUS.OK).send(result ?? []);
 });
 
 export const getUserRoles = asyncHandler(async (req, res) => {
@@ -66,31 +61,38 @@ export const createUser = asyncHandler(async (req, res) => {
   res.status(STATUS.CREATED).send(getFullUserResponseDTO(createdUser));
 });
 
-export const addMovieToFavorites = asyncHandler(async (req, res) => {
+export const joinChat = asyncHandler(async (req, res) => {
   const { _id } = req.user as IUser;
-  const { movieId } = req.body;
+  const { chatId } = req.body;
 
-  const updatedUser = await usersService.addMovieToFavorites(_id!, movieId);
+  const updatedUser = await usersService.addChatToUser(_id!, chatId);
 
   if (!updatedUser) {
-    throw new ApiError(STATUS.NOT_FOUND, ERROR_TEXT.USERS.USER_NOT_FOUND);
+    throw new ApiError(
+      STATUS.INTERNAL_SERVER_ERROR,
+      ERROR_TEXT.SERVER.INTERNAL_ERROR
+    );
   }
+
+  await chatsService.addUserToChat(chatId, _id!);
 
   res.status(STATUS.OK).send(getFullUserResponseDTO(updatedUser));
 });
 
-export const removeMovieFromFavorites = asyncHandler(async (req, res) => {
+export const leaveChat = asyncHandler(async (req, res) => {
   const { _id } = req.user as IUser;
-  const { movieId } = req.body;
+  const { chatId } = req.body;
 
-  const updatedUser = await usersService.removeMovieFromFavorites(
-    _id!,
-    movieId
-  );
+  const updatedUser = await usersService.removeChatFromUser(_id!, chatId);
 
   if (!updatedUser) {
-    throw new ApiError(STATUS.NOT_FOUND, ERROR_TEXT.USERS.USER_NOT_FOUND);
+    throw new ApiError(
+      STATUS.INTERNAL_SERVER_ERROR,
+      ERROR_TEXT.SERVER.INTERNAL_ERROR
+    );
   }
+
+  await chatsService.removeUserFromChat(chatId, _id!);
 
   res.status(STATUS.OK).send(getFullUserResponseDTO(updatedUser));
 });

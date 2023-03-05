@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { Types } from 'mongoose';
 import { IUser, User } from '../models/users.model';
 import { ROLES } from '../shared/const';
@@ -6,6 +7,16 @@ import * as tokenService from './token.service';
 
 export function getUsers() {
   return User.find();
+}
+export async function getUsersIdsByChat(
+  id: string | Types.ObjectId
+): Promise<string[]> {
+  const users = await User.find(
+    { chats: { $in: [new ObjectId(id)] } },
+    { _ids: 1 }
+  );
+
+  return users.map((user) => user._id.toString());
 }
 
 export function getUser(id: string | Types.ObjectId) {
@@ -17,7 +28,7 @@ export function getUserByEmail(email: string) {
 }
 
 export function getUserByToken(token: string) {
-  return User.findOne({ token }).lean();
+  return User.findOne({ token }).populate('chats').lean();
 }
 
 export function checkRole(user: IUser, role: string) {
@@ -36,28 +47,6 @@ export async function createUser(user: IUser) {
     password: hashPassword,
     token,
   });
-}
-
-export async function addMovieToFavorites(
-  id: string | Types.ObjectId,
-  movie: string
-) {
-  return User.findByIdAndUpdate(
-    { _id: id },
-    { $addToSet: { favorites: movie } },
-    { new: true }
-  );
-}
-
-export async function removeMovieFromFavorites(
-  id: string | Types.ObjectId,
-  movie: string
-) {
-  return User.findByIdAndUpdate(
-    { _id: id },
-    { $pull: { favorites: movie } },
-    { new: true }
-  );
 }
 
 export async function addRoleToUser(id: string | Types.ObjectId, role: string) {
@@ -79,6 +68,28 @@ export async function removeRoleFromUser(
   );
 }
 
+export async function addChatToUser(
+  id: string | Types.ObjectId,
+  chatId: string | Types.ObjectId
+) {
+  return User.findByIdAndUpdate(
+    { _id: id },
+    { $addToSet: { chats: chatId } },
+    { new: true }
+  );
+}
+
+export async function removeChatFromUser(
+  id: string | Types.ObjectId,
+  chatId: string | Types.ObjectId
+) {
+  return User.findByIdAndUpdate(
+    { _id: id },
+    { $pull: { chats: chatId } },
+    { new: true }
+  );
+}
+
 export async function updateUser(
   id: string | Types.ObjectId,
   { username, password }: Partial<IUser>
@@ -94,6 +105,10 @@ export async function updateUser(
 
 export function deleteUser(id: string | Types.ObjectId) {
   return User.findByIdAndDelete(id);
+}
+
+export function deleteChatFromUsers(chatId: string | Types.ObjectId) {
+  return User.updateMany({}, { $pull: { chats: chatId } });
 }
 
 export async function authUser(
@@ -115,29 +130,4 @@ export async function authUser(
     user,
     isPasswordCorrect,
   };
-}
-
-export async function aggregateByMovies() {
-  const counts = await User.aggregate([
-    { $unwind: { path: '$favorites' } },
-    {
-      $group: {
-        _id: '$favorites',
-        count: { $sum: 1 },
-      },
-    },
-    {
-      $lookup: {
-        from: 'movies',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'movie',
-      },
-    },
-  ]);
-
-  return counts.reduce(
-    (accum, current) => ({ ...accum, [current.movie[0].title]: current.count }),
-    {}
-  );
 }

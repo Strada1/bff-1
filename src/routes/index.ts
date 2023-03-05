@@ -1,8 +1,6 @@
 import { Router } from 'express';
-import { categoriesRoute } from './categories.route';
-import { moviesRoute } from './movies.route';
-import { commentsRoute } from './comments.route';
-import { directorsRoute } from './directors.route';
+import { chatsRoute } from './chats.route';
+import { messagesRoute } from './messages.route';
 import { usersRoute } from './users.route';
 
 const router = Router();
@@ -14,20 +12,12 @@ interface IRoute {
 
 const routeList: IRoute[] = [
   {
-    path: '/categories',
-    route: categoriesRoute,
+    path: '/chats',
+    route: chatsRoute,
   },
   {
-    path: '/movies',
-    route: moviesRoute,
-  },
-  {
-    path: '/comments',
-    route: commentsRoute,
-  },
-  {
-    path: '/directors',
-    route: directorsRoute,
+    path: '/messages',
+    route: messagesRoute,
   },
   {
     path: '/users',

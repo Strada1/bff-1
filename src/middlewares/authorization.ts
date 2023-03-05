@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import STATUS from 'http-status';
-import { IUser } from '../models/users.model';
 import ApiError from '../shared/ApiError';
+import { IUser } from '../models/users.model';
 import { ERROR_TEXT } from '../shared/const';
 
 export function authorization(roles: string[]) {

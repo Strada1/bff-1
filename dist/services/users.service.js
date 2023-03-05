@@ -32,7 +32,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.aggregateByMovies = exports.authUser = exports.deleteUser = exports.updateUser = exports.removeRoleFromUser = exports.addRoleToUser = exports.removeMovieFromFavorites = exports.addMovieToFavorites = exports.createUser = exports.checkRole = exports.getUserByToken = exports.getUserByEmail = exports.getUser = exports.getUsers = void 0;
+exports.authUser = exports.deleteChatFromUsers = exports.deleteUser = exports.updateUser = exports.removeChatFromUser = exports.addChatToUser = exports.removeRoleFromUser = exports.addRoleToUser = exports.createUser = exports.checkRole = exports.getUserByToken = exports.getUserByEmail = exports.getUser = exports.getUsersIdsByChat = exports.getUsers = void 0;
+const mongodb_1 = require("mongodb");
 const users_model_1 = require("../models/users.model");
 const const_1 = require("../shared/const");
 const passwordService = __importStar(require("./password.service"));
@@ -41,6 +42,13 @@ function getUsers() {
     return users_model_1.User.find();
 }
 exports.getUsers = getUsers;
+function getUsersIdsByChat(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const users = yield users_model_1.User.find({ chats: { $in: [new mongodb_1.ObjectId(id)] } }, { _ids: 1 });
+        return users.map((user) => user._id.toString());
+    });
+}
+exports.getUsersIdsByChat = getUsersIdsByChat;
 function getUser(id) {
     return users_model_1.User.findById(id);
 }
@@ -50,7 +58,7 @@ function getUserByEmail(email) {
 }
 exports.getUserByEmail = getUserByEmail;
 function getUserByToken(token) {
-    return users_model_1.User.findOne({ token }).lean();
+    return users_model_1.User.findOne({ token }).populate('chats').lean();
 }
 exports.getUserByToken = getUserByToken;
 function checkRole(user, role) {
@@ -68,18 +76,6 @@ function createUser(user) {
     });
 }
 exports.createUser = createUser;
-function addMovieToFavorites(id, movie) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return users_model_1.User.findByIdAndUpdate({ _id: id }, { $addToSet: { favorites: movie } }, { new: true });
-    });
-}
-exports.addMovieToFavorites = addMovieToFavorites;
-function removeMovieFromFavorites(id, movie) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return users_model_1.User.findByIdAndUpdate({ _id: id }, { $pull: { favorites: movie } }, { new: true });
-    });
-}
-exports.removeMovieFromFavorites = removeMovieFromFavorites;
 function addRoleToUser(id, role) {
     return __awaiter(this, void 0, void 0, function* () {
         return users_model_1.User.findByIdAndUpdate({ _id: id }, { $addToSet: { roles: role } }, { new: true });
@@ -92,6 +88,18 @@ function removeRoleFromUser(id, role) {
     });
 }
 exports.removeRoleFromUser = removeRoleFromUser;
+function addChatToUser(id, chatId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return users_model_1.User.findByIdAndUpdate({ _id: id }, { $addToSet: { chats: chatId } }, { new: true });
+    });
+}
+exports.addChatToUser = addChatToUser;
+function removeChatFromUser(id, chatId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return users_model_1.User.findByIdAndUpdate({ _id: id }, { $pull: { chats: chatId } }, { new: true });
+    });
+}
+exports.removeChatFromUser = removeChatFromUser;
 function updateUser(id, { username, password }) {
     return __awaiter(this, void 0, void 0, function* () {
         const newData = { username };
@@ -106,6 +114,10 @@ function deleteUser(id) {
     return users_model_1.User.findByIdAndDelete(id);
 }
 exports.deleteUser = deleteUser;
+function deleteChatFromUsers(chatId) {
+    return users_model_1.User.updateMany({}, { $pull: { chats: chatId } });
+}
+exports.deleteChatFromUsers = deleteChatFromUsers;
 function authUser(email, password) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield getUserByEmail(email);
@@ -120,26 +132,3 @@ function authUser(email, password) {
     });
 }
 exports.authUser = authUser;
-function aggregateByMovies() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const counts = yield users_model_1.User.aggregate([
-            { $unwind: { path: '$favorites' } },
-            {
-                $group: {
-                    _id: '$favorites',
-                    count: { $sum: 1 },
-                },
-            },
-            {
-                $lookup: {
-                    from: 'movies',
-                    localField: '_id',
-                    foreignField: '_id',
-                    as: 'movie',
-                },
-            },
-        ]);
-        return counts.reduce((accum, current) => (Object.assign(Object.assign({}, accum), { [current.movie[0].title]: current.count })), {});
-    });
-}
-exports.aggregateByMovies = aggregateByMovies;

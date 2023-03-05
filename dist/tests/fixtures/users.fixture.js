@@ -22,42 +22,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.favoritesCountMock = exports.selectRandomMovieIds = exports.generateUsersMock = exports.userTemplate = void 0;
-const lodash_1 = __importDefault(require("lodash"));
+exports.generateUsersMock = exports.userTemplate = exports.wrongUserId = void 0;
 const const_1 = require("../../shared/const");
 const tokenService = __importStar(require("../../services/token.service"));
-const helpers_1 = require("../../shared/helpers");
+exports.wrongUserId = '63e382d1848d4c8af8847773';
 exports.userTemplate = {
     email: 'lorem@ipsum.dev',
     username: 'dolor',
-    password: 'sit amet',
+    password: 'sit amet123',
 };
 function generateUsersMock(count) {
     const result = [];
     for (let i = 0; i < count; i += 1) {
         const token = tokenService.createToken(exports.userTemplate.email + i);
-        result.push(Object.assign(Object.assign({}, exports.userTemplate), { email: exports.userTemplate.email + i, username: exports.userTemplate.username + i, password: exports.userTemplate.password + i, roles: [const_1.ROLES.USER], token }));
+        result.push(Object.assign(Object.assign({}, exports.userTemplate), { email: exports.userTemplate.email + i, username: exports.userTemplate.username + i, password: exports.userTemplate.password + i, roles: [const_1.ROLES.USER], chats: ['64032e40e4b706cfe6224847'], token }));
     }
     return result;
 }
 exports.generateUsersMock = generateUsersMock;
-function selectRandomMovieIds(movies) {
-    return movies
-        .slice(0, (0, helpers_1.getRandomInt)(movies.length))
-        .map((item) => item._id.toString());
-}
-exports.selectRandomMovieIds = selectRandomMovieIds;
-function favoritesCountMock(users, movies) {
-    const allFavorites = users.flatMap((user) => [
-        ...user.favorites.map((movieId) => movies.find((movie) => movie._id.toString() === movieId)),
-    ]);
-    const grouped = (0, lodash_1.default)(allFavorites)
-        .groupBy((x) => x.title)
-        .value();
-    return Object.keys(grouped).reduce((accum, key) => (Object.assign(Object.assign({}, accum), { [key]: grouped[key].length })), {});
-}
-exports.favoritesCountMock = favoritesCountMock;
