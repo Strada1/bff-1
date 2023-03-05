@@ -1,5 +1,6 @@
 const Comments = require('../../models/Comments');
 const Movies = require('../../models/Movies');
+const mongoose = require('mongoose');
 
 const getAllcomments = async (movieId) => {
   const comments = await Comments.find({
@@ -14,7 +15,7 @@ const getCommentById = async (commentId) => {
 };
 
 const addComment = async (movieId, comment) => {
-  Comments.create({...comment, movie: movieId}, async (error, comment) => {
+  const commentarii = await Comments.create({...comment, movie: movieId}, async (error, comment) => {
     await Movies.findByIdAndUpdate(movieId, {$push: {comments: comment.id}});
   });
 };
@@ -24,8 +25,16 @@ const updateComment = async (commentId, comment) => {
 };
 
 const deleteComment = async (movieId, commentId) => {
-  await Comments.findByIdAndDelete(commentId);
-  await Movies.findByIdAndUpdate(movieId, {$pull: {comments: commentId}});
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    await Comments.findByIdAndDelete(commentId, {session});
+    await Movies.findByIdAndUpdate(movieId, {$pull: {comments: commentId}}, {session});
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  }
 };
 
 module.exports = {
