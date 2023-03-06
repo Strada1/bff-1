@@ -2,21 +2,34 @@ const request = require('supertest');
 const app = require('../server');
 const createChat = require('./fixtures/chat');
 const createUser = require('./fixtures/user');
-const createMessage = require('./fixtures/message');
+const authData = require('./fixtures/authData')
+const User = require('../models/User')
+const Chat = require('../models/Chat')
+const Message = require('../models/Message')
+
+beforeAll(async () => {
+    await User.deleteMany({});
+    await Chat.deleteMany({});
+    await Message.deleteMany({});
+});
 
 describe('/messages', () => {
     let messageId;
-    const user = createUser();
-    const chat = createChat(user._id);
+    let user;
+    let chat;
     const text = 'test';
+    let auth;
 
     it('POST', async () => {
-        const message = createMessage(user._id, chat._id, text);
+        user = await createUser(true, { isMessage: true });
+        chat = await createChat(user._id);
+        auth = authData(user.token);
         const { body } = await request(app)
             .post('/messages')
-            .send(message)
+            .send({ userId: user._id, chatId: chat._id, text: text },)
+            .set(auth.key, auth.value)
             .expect(201);
-        expect(body.text).toEqual(message.text);
+        expect(body.text).toEqual(text);
         messageId = body._id;
     })
 
@@ -24,7 +37,8 @@ describe('/messages', () => {
         const newText = text + 'New';
         const { body } = await request(app)
             .put(`/messages/${messageId}`)
-            .send(newText)
+            .send({ text: newText })
+            .set(auth.key, auth.value)
             .expect(201);
         expect(body.text).toEqual(newText);
     })
@@ -32,13 +46,16 @@ describe('/messages', () => {
     it('GET message Id', async () => {
         const { body } = await request(app)
             .get(`/messages/${messageId}`)
-            .expect(201);
-            expect(body._id).toEqual(chatId);
+            .expect(201)
+            .set(auth.key, auth.value)
+        expect(body._id).toEqual(messageId);
     })
 
     it('DELETE', async () => {
         const { body } = await request(app)
             .delete(`/messages/${messageId}`)
+            .set(auth.key, auth.value)
             .expect(201);
+
     })
 });

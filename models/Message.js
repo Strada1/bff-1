@@ -2,8 +2,8 @@ const mongoose = require('../db');
 const { ObjectId } = require('mongodb');
 
 const MessageSchema = mongoose.Schema({ 
-    user: { type: ObjectId, ref: 'User' },
-    chatId: { type: Number, required: true, unique : true },
+    userId: { type: ObjectId, ref: 'User' },
+    chatId: { type: ObjectId, ref: 'Chat' },
     text: String
   });
 

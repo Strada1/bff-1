@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const authorization = require('../midlewares/authorization');
+const authentication = require('../midlewares/authentication');
+const { getAllChats,  getChat, creatChat, findAndUpdate, findAndDelete } = require('../services/chat')
 
 router.get('/',
-    authorization,
     authentication,
+    authorization,
     async (req, res) => {
         try {
             const allChats = await getAllChats();
+            console.log('allChatsallChats', allChats)
             return res.status(201).send(allChats);
         } catch (err) {
             return res.status(500).send(err);
@@ -14,7 +18,8 @@ router.get('/',
     });
 
 router.get('/:id',
-    authorization,
+authentication,
+authorization,
     async (req, res) => {
         try {
             const { id } = req.params;
@@ -26,13 +31,15 @@ router.get('/:id',
     });
 
 router.post('/',
-    userValidatorSchema,
-    validate,
+    //userValidatorSchema,
+    //validate,
+    authentication,
     authorization,
     async (req, res) => {
         try {
-            const { title, users } = req.body;
-            const chat = await creatChat(title, users);
+            const { title, usersId } = req.body;
+
+            const chat = await creatChat(title, usersId);
 
             return res.status(201).send(chat);
         } catch (err) {
@@ -41,18 +48,19 @@ router.post('/',
     });
 
 router.put('/:id',
-    userPostValidatorSchema,
-    validate,
+    //userPostValidatorSchema,
+    //validate,
     authentication,
     authorization,
     async (req, res) => {
         try {
-            const { title, users } = req.body;
-            const id = req.params.id;            
+            const { title, usersId } = req.body;
+            const { id } = req.params;          
+
             const chat = await findAndUpdate(id,
                 {
                     title: title,
-                    users: [users]
+                    users: usersId
                 },
                 { new: true });
             return res.status(201).send(chat);
@@ -62,13 +70,13 @@ router.put('/:id',
     });
 
 router.delete('/:id',
-    userDeleteValidatorSchema,
-    validate,
+    //userDeleteValidatorSchema,
+    //validate,
     authentication,
     authorization,
     async (req, res) => {
         try {
-            const id = req.params.id;
+            const { id } = req.params;
             const deletedChat = await findAndDelete(id);
             if (!deletedChat) {
                 return res.status(400).send('chat not found');

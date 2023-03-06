@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const User = require('../../models/userModel');
+const User = require('../../models/User');
 
-const createUser = (isAdmin = false, notValidFields = []) => {
+const createUser = (isAdmin = true, CreateInDb, notValidFields = []) => {
 
     const roles = isAdmin ? 'admin' : 'user';
 
@@ -27,7 +27,10 @@ const createUser = (isAdmin = false, notValidFields = []) => {
         { email: testUser.email, password: testUser.password },
         process.env.JWT_SECRET
     );
-    return User.create(testUser);
+
+    if (CreateInDb) return User.create(testUser);
+    
+    return testUser;
 };
 
 

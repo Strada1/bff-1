@@ -1,5 +1,6 @@
-const createChat = (userId, notValidFields = []) => {
+const Chat = require('../../models/Chat')
 
+const createChat = (userId, notValidFields = []) => {
     const testChat = {
         title: 'Favorite',
         users: [userId],
@@ -14,7 +15,7 @@ const createChat = (userId, notValidFields = []) => {
             });
         }
     }
-    return testChat;
+    return  Chat.create(testChat);
 };
 
 module.exports = createChat;

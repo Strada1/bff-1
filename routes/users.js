@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const { createToken } = require('../helpers/token');
+const authorization = require('../midlewares/authorization');
+const authentication = require('../midlewares/authentication');
+const { getAllUsers,  getUser, createUser, findAndUpdate, findAndDelete, addChat, removeChat, findOneByToken } = require('../services/user')
 
 router.get('/',
-    authorization,
-    authentication,
+authentication,
+authorization,
     async (req, res) => {
         try {
             const allUsers = await getAllUsers();
@@ -14,7 +18,8 @@ router.get('/',
     });
 
 router.get('/:id',
-    authorization,
+authentication,
+authorization,
     async (req, res) => {
         try {
             const { id } = req.params;
@@ -26,8 +31,8 @@ router.get('/:id',
     });
 
 router.post('/',
-    userValidatorSchema,
-    validate,
+    //userValidatorSchema,
+    //validate,
     async (req, res) => {
         try {
             const { email, password, username, roles } = req.body;
@@ -40,39 +45,15 @@ router.post('/',
         }
     });
 
-router.get('/auth',
-    userPostValidatorSchema,
-    validate,
-    async (req, res) => {
-        try {
-            const { email, password } = req.body;
-            const user = await findOneByEmail({ email });
-            if (user === null) {
-                return res.status(401).send('This user was not found');
-            }
-
-            const payload = verifyToken(user.token);
-
-            if (password !== payload.password) {
-                return res.status(401).send('Token does not found');
-            }
-
-            return res.status(201).send(user.token);
-        } catch (err) {
-            return res.status(500).send(err);
-        }
-    });
-
-
 router.put('/:id',
-    userPostValidatorSchema,
-    validate,
+    //userPostValidatorSchema,
+    //validate,
     authentication,
     authorization,
     async (req, res) => {
         try {
             const { email, password, username, roles } = req.body;
-            const id = req.params.id;
+            const { id } = req.params;
             const token = createToken(email, password);
             const user = await findAndUpdate(id,
                 {
@@ -89,19 +70,54 @@ router.put('/:id',
     });
 
 router.delete('/:id',
-    userDeleteValidatorSchema,
-    validate,
+    //userDeleteValidatorSchema,
+    //validate,
     authentication,
     authorization,
     async (req, res) => {
         try {
-            const id = req.params.id;
+            const { id } = req.params;
             const deletedUser = await findAndDelete(id);
             if (!deletedUser) {
                 return res.status(400).send('user not found');
             }
 
             return res.status(201).send('user deleted');
+        } catch (err) {
+            return res.status(500).send(err);
+        }
+    });
+
+
+router.put('/:id/chats',
+    //userAddChatsValidatorSchema,
+    //validate,
+    authentication,
+    authorization,
+    async (req, res) => {
+        const { id } = req.params;
+        const { chatId } = req.body;
+        try {
+            const user = await addChat(id, chatId, { new: true });
+
+            return res.status(201).send(user);
+        } catch (err) {
+            return res.status(500).send(err);
+        }
+    });
+
+router.delete('/:id/chats',
+    //userAddChatsValidatorSchema,
+    //validate,
+    authentication,
+    authorization,
+    async (req, res) => {
+        const { id } = req.params;
+        const { chatId } = req.body;
+        try {
+            const user = await removeChat(id, chatId, { new: true });
+
+            return res.status(201).send(user);
         } catch (err) {
             return res.status(500).send(err);
         }

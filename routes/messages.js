@@ -1,16 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const authorization = require('../midlewares/authorization');
+const authentication = require('../midlewares/authentication');
+const { getAllMessages, getMessage, createMessage, findAndUpdate, findAndDelete } = require('../services/message');
 
-router.get('/:chatId',
-    authorization,
-    authentication,
+router.get('/chat/:chatId',
+authentication,
+authorization,
     async (req, res) => {
         try {
             const { chatId } = req.params;
-            const user = req.body.user;
-            const messages = await getAllMessages(chatId, user);
+            const userId = req.body.user;
+            const messages = await getAllMessages(userId, chatId);
             if (!messages) {
-                return res.status(400).send('messages not found');
+                return res.status(403).send('you can not get messages from this chat');
             }
             return res.status(201).send(messages);
         } catch (err) {
@@ -19,11 +22,16 @@ router.get('/:chatId',
     });
 
 router.get('/:id',
-    authorization,
+authentication,
+authorization,
     async (req, res) => {
         try {
             const { id } = req.params;
+            console.log('messageIdmessageId', id)
             const message = await getMessage(id);
+            if (!message) {
+                return res.status(403).send('you can not get this message');
+            }
             return res.status(201).send(message);
         } catch (err) {
             return res.status(500).send(err);
@@ -31,12 +39,18 @@ router.get('/:id',
     });
 
 router.post('/',
-    userValidatorSchema,
-    validate,
+    //userValidatorSchema,
+    //validate,
+    authentication,
+    authorization,
     async (req, res) => {
         try {
-            const { user, chatId, text } = req.body;
-            const message = await createMessage({ user, chatId, text });
+            const { userId, chatId, text } = req.body;
+
+            const message = await createMessage({ userId, chatId, text });
+            if (!message) {
+                return res.status(403).send('you can not post message in this chat');
+            }
             return res.status(201).send(message);
         } catch (err) {
             return res.status(500).send(err);
@@ -44,17 +58,20 @@ router.post('/',
     });
 
 router.put('/:id',
-    userPostValidatorSchema,
-    validate,
+    //userPostValidatorSchema,
+    //validate,
     authentication,
     authorization,
     async (req, res) => {
         try {
-            const { user, chatId, text } = req.body;
+            const { userId, chatId, text } = req.body;
             const id = req.params.id;
             const message = await findAndUpdate(id,
-                { user, chatId, text },
+                { userId, chatId, text },
                 { new: true });
+                if (!message) {
+                    return res.status(403).send('you can not edit this message');
+                }
             return res.status(201).send(message);
         } catch (err) {
             return res.status(500).send(err);
@@ -62,18 +79,17 @@ router.put('/:id',
     });
 
 router.delete('/:id',
-    userDeleteValidatorSchema,
-    validate,
+    //userDeleteValidatorSchema,
+    //validate,
     authentication,
     authorization,
     async (req, res) => {
         try {
-            const id = req.params.id;
+            const { id } = req.params;
             const deleteMessage = await findAndDelete(id);
             if (!deleteMessage) {
-                return res.status(400).send('message not found');
+                return res.status(403).send('you can not delete this message');
             }
-
             return res.status(201).send('message deleted');
         } catch (err) {
             return res.status(500).send(err);

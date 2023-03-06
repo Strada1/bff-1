@@ -8,9 +8,9 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use("/users", require("./routes/users"));
-app.use("/chats", require("./routes/chats"));
-app.use("/messeges", require("./routes/messages"));
+ app.use("/users", require("./routes/users"));
+ app.use("/chats", require("./routes/chats"));
+ app.use("/messages", require("./routes/messages"));
 
 
 if (process.env.NODE_ENV !== 'test') {
