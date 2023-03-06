@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test  jest",
-    "start": "node --trace-warnings server.js "
+    "start": "node --trace-warnings server.js"
   },
   "keywords": [],
   "author": "",

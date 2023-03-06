@@ -54,19 +54,18 @@ const deleteMovieFromFavorite = async (userId, movieId) => {
 };
 
 const getFavoriteMoviesCount = async (groupBy) => {
-  const groupedFavoriteMoviesCount =
-    (await Users.aggregate([
-      {
-        $group: {
-          _id: {
-            title: '',
-          },
-          moviesCount: {
-            $sum: 1,
-          },
+  const groupedFavoriteMoviesCount = await Users.aggregate([
+    {
+      $group: {
+        _id: {
+          title: '',
+        },
+        moviesCount: {
+          $sum: 1,
         },
       },
-    ])) || [];
+    },
+  ]);
   return groupedFavoriteMoviesCount;
 };
 
