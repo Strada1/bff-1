@@ -1,5 +1,5 @@
 Activate server:
-npx nodemon src/server/server.js
+npx nodemon src/server/app.js
 
 Start development front:
 npm start
