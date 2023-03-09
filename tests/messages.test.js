@@ -4,37 +4,35 @@ const app = require('../app');
 
 const userToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEiLCJwYXNzd29yZCI6IjEiLCJpYXQiOjE2NzY5NzExMDF9.CG1cxGmv5bDKzxi_cOvJ3YcjvaiOVhzHRE_E4pzTmlA';
+const userId = '';
+const chatId = '';
+const messageId = '';
+const message = {
+  test: '',
+};
 
-describe('GET /movies', () => {
-  it('should return all movies', async () => {
-    const res = await request(app).get('/movies').auth(userToken, {type: 'bearer'});
-    expect(res.statusCode).toBe(200);
+describe('GET /users/:userId/chats/:chatId/messages', () => {
+  it('should return the messages of this chat', async () => {
+    const res = await request(app).get(`/users/${userId}/chats/${chatId}/messages`).auth(userToken, {type: 'bearer'});
+    expect(res.statusCode).toBe(404);
   });
 });
 
-describe('POST /movies', () => {
-  it('should be add new movie', async () => {
-    const movie = {
-      title: 'Гарри Поттер',
-      category: '63d95c89ae0fb24823b5b237',
-      year: 2022,
-      duration: 120,
-      director: '63e5316d70801cccb0ac756b',
-    };
-    const res = await request(app).post('/movies').send(movie).auth(userToken, {type: 'bearer'});
-    expect(res.statusCode).toBe(201);
+describe('POST /users/:userId/chats/:chatId/messages', () => {
+  it('should add new message to chat', async () => {
+    const res = await request(app)
+      .post(`/users/${userId}/chats/${chatId}/messages`)
+      .send(message)
+      .auth(userToken, {type: 'bearer'});
+    expect(res.statusCode).toBe(404);
   });
 });
 
-describe('POST /movies', () => {
-  it('should be return status code 422', async () => {
-    const movie = {
-      category: '63d95c89ae0fb24823b5b237',
-      year: 2022,
-      duration: 120,
-      director: '63e5316d70801cccb0ac756b',
-    };
-    const res = await request(app).post('/movies').send(movie).auth(userToken, {type: 'bearer'});
-    expect(res.statusCode).toBe(422);
+describe('DELETE /users/:userId/chats/:chatId/messages/:messageId', () => {
+  it('should delete message from chat', async () => {
+    const res = await request(app)
+      .delete(`/users/${userId}/chats/${chatId}/messages/${messageId}`)
+      .auth(userToken, {type: 'bearer'});
+    expect(res.statusCode).toBe(404);
   });
 });
