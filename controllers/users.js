@@ -3,7 +3,7 @@ const usersService = require('../service/db/usersService');
 const getUser = async (req, res) => {
   try {
     const user = await usersService.getUser(req.params['userId']);
-    return res.status(201).json(user);
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -11,7 +11,7 @@ const getUser = async (req, res) => {
 const getUserChats = async (req, res) => {
   try {
     const chats = await usersService.getUserChats(req.params['userId']);
-    return res.status(201).json(chats);
+    return res.status(200).json(chats);
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -27,7 +27,7 @@ const addChat = async (req, res) => {
 const deleteChat = async (req, res) => {
   try {
     const user = await usersService.deleteChat(req.params['userId'], req.body.chatId);
-    return res.status(201).json(user);
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -35,4 +35,7 @@ const deleteChat = async (req, res) => {
 
 module.exports = {
   getUser,
+  getUserChats,
+  addChat,
+  deleteChat,
 };

@@ -10,6 +10,7 @@ const getChats = async (req, res) => {
 };
 const createChat = async (req, res) => {
   try {
+    console.log(req.body);
     await chatsService.createChat(req.body);
     return res.status(201).send('chat is created');
   } catch (error) {
@@ -19,7 +20,7 @@ const createChat = async (req, res) => {
 const updateChat = async (req, res) => {
   try {
     await chatsService.updateChat(req.params['chatId'], req.body);
-    return res.status(200).send('chat is updated');
+    return res.status(201).send('chat is updated');
   } catch (error) {
     return res.status(500).send(error);
   }
