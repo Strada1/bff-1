@@ -28,6 +28,16 @@ describe('POST /users/:userId/chats/:chatId/messages', () => {
   });
 });
 
+describe('PUT /users/:userId/chats/:chatId/messages/:messageId', () => {
+  it('should update message from chat', async () => {
+    const res = await request(app)
+      .put(`/users/${userId}/chats/${chatId}/messages/${messageId}`)
+      .send(message)
+      .auth(userToken, {type: 'bearer'});
+    expect(res.statusCode).toBe(404);
+  });
+});
+
 describe('DELETE /users/:userId/chats/:chatId/messages/:messageId', () => {
   it('should delete message from chat', async () => {
     const res = await request(app)

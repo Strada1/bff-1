@@ -7,20 +7,7 @@ const adminToken =
 const userToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjEiLCJwYXNzd29yZCI6IjEiLCJpYXQiOjE2NzY5NzExMDF9.CG1cxGmv5bDKzxi_cOvJ3YcjvaiOVhzHRE_E4pzTmlA';
 const userId = '';
-const user = {};
-describe('GET /users', () => {
-  it('should return all users', async () => {
-    const res = await request(app).get('/users').auth(adminToken, {type: 'bearer'});
-    expect(res.statusCode).toBe(404);
-  });
-});
-
-describe('POST /users', () => {
-  it('should add new user', async () => {
-    const res = await request(app).post('/users').send(user).auth(userToken, {type: 'bearer'});
-    expect(res.statusCode).toBe(404);
-  });
-});
+const chatId = '';
 
 describe('GET /users/:userId/', () => {
   it('should return user', async () => {
@@ -29,16 +16,23 @@ describe('GET /users/:userId/', () => {
   });
 });
 
-describe('PUT /users/:userId', () => {
-  it('should update user', async () => {
-    const res = await request(app).put(`/users/:userId`).send(user).auth(userToken, {type: 'bearer'});
+describe('GET /users/:userId/chats', () => {
+  it('should return a list of chats that the user is a member of', async () => {
+    const res = await request(app).get(`/users/${userId}/chats`).auth(userToken, {type: 'bearer'});
     expect(res.statusCode).toBe(404);
   });
 });
 
-describe('DELETE /users/:userId', () => {
-  it('should delete user', async () => {
-    const res = await request(app).delete(`/users/:userId`).auth(adminToken, {type: 'bearer'});
+describe('POST /users/:userId/chats/:chatId', () => {
+  it('should add user to chat', async () => {
+    const res = await request(app).post(`/users/${userId}/chats/${chatId}`).auth(userToken, {type: 'bearer'});
+    expect(res.statusCode).toBe(404);
+  });
+});
+
+describe('DELETE /users/:userId/chats/:chatId', () => {
+  it('should delete user from this chat', async () => {
+    const res = await request(app).delete(`/users/${userId}/chats/:chatId`).auth(userToken, {type: 'bearer'});
     expect(res.statusCode).toBe(404);
   });
 });

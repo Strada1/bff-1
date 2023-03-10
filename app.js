@@ -6,22 +6,16 @@ const {CORS_OPTIONS} = require('./config');
 const app = express();
 // const loginRoute = require('./routers/login');
 // const homeRoute = require('./routers/home');
-// const usersRoute = require('./routers/users');
-// const moviesRoute = require('./routers/movies');
-// const commentsRoute = require('./routers/comments');
-// const categoriesRoute = require('./routers/categories');
-// const directorsRoute = require('./routers/directors');
-// const exampleRoute = require('./routers/example');
+const usersRoute = require('./routers/users');
+// const chatsRoute = require('./routers/chats');
+// const messagesRoute = require('./routers/messages');
 
 app.use(express.json());
 app.use(cors(CORS_OPTIONS));
 // app.use(loginRoute);
 // app.use(homeRoute);
-// app.use(usersRoute);
-// app.use(moviesRoute);
-// app.use(commentsRoute);
-// app.use(categoriesRoute);
-// app.use(directorsRoute);
-// app.use(exampleRoute);
+app.use(usersRoute);
+// app.use(chatsRoute);
+// app.use(messagesRoute);
 
 module.exports = app;

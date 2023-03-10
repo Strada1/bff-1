@@ -1,82 +1,38 @@
 const usersService = require('../service/db/usersService');
 
-const getUsers = async (req, res) => {
+const getUser = async (req, res) => {
   try {
-    const users = await usersService.getUsers();
-    return res.status(200).json(users);
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-};
-const getUserById = async (req, res) => {
-  try {
-    const user = await usersService.getUserById(req.params['userId']);
+    const user = await usersService.getUser(req.params['userId']);
     return res.status(201).json(user);
   } catch (error) {
     return res.status(500).send(error);
   }
 };
-const createUser = async (req, res) => {
+const getUserChats = async (req, res) => {
   try {
-    await usersService.createUser(req.body);
-    return res.status(201).send('user created');
+    const chats = await usersService.getUserChats(req.params['userId']);
+    return res.status(201).json(chats);
   } catch (error) {
     return res.status(500).send(error);
   }
 };
-const updateUser = async (req, res) => {
+const addChat = async (req, res) => {
   try {
-    await usersService.updateUser(req.params['userId'], req.body);
-    return res.status(201).send('user updated');
+    const user = await usersService.addChat(req.params['userId'], req.body.chatId);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(500).send(error);
   }
 };
-const deleteUser = async (req, res) => {
+const deleteChat = async (req, res) => {
   try {
-    await usersService.deleteUser(req.params['userId']);
-    return res.status(201).send('user deleted');
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-};
-const addMovieInFavorite = async (req, res) => {
-  try {
-    const {userId} = req.params;
-    const {movieId} = req.body;
-    await usersService.addMovieInFavorite(userId, movieId);
-    return res.status(201).send('movie added');
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-};
-const deleteMovieFromFavorite = async (req, res) => {
-  try {
-    const {userId} = req.params;
-    const {movieId} = req.body;
-    await usersService.deleteMovieFromFavorite(userId, movieId);
-    return res.status(200).send('movie deleted');
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-};
-const getFavoriteMoviesCount = async (req, res) => {
-  try {
-    const {groupBy} = req.query;
-    const groupedFavoriteMovies = await usersService.getFavoriteMoviesCount(groupBy);
-    return res.status(200).json(groupedFavoriteMovies);
+    const user = await usersService.deleteChat(req.params['userId'], req.body.chatId);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(500).send(error);
   }
 };
 
 module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-  addMovieInFavorite,
-  deleteMovieFromFavorite,
-  getFavoriteMoviesCount,
+  getUser,
 };
