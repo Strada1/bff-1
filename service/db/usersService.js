@@ -5,6 +5,12 @@ const getUser = async (userId) => {
   const user = await Users.findById(userId);
   return user;
 };
+const getUserByToken = async (token) => {
+  const user = await Users.findOne({
+    token: token,
+  });
+  return user;
+};
 const getUserChats = async (userId) => {
   const user = await Users.findById(userId);
   return user?.chats;
@@ -90,6 +96,7 @@ const deleteChat = async (userId, chatId) => {
 
 module.exports = {
   getUser,
+  getUserByToken,
   getUserChats,
   addChat,
   deleteChat,

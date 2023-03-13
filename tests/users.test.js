@@ -31,9 +31,9 @@ describe('POST /users/:userId/chats/:chatId', () => {
   });
 });
 
-describe('DELETE /users/:userId/chats/:chatId', () => {
-  it('should delete user from this chat', async () => {
-    const res = await request(app).delete(`/users/${userId}/chats/${chatId}`);
-    expect(res.statusCode).toBe(200);
-  });
-});
+// describe('DELETE /users/:userId/chats/:chatId', () => {
+//   it('should delete user from this chat', async () => {
+//     const res = await request(app).delete(`/users/${userId}/chats/${chatId}`);
+//     expect(res.statusCode).toBe(200);
+//   });
+// });

@@ -3,6 +3,9 @@ const Chats = require('../../models/Chats');
 const getChats = async () => {
   return await Chats.find({});
 };
+const getChat = async (chatId) => {
+  return await Chats.findById(chatId);
+};
 const createChat = async (chat) => {
   await Chats.create(chat);
 };
@@ -15,6 +18,7 @@ const deleteChat = async (chatId) => {
 
 module.exports = {
   getChats,
+  getChat,
   createChat,
   updateChat,
   deleteChat,
